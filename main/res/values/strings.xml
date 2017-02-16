@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">LifeStats</string>
+    <string name="title_activity_setup_sentiment">SetupActivitySentiment</string>
+    <string name="health">To get in better shape</string>
+    <string name="stress">To reduce my stress levels</string>
+    <string name="grades">To improve my grades</string>
+    <string name="other">Other</string>
+    <string name="nextPage">Continue</string>
+    <string name="sentimentPrompt">Would you like to submit a diary entry for each day? We'll
+        analyze your diary entries to help you figure out what's stressing you out and how you
+        can fix it!</string>
+</resources>
