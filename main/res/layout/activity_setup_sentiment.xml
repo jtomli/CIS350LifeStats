@@ -27,11 +27,25 @@
             android:layout_height="wrap_content"
             android:layout_weight="0.07" />
 
-        <RadioButton
-            android:text="RadioButton"
-            android:layout_width="match_parent"
-            android:layout_height="94dp"
-            android:id="@+id/radioButton" />
+        <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:checkedButton="@+id/yes">
+
+            <RadioButton
+                android:text="Yes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="onRadioButtonClicked"
+                android:id="@+id/yes" />
+
+            <RadioButton
+                android:text="No"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="onRadioButtonClicked"
+                android:id="@+id/no" />
+        </RadioGroup>
 
         <LinearLayout
             android:orientation="horizontal"
@@ -53,6 +67,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/button"
+                android:onClick="onContinue"
                 android:layout_weight="1" />
 
             <Space
