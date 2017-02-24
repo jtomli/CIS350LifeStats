@@ -1,0 +1,44 @@
+<resources>
+    <string name="app_name">LifeStats</string>
+    <string name="setup">SETUP</string>
+    <string name="titleActivitySetupSentiment">SetupActivitySentiment</string>
+    <string name="health">To get in better shape</string>
+    <string name="stress">To reduce my stress levels</string>
+    <string name="grades">To improve my grades</string>
+    <string name="other">Other:</string>
+    <string name="nextPage">Continue</string>
+    <string name="sentimentPrompt">Would you like to submit a diary entry for each day? We\'ll
+        analyze your diary entries to help you figure out what\'s stressing you out and how you
+        can fix it!</string>
+    <string name="title_activity_login">Sign in</string>
+    <string name="goal_name">Name of goal:</string>
+    <string name="enter_text_here">(enter text here)</string>
+    <string name="duration">Duration of goal:</string>
+    <string name="start_time">Start Time</string>
+    <string name ="end_time">End Time</string>
+    <string name="repeat">Repeat:</string>
+    <string name="m">M</string>
+    <string name="t">T</string>
+    <string name="w">W</string>
+    <string name="r">R</string>
+    <string name="f">F</string>
+    <string name="s">S</string>
+    <string name="remind_me">Remind me:</string>
+    <string name="never">Never</string>
+    <string name="one_hour">1 hour before</string>
+    <string name="fifteen_mins">15 minutes before</string>
+    <string name="day_before">1 day before</string>
+    <string-array name="reminder_options">
+        <item>@string/never</item>
+        <item>@string/one_hour</item>
+        <item>@string/fifteen_mins</item>
+        <item>@string/day_before</item>
+    </string-array>
+    <string name="all_day_string">All day</string>
+    <string-array name="frequency_options">
+        <item>One time only</item>
+        <item>Weekly</item>
+        <item>Biweekly</item>
+        <item>Monthly</item>
+    </string-array>
+</resources>
