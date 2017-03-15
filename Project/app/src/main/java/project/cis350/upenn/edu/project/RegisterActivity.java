@@ -33,17 +33,26 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
     }
+
     public void login(View v) {
         EditText emailInput = (EditText)findViewById(R.id.emailInput);
         EditText passwordInput = (EditText)findViewById(R.id.passwordInput);
 
+        String username = emailInput.getText().toString();
+        String password = passwordInput.getText().toString();
+
         DatabaseManager db = new DatabaseManager(this);
-        User match = db.getUser(emailInput.getText().toString());
+        User match = db.getUser(username);
+
+
 
         if (match != null) {
-            if (match.getRawPassword().equals(passwordInput.getText().toString())) {
+            if (match.getRawPassword().equals(password)) {
                 Toast.makeText(this, "Logged in!", Toast.LENGTH_LONG).show();
                 Intent i = new Intent(this, SetupActivityReasons.class);
+
+                // send username to "reasons" DB
+                i.putExtra("username", username);
                 startActivity(i);
             } else {
                 Toast.makeText(this, "Wrong password.", Toast.LENGTH_LONG).show();
@@ -51,7 +60,5 @@ public class RegisterActivity extends AppCompatActivity {
         } else {
             Toast.makeText(this, "This email is not registered.", Toast.LENGTH_LONG).show();
         }
-
-
     }
 }

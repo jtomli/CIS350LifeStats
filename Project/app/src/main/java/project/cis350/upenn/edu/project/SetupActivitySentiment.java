@@ -9,21 +9,28 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.RadioButton;
 
+import java.util.ArrayList;
+
 public class SetupActivitySentiment extends AppCompatActivity {
 
     String username;
-    String password;
-    String reasons;
+    ArrayList<String> reasons;
     String sentiment = "yes";
+    int maxReasons = 11;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setup_sentiment);
         Intent intent = getIntent();
+
+        // get username, password, and reasons to add to database
         username = intent.getExtras().getString("username");
-        password = intent.getExtras().getString("password");
-        reasons = intent.getExtras().getString("reasons");
+        reasons = intent.getStringArrayListExtra("reasons");
+
+        for (int i = 0; i < reasons.size(); i++) {
+            System.out.println(reasons.get(i));
+        }
     }
 
     public void onRadioButtonClicked(View view) {
@@ -34,12 +41,11 @@ public class SetupActivitySentiment extends AppCompatActivity {
             case R.id.yes:
                 if (checked)
                     sentiment = "yes";
-                    break;
-            case R.id.no:                        if (itemId == R.id.addAnother) {
-
+                break;
+            case R.id.no:
                 if (checked)
                     sentiment = "no";
-                    break;
+                break;
         }
 
     }
@@ -51,14 +57,58 @@ public class SetupActivitySentiment extends AppCompatActivity {
 
         ContentValues values = new ContentValues();
         values.put(UserDatabaseContract.UserDB.COL_USERNAME, username);
-        values.put(UserDatabaseContract.UserDB.COL_PASSWORD, password);
-        values.put(UserDatabaseContract.UserDB.COL_REASONS, reasons);
+        for (int i = 0; i < reasons.size(); i++) {
+            values.put(("reasons" + i), reasons.get(i));
+        }
+        for (int i = reasons.size(); i < maxReasons; i++) {
+            values.put(("reasons" + i), "");
+        }
         values.put(UserDatabaseContract.UserDB.COL_SENTIMENT, sentiment);
 
         // insert new row, returning primary key value of new row
         long newRowId = db.insert(UserDatabaseContract.UserDB.TABLE_NAME, null, values);
 
-        Intent i = new Intent(this, GoalActivity.class);
-        startActivity(i);
+        Intent intent = new Intent(this, CreateGoalActivity.class);
+        startActivity(intent);
     }
 }
+
+/*
+String[] projection = {
+                UserDatabaseContract.UserDB.COL_USERNAME,
+                UserDatabaseContract.UserDB.COL_REASONS_1,
+                UserDatabaseContract.UserDB.COL_REASONS_2,
+                UserDatabaseContract.UserDB.COL_REASONS_3,
+                UserDatabaseContract.UserDB.COL_REASONS_4,
+                UserDatabaseContract.UserDB.COL_REASONS_5,
+                UserDatabaseContract.UserDB.COL_REASONS_6,
+                UserDatabaseContract.UserDB.COL_REASONS_7,
+                UserDatabaseContract.UserDB.COL_REASONS_8,
+                UserDatabaseContract.UserDB.COL_REASONS_9,
+                UserDatabaseContract.UserDB.COL_REASONS_10,
+                UserDatabaseContract.UserDB.COL_REASONS_11,
+                UserDatabaseContract.UserDB.COL_SENTIMENT
+
+        };
+
+        Cursor cursor = db.query(
+                UserDatabaseContract.UserDB.TABLE_NAME,                     // The table to query
+                projection,                               // The columns to return
+                null,                                // The columns for the WHERE clause
+                null,                            // The values for the WHERE clause
+                null,                                     // don't group the rows
+                null,                                     // don't filter by row groups
+                null                                 // The sort order
+        );
+
+        // access list of reasons for each row
+        ArrayList<String> items = new ArrayList<String>();
+        while(cursor.moveToNext()) {
+            for (int i = 0; i < 11; i++) {
+                String item = cursor.getString(cursor.getColumnIndex("reasons" + i));
+                items.add(item);
+            }
+        }
+        cursor.close();
+        // items are in "items.get(i)"
+ */
