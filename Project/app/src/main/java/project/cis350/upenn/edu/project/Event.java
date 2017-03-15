@@ -1,4 +1,4 @@
-package project.cis350.upenn.nkeenan.lifestats;
+package project.cis350.upenn.edu.project;
 
 import java.io.Serializable;
 

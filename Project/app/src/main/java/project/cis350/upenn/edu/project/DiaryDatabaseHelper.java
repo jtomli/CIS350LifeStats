@@ -8,20 +8,21 @@ import android.database.sqlite.*;
 
 class DiaryDatabaseHelper extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 5;
+    private static final int DATABASE_VERSION = 6;
 
     private static final String USER_TABLE_CREATE =
-            "CREATE TABLE " + DiaryDatabaseContract.UserDB.TABLE_NAME + "(" +
-                    DiaryDatabaseContract.UserDB._ID + " INTEGER PRIMARY KEY," +
-                    DiaryDatabaseContract.UserDB.COL_DATE + " TEXT," +
-                    DiaryDatabaseContract.UserDB.COL_ENTRY + " TEXT);";
+            "CREATE TABLE " + DiaryDatabaseContract.DiaryDB.TABLE_NAME + "(" +
+                    DiaryDatabaseContract.DiaryDB._ID + " INTEGER PRIMARY KEY," +
+                    DiaryDatabaseContract.DiaryDB.COL_USERNAME + " TEXT," +
+                    DiaryDatabaseContract.DiaryDB.COL_DATE + " TEXT," +
+                    DiaryDatabaseContract.DiaryDB.COL_ENTRY + " TEXT);";
 
 
     private static final String SQL_DELETE_ENTRIES =
-            "DROP TABLE IF EXISTS " + DiaryDatabaseContract.UserDB.TABLE_NAME;
+            "DROP TABLE IF EXISTS " + DiaryDatabaseContract.DiaryDB.TABLE_NAME;
 
     public DiaryDatabaseHelper(Context context) {
-        super(context, DiaryDatabaseContract.UserDB.TABLE_NAME, null, DATABASE_VERSION);
+        super(context, DiaryDatabaseContract.DiaryDB.TABLE_NAME, null, DATABASE_VERSION);
     }
 
     @Override

@@ -49,8 +49,6 @@ public class LoginActivity extends AppCompatActivity {
         }
 
 
-
-
         List<User> contacts = db.getAllUsers();
 
         for (User cn : contacts) {

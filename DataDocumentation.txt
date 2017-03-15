@@ -1,0 +1,75 @@
+SQLite documentation on Android Developer site
+
+LifeStats data setup:
+
+NOTE: I'm leaving Colin's stuff the way it is because it's working perfectly fine and there's no need to mess that up. 
+
+USERS_TABLE
+	COL_USERNAME 
+		TEXT
+	COL_PASSWORD 
+		TEXT
+	COL_REASONS_i (i = 0 ... 10) 
+		TEXT 
+		"why are you using this app"
+		anywhere from 0-11 reasons, each stored in a separate column
+	COL_SENTIMENT
+		TEXT 
+		just the answer to "do you want to also do a sentiment analysis"
+
+
+GOALS_TABLE
+	COL_USERNAME
+	COL_GOALNAME
+		TEXT
+	COL_REASON
+		TEXT
+		for the sake of my sanity, you can add one reason per goal
+	COL_ALLDAY
+	COL_STARTYEAR
+	COL_STARTMONTH
+	COL_STARTDAY
+	COL_STARTHOUR
+	COL_STARTMIN
+	COL_ENDYEAR
+	COL_ENDMONTH
+	COL_ENDDAY
+	COL_ENDHOUR
+	COL_ENDMIN
+	COL_REPEAT
+	COL_FREQUENCY
+	COL_REMINDME
+
+EVENTS_TABLE
+	COL_USERNAME
+	COL_GOALNAME
+		TEXT
+	COL_YEAR
+		INT
+	COL_MONTH
+		INT
+	COL_DAY
+		INT
+	COL_STARTHOUR
+		INT
+	COL_STARTMIN
+		INT
+	COL_ENDHOUR
+		INT
+	COL_ENDMIN
+		INT
+	COL_ALLDAY
+		INT
+		SQLite doesn't like booleans; we can do a 1/0 int or a T/F string 
+
+DIARY_TABLE
+	COL_USERNAME
+	COL_DATE
+	COL_ENTRY
+
+SENTIMENT_TABLE
+	COL_USERNAME
+	COL_YEAR
+	COL_MONTH
+	COL_DAY
+	COL_FEELINGS	
