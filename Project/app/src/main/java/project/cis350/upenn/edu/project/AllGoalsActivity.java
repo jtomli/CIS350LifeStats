@@ -33,7 +33,7 @@ public class AllGoalsActivity extends Activity  {
                 for (Goal goal : allGoals) {
                     if (goal.toString().equals(selectedFromList)) {
                         // create a new Intent using the current activity and GoalActivity class
-                        Intent i = new Intent(getApplicationContext(), GoalActivity.class);
+                        Intent i = new Intent(getApplicationContext(), SingleGoalActivity.class);
                         // pass the goal to GoalAtivity
                         i.putExtra("Goal", goal);
                         // start the game activity
