@@ -264,32 +264,25 @@
         android:layout_marginBottom="13dp"
         android:id="@+id/addGoalButton" />
 
-    <Switch
-        android:text="weightloss"
+    <TextView
+        android:id="@+id/setReasonsLabel"
+        android:text="Reason"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/reminderSpinner"
-        android:layout_alignLeft="@+id/all_day_box"
-        android:layout_alignStart="@+id/all_day_box"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="20dp" />
+
+    <Spinner
+        android:text = "Goal Reason"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/reminderSpinner"
+        android:layout_alignTop="@+id/setReasonsLabel"
+        android:layout_alignStart="@+id/setReasonsLabel"
         android:layout_marginTop="30dp"
-        android:id="@+id/switch1" />
-
-    <Switch
-        android:text="stress-reducer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/switch1"
-        android:layout_toRightOf="@+id/goalTextLabel"
-        android:layout_toEndOf="@+id/goalTextLabel"
-        android:id="@+id/switch2" />
-
-    <Switch
-        android:text="enjoyment"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/switch2"
-        android:layout_toRightOf="@+id/startDateTextLabel"
-        android:layout_toEndOf="@+id/startDateTextLabel"
-        android:id="@+id/switch3" />
+        android:id="@+id/reasonspinner"
+        ></Spinner>
 
 </RelativeLayout>
