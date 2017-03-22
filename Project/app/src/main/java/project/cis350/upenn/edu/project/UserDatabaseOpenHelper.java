@@ -10,7 +10,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class UserDatabaseOpenHelper extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 7;
+    private static final int DATABASE_VERSION = 11;
 
     private static final String USER_TABLE_CREATE =
             "CREATE TABLE " + UserDatabaseContract.UserDB.TABLE_NAME + "(" +

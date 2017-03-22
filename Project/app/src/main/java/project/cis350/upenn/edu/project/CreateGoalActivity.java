@@ -4,6 +4,8 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
@@ -41,12 +43,66 @@ public class CreateGoalActivity extends AppCompatActivity implements AdapterView
     private String frequencySelection;
     private String reminderSelection;
 
+    String username;
+    ArrayList<String> reasons;
+
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_goal);
 
         Calendar c = Calendar.getInstance();
+
+        Intent intent = getIntent();
+        username = intent.getExtras().getString("username");
+
+        UserDatabaseOpenHelper dbHelper = new UserDatabaseOpenHelper(this);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        String[] projection = {
+                UserDatabaseContract.UserDB.COL_USERNAME,
+                UserDatabaseContract.UserDB.COL_REASONS_1,
+                UserDatabaseContract.UserDB.COL_REASONS_2,
+                UserDatabaseContract.UserDB.COL_REASONS_3,
+                UserDatabaseContract.UserDB.COL_REASONS_4,
+                UserDatabaseContract.UserDB.COL_REASONS_5,
+                UserDatabaseContract.UserDB.COL_REASONS_6,
+                UserDatabaseContract.UserDB.COL_REASONS_7,
+                UserDatabaseContract.UserDB.COL_REASONS_8,
+                UserDatabaseContract.UserDB.COL_REASONS_9,
+                UserDatabaseContract.UserDB.COL_REASONS_10,
+                UserDatabaseContract.UserDB.COL_REASONS_11,
+                UserDatabaseContract.UserDB.COL_SENTIMENT
+
+        };
+
+        // Filter results WHERE COL_USERNAME = username
+        String selection = UserDatabaseContract.UserDB.COL_USERNAME + " = ?";
+        String[] selectionArgs = { username };
+
+        Cursor cursor = db.query(
+                UserDatabaseContract.UserDB.TABLE_NAME,         // The table to query
+                projection,                                     // The columns to return
+                selection,                                      // The columns for the WHERE clause
+                selectionArgs,                                  // The values for the WHERE clause
+                null,                                           // don't group the rows
+                null,                                           // don't filter by row groups
+                null                                            // The sort order
+        );
+
+        reasons = new ArrayList<String>();
+        // access list of reasons for each row
+        while(cursor.moveToNext()) {
+            for (int i = 0; i < 11; i++) {
+                String item = cursor.getString(cursor.getColumnIndex("reasons" + i));
+                if (!item.isEmpty()) {
+                    reasons.add(item);
+                }
+            }
+        }
+        cursor.close();
+        // reasons are saved in reason
+        // reason can now populate a spinner
 
         //setting labels at start up for TIME
         String currTime = hourConverter(c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE));
@@ -81,12 +137,19 @@ public class CreateGoalActivity extends AppCompatActivity implements AdapterView
         frequencySpinner.setAdapter(adapterTwo);
         frequencySpinner.setOnItemSelectedListener(this);
 
+        //creating reasons spinner
+        Spinner reasonsSpinner = (Spinner) findViewById(R.id.reasonspinner);
+        ArrayAdapter<String> adapterThree = new ArrayAdapter<String>(
+                this, android.R.layout.simple_spinner_item, reasons);
+        adapterThree.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        reasonsSpinner.setAdapter(adapterThree);
+
         //GOAL NAME
         final EditText goalInput = (EditText) findViewById(R.id.goalNameInput);
 
 
         //TODO: NEED TO GATHER ALL INFO FOR GOAL OBJECT HERE
-        //should alos switch intent here
+        //should also switch intent here
         final Button addGoal = (Button) findViewById(R.id.addGoalButton);
         addGoal.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -101,9 +164,11 @@ public class CreateGoalActivity extends AppCompatActivity implements AdapterView
                         int itemId = item.getItemId();
                         if (itemId == R.id.addAnother) {
                             Intent i = new Intent(view.getContext(), GoalActivity.class);
+                            i.putExtra("username", username);
                             startActivity(i);
                         } else if (itemId == R.id.mainMenu) {
                             Intent i = new Intent(view.getContext(), MainActivity.class);
+                            i.putExtra("username", username);
                             startActivity(i);
                         }
                         return true;
