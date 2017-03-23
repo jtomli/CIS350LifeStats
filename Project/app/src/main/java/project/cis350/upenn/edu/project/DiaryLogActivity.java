@@ -30,9 +30,9 @@ public class DiaryLogActivity extends AppCompatActivity{
         DiaryDatabaseHelper dbh = new DiaryDatabaseHelper(v.getContext());
         SQLiteDatabase db = dbh.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(DiaryDatabaseContract.UserDB.COL_DATE, "Feb 20");
-        values.put(DiaryDatabaseContract.UserDB.COL_ENTRY, entry);
-        db.insert(DiaryDatabaseContract.UserDB.TABLE_NAME, null, values);
+        values.put(DiaryDatabaseContract.DiaryDB.COL_DATE, "Feb 20");
+        values.put(DiaryDatabaseContract.DiaryDB.COL_ENTRY, entry);
+        db.insert(DiaryDatabaseContract.DiaryDB.TABLE_NAME, null, values);
         db.close();
 
 

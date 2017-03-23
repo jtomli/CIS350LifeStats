@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
         Intent i = new Intent(this, DiaryActivity.class);
         startActivity(i);
     }
+
     //go to setup
     public void setup(View view) {
         Intent intent = new Intent(this, SetupActivityReasons.class);
@@ -34,6 +35,7 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
         intent.putExtra("password", "password");
         startActivity(intent);
     }
+
     @Override
     public void onItemSelected(AdapterView<?> parent, View view,
                                int pos, long id) {

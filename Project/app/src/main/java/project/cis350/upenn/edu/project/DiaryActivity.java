@@ -20,7 +20,7 @@ public class DiaryActivity extends AppCompatActivity{
 
         List<String[]> contactList = new ArrayList<String[]>();
         // Select All Query
-        String selectQuery = "SELECT  * FROM " + DiaryDatabaseContract.UserDB.TABLE_NAME;
+        String selectQuery = "SELECT  * FROM " + DiaryDatabaseContract.DiaryDB.TABLE_NAME;
 
         DiaryDatabaseHelper dbh = new DiaryDatabaseHelper(findViewById(R.id.diary_entries).getContext());
         SQLiteDatabase db = dbh.getWritableDatabase();
