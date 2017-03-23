@@ -13,24 +13,43 @@ import android.widget.*;
  */
 
 public class DiaryActivity extends AppCompatActivity{
+    String username;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.diary);
 
+        Intent intent = getIntent();
+        username = intent.getExtras().getString("username");
+
         List<String[]> contactList = new ArrayList<String[]>();
-        // Select All Query
-        String selectQuery = "SELECT  * FROM " + DiaryDatabaseContract.DiaryDB.TABLE_NAME;
 
         DiaryDatabaseHelper dbh = new DiaryDatabaseHelper(findViewById(R.id.diary_entries).getContext());
         SQLiteDatabase db = dbh.getWritableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        String[] projection = {
+                DiaryDatabaseContract.DiaryDB.COL_DATE,
+                DiaryDatabaseContract.DiaryDB.COL_ENTRY
+        };
+        String selection = DiaryDatabaseContract.DiaryDB.COL_USERNAME + " = ?";
+        String[] selectionArgs = { username };
+
+        Cursor cursor = db.query(
+                DiaryDatabaseContract.DiaryDB.TABLE_NAME,         // The table to query
+                projection,                                     // The columns to return
+                selection,                                      // The columns for the WHERE clause
+                selectionArgs,                                  // The values for the WHERE clause
+                null,                                           // don't group the rows
+                null,                                           // don't filter by row groups
+                null                                            // The sort order
+        );
+
 
         String diary = ((TextView) findViewById(R.id.diary_entries)).getText().toString();
         // looping through all rows and adding to list
         if (cursor.moveToFirst()) {
             do {
-                diary = diary + cursor.getString(1) + "\n" + cursor.getString(2) + "\n" + "\n";
+                diary = diary + cursor.getString(0) + "\n" + cursor.getString(1) + "\n" + "\n";
 
             } while (cursor.moveToNext());
             ((TextView) findViewById(R.id.diary_entries)).setText(diary);
@@ -38,6 +57,7 @@ public class DiaryActivity extends AppCompatActivity{
     }
     public void onMenuButton(View v) {
         Intent i = new Intent(this, MainActivity.class);
+        i.putExtra("username", username);
         startActivity(i);
     }
 }

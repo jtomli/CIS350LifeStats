@@ -14,9 +14,12 @@ public class SentimentDatabaseContract {
 
         public static final String TABLE_NAME = "SENTIMENT_TABLE";
         public static final String COL_USERNAME = "username";
-        public static final String COL_YEAR = "year";
-        public static final String COL_MONTH = "month";
-        public static final String COL_DAY = "day";
-        public static final String COL_FEELINGS = "sentiment";
+        public static final String COL_DATE = "date";
+        public static final String COL_ANGER = "anger";
+        public static final String COL_DISGUST = "disgust";
+        public static final String COL_FEAR = "fear";
+        public static final String COL_JOY = "joy";
+        public static final String COL_SADNESS = "sadness";
+
     }
 }

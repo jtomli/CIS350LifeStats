@@ -36,6 +36,7 @@
         <activity
             android:name=".DiaryLogActivity"
             android:screenOrientation="landscape" />
+        <activity android:name=".EmotionActivity" />
         <activity android:name=".SetupActivityReasons" />
         <activity android:name=".SetupActivitySentiment" />
         <activity android:name=".GoalActivity">

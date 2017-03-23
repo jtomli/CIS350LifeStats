@@ -15,6 +15,15 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="Emotion Graph"
+        android:id="@+id/emotion_button"
+
+        android:layout_centerHorizontal="true"
+        android:onClick="onEmotionButtonClick"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:text="Add Diary Entry"
         android:id="@+id/log_button"
 
