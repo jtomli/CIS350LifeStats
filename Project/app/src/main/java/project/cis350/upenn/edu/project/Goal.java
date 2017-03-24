@@ -1,5 +1,3 @@
-package project.cis350.upenn.edu.project;
-
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashMap;
