@@ -1,4 +1,4 @@
-package project.cis350.upenn.edu.project;
+package com.example.jamietomlinson.iteration2;
 
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;

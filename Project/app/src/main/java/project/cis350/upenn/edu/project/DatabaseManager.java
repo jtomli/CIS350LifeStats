@@ -1,4 +1,4 @@
-package project.cis350.upenn.edu.project;
+package com.example.jamietomlinson.iteration2;
 
 /**
  * Created by Colin on 2/23/17.

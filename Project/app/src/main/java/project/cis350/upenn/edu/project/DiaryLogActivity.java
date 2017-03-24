@@ -1,13 +1,20 @@
-package project.cis350.upenn.edu.project;
+package com.example.jamietomlinson.iteration2;
 
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+<<<<<<< HEAD
 import android.widget.*;
 import android.database.sqlite.SQLiteDatabase;
 import android.content.ContentValues;
 import java.util.Date;
+=======
+import android.widget.EditText;
+
+>>>>>>> master
 /**
  * Created by AK47 on 2/21/17.
  */

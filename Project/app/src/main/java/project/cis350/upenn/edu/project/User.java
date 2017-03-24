@@ -1,4 +1,4 @@
-package project.cis350.upenn.edu.project;
+package com.example.jamietomlinson.iteration2;
 
 import static android.R.attr.id;
 import static android.R.attr.name;

@@ -41,4 +41,30 @@
         <item>Biweekly</item>
         <item>Monthly</item>
     </string-array>
+<<<<<<< HEAD
+    <string name="server_client_id">655536071000-dccs4ddr1rlmoio83t1a1f3osakk0skb.apps.googleusercontent.com</string>
+    <string name="loading">LOADING</string>
+    <string name="signed_in_fmt">Welcome, %1$s!</string>
+=======
+    <string name="sunday">Sunday</string>
+    <string name="monday">Monday</string>
+    <string name="tuesday">Tuesday</string>
+    <string name="wednesday">Wednesday</string>
+    <string name="thursday">Thursday</string>
+    <string name="friday">Friday</string>
+    <string name="saturday">Saturday</string>
+    <string name="january">January</string>
+    <string name="february">February</string>
+    <string name="march">March</string>
+    <string name="april">April</string>
+    <string name="may">May</string>
+    <string name="june">June</string>
+    <string name="july">July</string>
+    <string name="august">August</string>
+    <string name="september">September</string>
+    <string name="october">October</string>
+    <string name="november">November</string>
+    <string name="december">December</string>
+    <string name="app_name">Calendar Widget</string>
+>>>>>>> origin/master
 </resources>

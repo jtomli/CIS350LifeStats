@@ -1,10 +1,10 @@
-package project.cis350.upenn.edu.project;
+package com.example.jamietomlinson.iteration2;
 
-import android.support.v7.app.AppCompatActivity;
+import android.content.Intent;
 import android.os.Bundle;
-import android.view.*;
-import android.content.*;
-import android.widget.*;
+import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 
 public class MainActivity extends AppCompatActivity implements OnItemSelectedListener {
@@ -47,6 +47,20 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
         intent.putExtra("username", "username");
         intent.putExtra("password", "password");
         startActivity(intent);
+    }
+
+    //when View Goals button is clicked, should launch new intent to AllGoalsActivity
+    public void viewGoalsButtonClick(View view) {
+        Intent i = new Intent(this, AllGoalsActivity.class);
+        i.putExtra("username", "username");
+        startActivity(i);
+    }
+
+    public void calendarButtonClick(View view) {
+        Intent i = new Intent(this, CalendarActivity.class);
+        i.putExtra("username", "username");
+        startActivity(i);
+
     }
 
     @Override

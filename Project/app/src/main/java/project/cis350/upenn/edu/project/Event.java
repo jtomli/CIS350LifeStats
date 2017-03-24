@@ -1,50 +1,27 @@
-package project.cis350.upenn.edu.project;
+package com.example.jamietomlinson.iteration2;
 
 import java.io.Serializable;
+import java.util.Calendar;
 
 /**
  * Created by nkeen_000 on 2/22/2017.
  */
 
 public class Event implements Serializable, Comparable<Event> {
-    private int year;
-    private int month;
-    private int day;
-    private int startHour;
-    private int startMinute;
-    private int endHour;
-    private int endMinute;
-    private boolean allDay;
+    private Calendar start;
+    private Calendar end;
     private boolean completed;
 
-    public Event(int year, int month, int day, int startHour, int startMinute, int endHour,
-                 int endMinute, boolean allDay) {
-        this.year = year;
-        this.month = month;
-        this.day = day;
-        this.startHour = startHour;
-        this.startMinute = startMinute;
-        this.endHour = endHour;
-        this.endMinute = endMinute;
-        this.allDay = allDay;
+    public Event(Calendar start, Calendar end) {
+        if (start == null || end == null) throw new IllegalArgumentException("Cal is null.");
+        this.start = start;
+        this.end = end;
         completed = false;
     }
 
-    public int getYear() { return year; }
+    public Calendar getStart() { return start; }
 
-    public int getMonth() { return month; }
-
-    public int getDay() { return day; }
-
-    public int getStartHour() { return startHour; }
-
-    public int getStartMinute() { return startMinute; }
-
-    public int getEndHour() { return endHour; }
-
-    public int getEndMinute() { return endMinute; }
-
-    public boolean isAllDay() { return allDay; }
+    public Calendar getEnd() { return end; }
 
     public boolean isCompleted() { return completed; }
 
@@ -59,127 +36,40 @@ public class Event implements Serializable, Comparable<Event> {
 
         Event event = (Event) o;
 
-        if (year != event.year) return false;
-        if (month != event.month) return false;
-        if (day != event.day) return false;
-        if (allDay && event.allDay) return true;
-        if (startHour != event.startHour) return false;
-        if (startMinute != event.startMinute) return false;
-        if (endHour != event.endHour) return false;
-        if (endMinute != event.endMinute) return false;
-        return allDay == event.allDay;
+        if (!start.equals(event.start)) return false;
+        return end.equals(event.end);
 
     }
 
     @Override
     public int hashCode() {
-        int result = year;
-        result = 31 * result + month;
-        result = 31 * result + day;
-        result = 31 * result + startHour;
-        result = 31 * result + startMinute;
-        result = 31 * result + endHour;
-        result = 31 * result + endMinute;
-        result = 31 * result + (allDay ? 1 : 0);
+        int result = start.hashCode();
+        result = 31 * result + end.hashCode();
         return result;
+    }
+
+    public int compareTo(Event other) {
+        if (start.compareTo(other.start) == 0) {
+            return end.compareTo(other.end);
+        } else {
+            return start.compareTo(other.start);
+        }
+    }
+
+    public String toStringHour() {
+        return start.get(Calendar.HOUR_OF_DAY) + ":" + start.get(Calendar.MINUTE) + " - " +
+                end.get(Calendar.HOUR_OF_DAY) + ":" + end.get(Calendar.MINUTE);
     }
 
     @Override
     public String toString() {
-        // Returns in the following format:
-        // Event on mm/dd/yyyy from hh:mm to hh:mm is (not) completed
-        // Event on mm/dd/yyyy all day is (not) completed
-
-        StringBuilder s = new StringBuilder();
-
-        if (completed) s.append("Complete goal:      ");
-        else           s.append("Incomplete goal:   ");
-
-        // pad months, days, hours, and minutes with 0's if necessary
-        if (month < 10) s.append("0" + month);
-        else            s.append(month);
-
-        s.append("/");
-
-        if (day < 10) s.append("0" + day);
-        else          s.append(day);
-
-        s.append("/");
-
-        if (year < 100) s.append("20" + year);
-        else            s.append(year);
-
-        if (allDay) s.append(" all day");
-        else {
-            s.append(" from ");
-            if (startHour < 10) s.append("0" + startHour + ":");
-            else                s.append(startHour + ":");
-
-            if (startMinute < 10) s.append("0" + startMinute);
-            else                  s.append(startMinute);
-
-            s.append(" to ");
-
-            if (endHour < 10) s.append("0" + endHour + ":");
-            else                s.append(endHour + ":");
-
-            if (endMinute < 10) s.append("0" + endMinute);
-            else                  s.append(endMinute);
-        }
-
-        return s.toString();
+        return  "Completed = " + completed + "/n" +
+                "Start: " + start.get(Calendar.HOUR_OF_DAY) + ":" + start.get(Calendar.MINUTE) + " on " +
+                start.get(Calendar.YEAR)+ start.get(Calendar.MONTH) + "/" + start.get(Calendar.DATE) + "/" +
+                start.get(Calendar.YEAR) + "/n" +
+                "End:  " + end.get(Calendar.HOUR_OF_DAY) + ":" + end.get(Calendar.MINUTE) + " on " +
+                end.get(Calendar.YEAR)+ end.get(Calendar.MONTH) + "/" + end.get(Calendar.DATE) + "/" +
+                end.get(Calendar.YEAR);
     }
 
-    @Override
-    // if this.compareTo(e) returns 1, then this is earlier
-    public int compareTo(Event e) {
-        if (year == e.year) {
-            if (month == e.month) {
-                if (day == e.day) {
-                    if (allDay && e.allDay) return 0;
-                    else if (allDay && !e.allDay) return 1;
-                    else if (!allDay && e.allDay) return -1;
-                    else {
-                        if (startHour == e.startHour) {
-                            if (startMinute == e.startMinute) {
-                                if (endHour == e.endHour) {
-                                    if (endMinute == e.endMinute) {
-                                        return 0;
-                                    } else if (endMinute < e.endMinute) {
-                                        return -1;
-                                    } else {
-                                        return 1;
-                                    }
-                                } else if (endHour < e.endHour) {
-                                    return -1;
-                                } else {
-                                    return 1;
-                                }
-                            } else if (startMinute < e.startMinute) {
-                                return -1;
-                            } else {
-                                return 1;
-                            }
-                        } else if (startHour < e.startHour) {
-                            return -1;
-                        } else {
-                            return 1;
-                        }
-                    }
-                } else if (day < e.day) {
-                    return -1;
-                } else {
-                    return 1;
-                }
-            } else if (month < e.month) {
-                return -1;
-            } else {
-                return 1;
-            }
-        } else if (year < e.year) {
-            return -1;
-        } else {
-            return 1;
-        }
-    }
 }

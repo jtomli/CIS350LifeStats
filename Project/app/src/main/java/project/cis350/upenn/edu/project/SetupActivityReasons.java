@@ -1,8 +1,8 @@
-package project.cis350.upenn.edu.project;
+package com.example.jamietomlinson.iteration2;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.Checkable;
@@ -12,6 +12,7 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+
 
 public class SetupActivityReasons extends AppCompatActivity {
 
