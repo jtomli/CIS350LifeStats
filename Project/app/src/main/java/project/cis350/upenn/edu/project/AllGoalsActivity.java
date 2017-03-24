@@ -1,7 +1,9 @@
-package project.cis350.upenn.edu.project;
+package com.example.jamietomlinson.iteration2;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -9,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -19,9 +22,12 @@ import java.util.TreeSet;
 
 public class AllGoalsActivity extends Activity  {
     Set<Goal> allGoals;
+    String userName;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Intent i = getIntent();
+        userName = i.getExtras().getString("username");
         setContentView(R.layout.all_goals_layout);
         // create a ListView to display all the user's goals into a ListView
         final ListView goals = (ListView) findViewById(R.id.all_goals);
@@ -36,6 +42,7 @@ public class AllGoalsActivity extends Activity  {
                         Intent i = new Intent(getApplicationContext(), SingleGoalActivity.class);
                         // pass the goal to GoalAtivity
                         i.putExtra("Goal", goal);
+                        i.putExtra("username", userName);
                         // start the game activity
                         startActivityForResult(i, 1);
                     }
@@ -45,47 +52,62 @@ public class AllGoalsActivity extends Activity  {
 
         allGoals = new TreeSet<>();
         // TODO: Retrieve set of Goals from database
-        Goal test1 = new Goal("Test Goal 1");
-        test1.addReason("Get a good grade on this assignment");
-        test1.addEvent(new Event(2017, 2, 24, 11, 30, 12, 30, false));
-        test1.addEvent(new Event(2017, 2, 25, 11, 30, 12, 30, false));
-        test1.addEvent(new Event(2017, 2, 26, 11, 30, 12, 30, false));
-        test1.addEvent(new Event(2017, 2, 27, 11, 30, 12, 30, false));
-        Event eCompl1 = new Event(2017, 2, 28, 11, 30, 12, 30, false);
-        eCompl1.markCompleted(true);
-        test1.addEvent(eCompl1);
-        Goal test2 = new Goal("Test Goal 2");
-        test2.addReason("Test my code");
-        test2.addEvent(new Event(2017, 2, 24, 11, 30, 12, 30, false));
-        test2.addEvent(new Event(2017, 2, 25, 11, 30, 12, 30, false));
-        test2.addEvent(new Event(2017, 2, 26, 11, 30, 12, 30, false));
-        test2.addEvent(eCompl1);
-        Event eCompl2 = new Event(2017, 2, 29, 11, 30, 12, 30, false);
-        eCompl2.markCompleted(true);
-        test2.addEvent(eCompl1);
-        Goal test3 = new Goal("Test Goal 3");
-        test3.addReason("Is there a reason for anything? Does life have any meaning? Why are we here?");
-        test3.addEvent(new Event(2017, 2, 24, 11, 30, 12, 30, false));
-        test3.addEvent(new Event(2017, 2, 25, 11, 30, 12, 30, false));
-        test3.addEvent(eCompl1);
-        test3.addEvent(eCompl2);
-        Event eCompl3 = new Event(2017, 2, 30, 11, 30, 12, 30, false);
-        eCompl3.markCompleted(true);
-        test3.addEvent(eCompl1);
-        Goal test4 = new Goal("Test Goal 4");
-        test4.addReason("42");
-        test4.addEvent(new Event(2017, 2, 24, 11, 30, 12, 30, false));
-        test4.addEvent(new Event(2017, 2, 25, 11, 30, 12, 30, false));
-        test4.addEvent(eCompl1);
-        test4.addEvent(eCompl2);
-        Event eCompl4 = new Event(2017, 2, 31, 11, 30, 12, 30, false);
-        eCompl3.markCompleted(true);
-        test4.addEvent(eCompl1);
+        GoalsDatabaseOpenHelper dbGoalsHelper = new GoalsDatabaseOpenHelper(this);
+        SQLiteDatabase dbGoals = dbGoalsHelper.getWritableDatabase();
 
-        allGoals.add(test1);
-        allGoals.add(test2);
-        allGoals.add(test3);
-        allGoals.add(test4);
+        String[] projectionGoals = {
+                GoalsDatabaseContract.GoalsDB.COL_USERNAME,
+                GoalsDatabaseContract.GoalsDB.COL_GOALNAME,
+                GoalsDatabaseContract.GoalsDB.COL_REASON,
+                GoalsDatabaseContract.GoalsDB.COL_ALLDAY,
+                GoalsDatabaseContract.GoalsDB.COL_STARTYEAR,
+                GoalsDatabaseContract.GoalsDB.COL_STARTMONTH,
+                GoalsDatabaseContract.GoalsDB.COL_STARTDAY,
+                GoalsDatabaseContract.GoalsDB.COL_STARTHOUR,
+                GoalsDatabaseContract.GoalsDB.COL_STARTMIN,
+                GoalsDatabaseContract.GoalsDB.COL_STARTAMPM,
+                GoalsDatabaseContract.GoalsDB.COL_ENDYEAR,
+                GoalsDatabaseContract.GoalsDB.COL_ENDMONTH,
+                GoalsDatabaseContract.GoalsDB.COL_ENDDAY,
+                GoalsDatabaseContract.GoalsDB.COL_ENDHOUR,
+                GoalsDatabaseContract.GoalsDB.COL_ENDMIN,
+                GoalsDatabaseContract.GoalsDB.COL_ENDAMPM,
+                GoalsDatabaseContract.GoalsDB.COL_REPEAT,
+                GoalsDatabaseContract.GoalsDB.COL_FREQUENCY,
+                GoalsDatabaseContract.GoalsDB.COL_REMINDME
+        };
+
+        String selectionGoals = GoalsDatabaseContract.GoalsDB.COL_GOALNAME + " = ?";
+        String[] selectionArgsGoals = {userName};
+
+        Cursor cursorGoals = dbGoals.query(
+                GoalsDatabaseContract.GoalsDB.TABLE_NAME,         // The table to query
+                projectionGoals,                                     // The columns to return
+                selectionGoals,                                      // The columns for the WHERE clause
+                selectionArgsGoals,                                  // The values for the WHERE clause
+                null,                                           // don't group the rows
+                null,                                           // don't filter by row groups
+                null                                            // The sort order
+        );
+
+        while (cursorGoals.moveToNext()) {
+            //create an event using Calendar objects
+            Calendar startCal = Calendar.getInstance();
+            Calendar endCal = Calendar.getInstance();
+            startCal.set(Integer.parseInt(cursorGoals.getString(cursorGoals.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_STARTYEAR))),
+                    Integer.parseInt(cursorGoals.getString(cursorGoals.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_STARTMONTH))),
+                    Integer.parseInt(cursorGoals.getString(cursorGoals.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_STARTDAY))),
+                    Integer.parseInt(cursorGoals.getString(cursorGoals.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_STARTHOUR))),
+                    Integer.parseInt(cursorGoals.getString(cursorGoals.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_STARTMIN))));
+            endCal.set(Integer.parseInt(cursorGoals.getString(cursorGoals.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_ENDYEAR))),
+                    Integer.parseInt(cursorGoals.getString(cursorGoals.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_ENDMONTH))),
+                    Integer.parseInt(cursorGoals.getString(cursorGoals.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_ENDDAY))),
+                    Integer.parseInt(cursorGoals.getString(cursorGoals.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_ENDHOUR))),
+                    Integer.parseInt(cursorGoals.getString(cursorGoals.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_ENDMIN))));
+            Goal g = new Goal(cursorGoals.getString(cursorGoals.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_GOALNAME)));
+            allGoals.add(g);
+        }
+
 
         // populate the ListView with all of the user's goals
         List<String> list = new ArrayList<>();

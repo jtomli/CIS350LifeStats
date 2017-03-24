@@ -1,10 +1,4 @@
-package project.cis350.upenn.edu.project;
-
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+package com.example.jamietomlinson.iteration2;
 
 import android.app.Activity;
 import android.os.Bundle;

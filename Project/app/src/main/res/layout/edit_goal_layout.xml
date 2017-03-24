@@ -251,14 +251,14 @@
         android:layout_marginTop="20dp" />
 
     <Button
-        android:text="Add Goal"
+        android:text="Update Goal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignLeft="@+id/endTimeLabel"
         android:layout_alignStart="@+id/endTimeLabel"
         android:layout_marginBottom="13dp"
-        android:id="@+id/addGoalButton" />
+        android:id="@+id/updateGoalButton" />
 
     <TextView
         android:id="@+id/setReasonsLabel"
@@ -279,6 +279,7 @@
         android:layout_alignStart="@+id/setReasonsLabel"
         android:layout_marginTop="30dp"
         android:id="@+id/reasonspinner"
-        android:layout_alignLeft="@+id/setReasonsLabel"></Spinner>
+        android:layout_alignLeft="@+id/setReasonsLabel">
+    </Spinner>
 
 </RelativeLayout>

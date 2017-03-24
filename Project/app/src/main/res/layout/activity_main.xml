@@ -4,13 +4,27 @@
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="16dp"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingTop="16dp"
     android:orientation="vertical"
     android:gravity="center">>
     tools:context="project.cis350.upenn.edu.project.MainActivity">
+
+    <Button
+        android:text="Calendar"
+        android:onClick="calendarButtonClick"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/calendar_button" />
+
+    <Button
+        android:text="View Goals"
+        android:onClick="viewGoalsButtonClick"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/view_goals_button" />
 
     <Button
         android:layout_width="wrap_content"
@@ -37,11 +51,4 @@
         android:onClick="setup"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true" />
-
-    <Button
-        android:text="Sign Out"
-        android:layout_height="wrap_content"
-        android:id="@+id/sign_out_button"
-        android:layout_width="wrap_content"
-        android:onClick="signOut" />
-</LinearLayout>
+    </LinearLayout>

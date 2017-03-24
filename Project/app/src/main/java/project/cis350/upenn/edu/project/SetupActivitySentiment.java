@@ -1,23 +1,19 @@
-package project.cis350.upenn.edu.project;
+package com.example.jamietomlinson.iteration2;
 
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.RadioButton;
-import android.widget.Toast;
-
-import com.google.gson.Gson;
 
 import java.util.ArrayList;
 
 public class SetupActivitySentiment extends AppCompatActivity {
 
-    User user;
-    String userID;
+    String username;
     ArrayList<String> reasons;
     String sentiment = "yes";
     int maxReasons = 11;
@@ -29,14 +25,8 @@ public class SetupActivitySentiment extends AppCompatActivity {
         Intent intent = getIntent();
 
         // get username, password, and reasons to add to database
-        Gson gson = new Gson();
-        String serializedUser = getIntent().getStringExtra("user");
-        user = gson.fromJson(serializedUser, User.class);
-        userID = user.getID();
-        reasons = user.getReasons();
-        //reasons = intent.getStringArrayListExtra("reasons");
-        Toast.makeText(this, user.getName(), Toast.LENGTH_LONG).show();
-
+        username = intent.getExtras().getString("username");
+        reasons = intent.getStringArrayListExtra("reasons");
 
         for (int i = 0; i < reasons.size(); i++) {
             System.out.println(reasons.get(i));
@@ -84,7 +74,7 @@ public class SetupActivitySentiment extends AppCompatActivity {
         };
 
         String selection = UserDatabaseContract.UserDB.COL_USERNAME + " = ?";
-        String[] selectionArgs = { userID };
+        String[] selectionArgs = { username };
 
         Cursor cursor = db.query(
                 UserDatabaseContract.UserDB.TABLE_NAME,         // The table to query
@@ -97,7 +87,7 @@ public class SetupActivitySentiment extends AppCompatActivity {
         );
 
         ContentValues values = new ContentValues();
-        values.put(UserDatabaseContract.UserDB.COL_USERNAME, userID);
+        values.put(UserDatabaseContract.UserDB.COL_USERNAME, username);
         for (int i = 0; i < reasons.size(); i++) {
             values.put(("reasons" + i), reasons.get(i));
         }
@@ -114,7 +104,7 @@ public class SetupActivitySentiment extends AppCompatActivity {
         // if username does have saved reasons, update the existing row
         else {
             String selectionTwo = UserDatabaseContract.UserDB.COL_USERNAME + " LIKE ?";
-            String[] selectionArgsTwo = { userID };
+            String[] selectionArgsTwo = { username };
 
             int count = db.update(
                     UserDatabaseContract.UserDB.TABLE_NAME,
@@ -124,8 +114,7 @@ public class SetupActivitySentiment extends AppCompatActivity {
         }
 
         Intent intent = new Intent(this, CreateGoalActivity.class);
-        Gson gson = new Gson();
-        intent.putExtra("user", gson.toJson(user));
+        intent.putExtra("username", username);
         startActivity(intent);
     }
 }

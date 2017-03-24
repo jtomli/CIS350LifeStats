@@ -1,4 +1,4 @@
-package project.cis350.upenn.edu.project;
+package com.example.jamietomlinson.iteration2;
 
 import android.provider.BaseColumns;
 
@@ -22,11 +22,13 @@ public class GoalsDatabaseContract {
         public static final String COL_STARTDAY = "startday";
         public static final String COL_STARTHOUR = "starthour";
         public static final String COL_STARTMIN = "startmin";
+        public static final String COL_STARTAMPM = "startampm";
         public static final String COL_ENDYEAR = "endyear";
         public static final String COL_ENDMONTH = "endmonth";
         public static final String COL_ENDDAY = "endday";
         public static final String COL_ENDHOUR = "endhour";
         public static final String COL_ENDMIN = "endmin";
+        public static final String COL_ENDAMPM = "endampm";
         public static final String COL_REPEAT = "repeat";
         public static final String COL_FREQUENCY = "frequency";
         public static final String COL_REMINDME = "remindme";
