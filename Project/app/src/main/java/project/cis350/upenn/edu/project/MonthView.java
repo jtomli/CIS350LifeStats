@@ -1,10 +1,5 @@
-package project.cis350.upenn.edu.project;
+package com.example.jamietomlinson.iteration2;
 
-
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Map;
-import java.util.TreeMap;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -21,6 +16,11 @@ import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class MonthView extends TableLayout{
 
@@ -155,7 +155,7 @@ public class MonthView extends TableLayout{
 		//get the number of days in the previous month to display last few days of previous month
 		prevMonthDay = prevCal.getActualMaximum(Calendar.DAY_OF_MONTH)-firstDayOfWeek+1;
 		nextMonthDay = 1;	//set the next month counter to date 1
-		android.widget.TableRow.LayoutParams lp;
+		TableRow.LayoutParams lp;
 		
 		RelativeLayout rl = (RelativeLayout) LayoutInflater.from(context).inflate(R.layout.monthtop, null);
 		
@@ -333,36 +333,33 @@ public class MonthView extends TableLayout{
 	private OnClickListener dayClickedListener = new OnClickListener(){
 		@Override
 		public void onClick(View v) {
-			if(tv!=null)
-			{
-				try{
-					if(hasEvents[day])
-					{
+			if (tv != null) {
+				try {
+					if (hasEvents[day]) {
 						tv.setBackgroundResource(R.drawable.dayinmonth);
-					}
-					else
+					} else
 						tv.setBackgroundResource(R.drawable.rectgrad);
-					
-				}catch(Exception ex)
-				{
+
+				} catch (Exception ex) {
 					tv.setBackgroundResource(R.drawable.rectgrad);
 				}
-				tv.setPadding(8,8,8,8);
-			}
-			if(tv.getText().toString().trim().equals(String.valueOf(today.get(Calendar.DATE))))
-			{
+				tv.setPadding(8, 8, 8, 8);
+				//}
+				if (tv.getText().toString().trim().equals(String.valueOf(today.get(Calendar.DATE)))) {
+					tv.setBackgroundResource(R.drawable.selectedgrad);
+				}
+				day = Integer.parseInt(v.getTag().toString());
+				selected_day = day;
+				tv = (TextView) v;
 				tv.setBackgroundResource(R.drawable.selectedgrad);
-			}
-			day = Integer.parseInt(v.getTag().toString());
-			selected_day = day;
-			tv = (TextView)v;
-			tv.setBackgroundResource(R.drawable.selectedgrad);
-			DisplayMonth(false);
+				DisplayMonth(false);
 			/*save the day,month and year in the public int variables day,month and year
 			 so that they can be used when the calendar is closed */
-			
-			cal.set(Calendar.DAY_OF_MONTH, day);			
+
+				cal.set(Calendar.DAY_OF_MONTH, day);
+			}
 		}
 	};
+
 
 }

@@ -1,30 +1,19 @@
-package project.cis350.upenn.edu.project;
+package com.example.jamietomlinson.iteration2;
 
-import android.support.v7.app.AppCompatActivity;
+import android.content.Intent;
 import android.os.Bundle;
-import android.view.*;
-import android.content.*;
-import android.widget.*;
+import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
-
-import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
 
 public class MainActivity extends AppCompatActivity implements OnItemSelectedListener {
     public static final int GameActivity_ID = 1;
-    private GoogleApiClient mGoogleApiClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        MainApplication.getGoogleApiHelper().connect();
-        if (MainApplication.getGoogleApiHelper().isConnected()) {
-            mGoogleApiClient = MainApplication.getGoogleApiHelper().getGoogleApiClient();
-        }
     }
 
     //go to Diary Log
@@ -47,17 +36,17 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
         startActivity(intent);
     }
 
-    //sign out
-    public void signOut(View v) {
-        Toast.makeText(this, "You are now signed out.", Toast.LENGTH_LONG).show();
-        Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
-                new ResultCallback<Status>() {
-                    @Override
-                    public void onResult(Status status) {
-                        Intent i = new Intent(MainActivity.this, LoginActivity.class);
-                        startActivity(i);
-                    }
-                });
+    //when View Goals button is clicked, should launch new intent to AllGoalsActivity
+    public void viewGoalsButtonClick(View view) {
+        Intent i = new Intent(this, AllGoalsActivity.class);
+        i.putExtra("username", "username");
+        startActivity(i);
+    }
+
+    public void calendarButtonClick(View view) {
+        Intent i = new Intent(this, CalendarActivity.class);
+        i.putExtra("username", "username");
+        startActivity(i);
 
     }
 

@@ -1,28 +1,7 @@
-package project.cis350.upenn.edu.project;
+package com.example.jamietomlinson.iteration2;
 
 /**
  * Created by Colin on 2/23/17.
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *   THIS WHOLE THING ISN'T NEEDED ANYMORE I THINK
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
  */
 
 import java.util.ArrayList;
@@ -82,7 +61,6 @@ public class DatabaseManager extends SQLiteOpenHelper {
      * All CRUD(Create, Read, Update, Delete) Operations
      */
 
-    /*
     void addUser(User user) {
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -157,5 +135,5 @@ public class DatabaseManager extends SQLiteOpenHelper {
         // return count
         return cursor.getCount();
     }
-    */
+
 }

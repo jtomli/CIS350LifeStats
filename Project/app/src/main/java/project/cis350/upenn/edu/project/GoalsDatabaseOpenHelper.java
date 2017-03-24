@@ -1,4 +1,4 @@
-package project.cis350.upenn.edu.project;
+package com.example.jamietomlinson.iteration2;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -10,7 +10,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class GoalsDatabaseOpenHelper extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 3;
 
     private static final String GOALS_TABLE_CREATE =
             "CREATE TABLE " + GoalsDatabaseContract.GoalsDB.TABLE_NAME + "(" +
@@ -23,11 +23,13 @@ public class GoalsDatabaseOpenHelper extends SQLiteOpenHelper {
                     GoalsDatabaseContract.GoalsDB.COL_STARTDAY + " INT," +
                     GoalsDatabaseContract.GoalsDB.COL_STARTHOUR + " INT," +
                     GoalsDatabaseContract.GoalsDB.COL_STARTMIN + " INT," +
+                    GoalsDatabaseContract.GoalsDB.COL_STARTAMPM + " INT," +
                     GoalsDatabaseContract.GoalsDB.COL_ENDYEAR + " INT," +
                     GoalsDatabaseContract.GoalsDB.COL_ENDMONTH + " INT," +
                     GoalsDatabaseContract.GoalsDB.COL_ENDDAY + " INT," +
                     GoalsDatabaseContract.GoalsDB.COL_ENDHOUR + " INT," +
                     GoalsDatabaseContract.GoalsDB.COL_ENDMIN + " INT," +
+                    GoalsDatabaseContract.GoalsDB.COL_ENDAMPM + " INT," +
                     GoalsDatabaseContract.GoalsDB.COL_REPEAT + " TEXT," +
                     GoalsDatabaseContract.GoalsDB.COL_FREQUENCY + " TEXT," +
                     GoalsDatabaseContract.GoalsDB.COL_REMINDME + " TEXT);";
