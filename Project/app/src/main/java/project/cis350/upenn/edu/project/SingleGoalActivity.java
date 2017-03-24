@@ -1,10 +1,12 @@
-package com.example.jamietomlinson.iteration2;
+package project.cis350.upenn.edu.project;
 
-import android.content.Intent;
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -18,12 +20,9 @@ import java.util.List;
 
 public class SingleGoalActivity extends AppCompatActivity {
     Goal goal;
-    String userName;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Intent i = getIntent();
-        userName = i.getExtras().getString("username");
         this.goal = (Goal) getIntent().getSerializableExtra("Goal");
         setContentView(R.layout.goal_view);
 
@@ -61,16 +60,16 @@ public class SingleGoalActivity extends AppCompatActivity {
         return true;
     }
 
-    public boolean onOptionsItemSelected(MenuItem item) {
-            int itemId = item.getItemId();
-            if (itemId == R.id.edit_goal_button) {
-                Intent i = new Intent(this, EditGoalActivity.class);
-                i.putExtra("username", userName);
-                startActivity(i);
-            } else if (itemId == R.id.delete_goal_button) {
-                //TODO: add delete button?
-            }
-
+    public boolean onOptionsItemSelected(MenuItem i) {
+        int id = i.getItemId();
+        switch (id) {
+            case R.id.edit_goal_button:
+                // TODO: Take to menu to edit the current goal
+                return true;
+            case R.id.delete_goal_button:
+                // TODO: Show confirmation prompt
+                return true;
+        }
         return false;
     }
 }
