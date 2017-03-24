@@ -11,7 +11,11 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
 import java.util.ArrayList;
+
+import static android.R.attr.data;
 
 public class SetupActivityReasons extends AppCompatActivity {
 
@@ -23,8 +27,10 @@ public class SetupActivityReasons extends AppCompatActivity {
 
     final int idForAdditionalCheckboxLayout = 1;
 
+    User user;
+
     // database elements
-    String username;
+    String userID;
     ArrayList<String> reasons;
     int maxReasons = 11; // the maximum number of reasons that can be selected
     int maxOther = 8; // the maximum number of user-generated reasons that can be added
@@ -38,8 +44,10 @@ public class SetupActivityReasons extends AppCompatActivity {
         setContentView(R.layout.activity_setup_reasons);
 
         // get username and password
-        Intent intent = getIntent();
-        username = intent.getExtras().getString("username");
+        Gson gson = new Gson();
+        String serializedUser = getIntent().getStringExtra("user");
+        user = gson.fromJson(serializedUser, User.class);
+        userID = user.getID();
 
         layoutCheckBox = (LinearLayout) findViewById(R.id.otherCheckBoxLayout);
         ugrCheckbox = new ArrayList<CheckBox>(maxOther);
@@ -70,8 +78,11 @@ public class SetupActivityReasons extends AppCompatActivity {
 
         if (!reasons.isEmpty()) {
             Intent intent = new Intent(this, SetupActivitySentiment.class);
-            intent.putExtra("username", username);
-            intent.putExtra("reasons", reasons);
+            // Add reasons to the user object and pass the user object to the next activity
+
+            user.setReasons(reasons);
+            Gson gson = new Gson();
+            intent.putExtra("user", gson.toJson(user));
             startActivity(intent);
         } else {
             Toast.makeText(this, "Select at least one reason.", Toast.LENGTH_LONG).show();

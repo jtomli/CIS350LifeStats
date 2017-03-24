@@ -41,4 +41,7 @@
         <item>Biweekly</item>
         <item>Monthly</item>
     </string-array>
+    <string name="server_client_id">655536071000-dccs4ddr1rlmoio83t1a1f3osakk0skb.apps.googleusercontent.com</string>
+    <string name="loading">LOADING</string>
+    <string name="signed_in_fmt">Welcome, %1$s!</string>
 </resources>

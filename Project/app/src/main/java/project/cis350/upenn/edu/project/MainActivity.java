@@ -7,13 +7,24 @@ import android.content.*;
 import android.widget.*;
 import android.widget.AdapterView.OnItemSelectedListener;
 
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
+
 public class MainActivity extends AppCompatActivity implements OnItemSelectedListener {
     public static final int GameActivity_ID = 1;
+    private GoogleApiClient mGoogleApiClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        MainApplication.getGoogleApiHelper().connect();
+        if (MainApplication.getGoogleApiHelper().isConnected()) {
+            mGoogleApiClient = MainApplication.getGoogleApiHelper().getGoogleApiClient();
+        }
     }
 
     //go to Diary Log
@@ -34,6 +45,20 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
         intent.putExtra("username", "username");
         intent.putExtra("password", "password");
         startActivity(intent);
+    }
+
+    //sign out
+    public void signOut(View v) {
+        Toast.makeText(this, "You are now signed out.", Toast.LENGTH_LONG).show();
+        Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
+                new ResultCallback<Status>() {
+                    @Override
+                    public void onResult(Status status) {
+                        Intent i = new Intent(MainActivity.this, LoginActivity.class);
+                        startActivity(i);
+                    }
+                });
+
     }
 
     @Override

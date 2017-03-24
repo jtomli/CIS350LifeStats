@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "655536071000",
+    "project_id": "firebase-lifestats"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:655536071000:android:e2fa19b4d458b070",
+        "android_client_info": {
+          "package_name": "project.cis350.upenn.edu.project"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "655536071000-aaova5irqtmm4o909brqrfc0dcndg11q.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "655536071000-dccs4ddr1rlmoio83t1a1f3osakk0skb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "project.cis350.upenn.edu.project",
+            "certificate_hash": "52d093d92808a55f2042018ea73e631bcaa5bcf0"
+          }
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCaFowOFaO4fjI6c7-rtESSkJWd3mS0kFc"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

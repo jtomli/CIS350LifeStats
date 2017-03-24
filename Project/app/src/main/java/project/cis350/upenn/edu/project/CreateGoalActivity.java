@@ -22,6 +22,9 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
+
+import com.google.gson.Gson;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -43,7 +46,8 @@ public class CreateGoalActivity extends AppCompatActivity implements AdapterView
     private String frequencySelection;
     private String reminderSelection;
 
-    String username;
+    User user;
+    String userID;
     ArrayList<String> reasons;
 
     @Override
@@ -53,8 +57,12 @@ public class CreateGoalActivity extends AppCompatActivity implements AdapterView
 
         Calendar c = Calendar.getInstance();
 
-        Intent intent = getIntent();
-        username = intent.getExtras().getString("username");
+        Gson gson = new Gson();
+        String serializedUser = getIntent().getStringExtra("user");
+        user = gson.fromJson(serializedUser, User.class);
+        userID = user.getID();
+        reasons = user.getReasons();
+        Toast.makeText(this, user.getName(), Toast.LENGTH_LONG).show();
 
         UserDatabaseOpenHelper dbHelper = new UserDatabaseOpenHelper(this);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
@@ -78,7 +86,7 @@ public class CreateGoalActivity extends AppCompatActivity implements AdapterView
 
         // Filter results WHERE COL_USERNAME = username
         String selection = UserDatabaseContract.UserDB.COL_USERNAME + " = ?";
-        String[] selectionArgs = { username };
+        String[] selectionArgs = { userID };
 
         Cursor cursor = db.query(
                 UserDatabaseContract.UserDB.TABLE_NAME,         // The table to query
@@ -164,11 +172,13 @@ public class CreateGoalActivity extends AppCompatActivity implements AdapterView
                         int itemId = item.getItemId();
                         if (itemId == R.id.addAnother) {
                             Intent i = new Intent(view.getContext(), GoalActivity.class);
-                            i.putExtra("username", username);
+                            Gson gson = new Gson();
+                            i.putExtra("user", gson.toJson(user));
                             startActivity(i);
                         } else if (itemId == R.id.mainMenu) {
                             Intent i = new Intent(view.getContext(), MainActivity.class);
-                            i.putExtra("username", username);
+                            Gson gson = new Gson();
+                            i.putExtra("user", gson.toJson(user));
                             startActivity(i);
                         }
                         return true;
