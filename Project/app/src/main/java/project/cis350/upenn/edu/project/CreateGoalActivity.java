@@ -409,21 +409,33 @@ public class CreateGoalActivity extends AppCompatActivity implements AdapterView
 
     public static void setText(String selection) {
         if (startTimePressed) {
-//            Pattern p = Pattern.compile("\\d{2}\\W\\d{2}\\w{2}");
-//            Matcher m = p.matcher(selection);
-//            String[] hourMinuteAmPm = p.split(selection);
-//            startHour = hourMinuteAmPm[0];
-//            startMin = hourMinuteAmPm[1];
-//            startAmPm = hourMinuteAmPm[2];
-            //TODO test
+            int index = 0;
+            if (selection.contains("A")) {
+                index = selection.indexOf("A");
+                startAmPm = "AM";
+            } else if (selection.contains("P")) {
+                index = selection.indexOf("P");
+                startAmPm = "PM";
+            }
+            String sub = selection.substring(0, index);
+            String[] hourMin = sub.split(":");
+            startHour = hourMin[0] ;
+            startMin = hourMin[1];
             startTimeText.setText(selection);
             startTimePressed = false;
         } else if (endTimePressed) {
-//            Pattern p = Pattern.compile("\\d{2}\\W\\d{2}\\w{2}");
-//            String[] hourMinuteAmPm = p.split(selection);
-//            endHour = hourMinuteAmPm[0];
-//            endMin = hourMinuteAmPm[1];
-//            endAmPm = hourMinuteAmPm[2];
+            int index = 0;
+            if (selection.contains("A")) {
+                index = selection.indexOf("A");
+                endAmPm = "AM";
+            } else if (selection.contains("P")) {
+                index = selection.indexOf("P");
+                endAmPm = "PM";
+            }
+            String sub = selection.substring(0, index);
+            String[] hourMin = sub.split(":");
+            endHour = hourMin[0] ;
+            endMin = hourMin[1];
             endTimeText.setText(selection);
             endTimePressed = false;
         } else if (startDatePressed) {
