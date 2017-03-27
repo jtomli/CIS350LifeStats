@@ -48,6 +48,7 @@
         <activity android:name=".CreateGoalActivity" />
         <activity android:name=".SingleGoalActivity" />
         <activity android:name=".CalendarActivity" />
+        <activity android:name=".AllGoalsActivity"/>
         <activity android:name=".EditGoalActivity"></activity>
     </application>
 

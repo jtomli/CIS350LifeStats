@@ -202,19 +202,6 @@ public class CreateGoalActivity extends AppCompatActivity implements AdapterView
 
     //TODO 3/24 add to database
     public void addGoal(View v) {
-//        System.out.println(username);
-//        System.out.println(goalName);
-//        System.out.println(reasonSelection);
-//        System.out.println(allDay);
-//        System.out.println(startMonth);
-//        System.out.println(startDay);
-//        System.out.println(startYear);
-//        System.out.println(startHour);
-//        System.out.println(startMin);
-//        System.out.println(startAmPm);
-//        System.out.println(frequencySelection);
-//        System.out.println(reminderSelection);
-
 
         GoalsDatabaseOpenHelper dbHelper = new GoalsDatabaseOpenHelper(v.getContext());
         SQLiteDatabase db = dbHelper.getWritableDatabase();

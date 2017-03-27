@@ -175,7 +175,7 @@ public class EditGoalActivity extends AppCompatActivity implements AdapterView.O
         String selectionGoals = GoalsDatabaseContract.GoalsDB.COL_GOALNAME + " = ?";
         String[] selectionArgsGoals = {goalName};
 
-        Cursor cursor = db.query(
+        Cursor cursor = db.query( //TODO getting error here "GOALS_TABLE does not exist"
                 GoalsDatabaseContract.GoalsDB.TABLE_NAME,         // The table to query
                 projectionGoals,                                     // The columns to return
                 selectionGoals,                                      // The columns for the WHERE clause
@@ -185,7 +185,7 @@ public class EditGoalActivity extends AppCompatActivity implements AdapterView.O
                 null                                            // The sort order
         );
 
-        //setting labels at start up for TIME
+        //setting all info on EditGoal screen to match the previous goals info
         while (cursor.moveToNext()) {
             startTimeText = (TextView) findViewById(R.id.setStartTime);
             startTimeText.setText(timePrinter(cursor.getString(cursor.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_STARTHOUR)),
@@ -252,20 +252,6 @@ public class EditGoalActivity extends AppCompatActivity implements AdapterView.O
 
     //TODO 3/24 add to database
     public void updateGoal(View v) {
-//        System.out.println(username);
-//        System.out.println(goalName);
-//        System.out.println(reasonSelection);
-//        System.out.println(allDay);
-//        System.out.println(startMonth);
-//        System.out.println(startDay);
-//        System.out.println(startYear);
-//        System.out.println(startHour);
-//        System.out.println(startMin);
-//        System.out.println(startAmPm);
-//        System.out.println(frequencySelection);
-//        System.out.println(reminderSelection);
-
-
         GoalsDatabaseOpenHelper dbHelper = new GoalsDatabaseOpenHelper(v.getContext());
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
