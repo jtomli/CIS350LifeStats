@@ -24,23 +24,20 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
         GoogleApiClient.OnConnectionFailedListener {
 
     public static final int GameActivity_ID = 1;
-<<<<<<< HEAD
-    private String username;
-=======
+
     private GoogleApiClient mGoogleApiClient;
     User user;
     String username;
     ArrayList<String> reasons;
     String sentiment;
 
->>>>>>> master
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-<<<<<<< HEAD
+
         Intent intent = getIntent();
         username = intent.getExtras().getString("username");
     }
@@ -50,7 +47,7 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
         Intent i = new Intent(this, EmotionActivity.class);
         i.putExtra("username", username);
         startActivity(i);
-=======
+
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .enableAutoManage(this, this)
@@ -88,35 +85,25 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
         Gson gson = new Gson();
         intent.putExtra("user", gson.toJson(user));
         startActivity(intent);
->>>>>>> master
     }
 
     //go to Diary Log
     public void onDiaryLogButtonClick(View v) {
-<<<<<<< HEAD
-        Intent i = new Intent(this, DiaryLogActivity.class);
-        i.putExtra("username", username);
-        startActivity(i);
-=======
         Intent intent = new Intent(this, DiaryLogActivity.class);
         Gson gson = new Gson();
         intent.putExtra("user", gson.toJson(user));
         startActivity(intent);
->>>>>>> master
+
     }
 
     //go to Diary Log
     public void onDiaryButtonClick(View v) {
-<<<<<<< HEAD
-        Intent i = new Intent(this, DiaryActivity.class);
-        i.putExtra("username", username);
-        startActivity(i);
-=======
+
         Intent intent = new Intent(this, DiaryActivity.class);
         Gson gson = new Gson();
         intent.putExtra("user", gson.toJson(user));
         startActivity(intent);
->>>>>>> master
+
     }
 
     //go to setup
