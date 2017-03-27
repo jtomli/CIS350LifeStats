@@ -10,6 +10,8 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.google.gson.Gson;
 import com.jjoe64.graphview.*;
 import com.jjoe64.graphview.series.*;
 import android.graphics.*;
@@ -19,13 +21,16 @@ import android.graphics.*;
 
 public class EmotionActivity extends AppCompatActivity{
     String username;
+    User user;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.emotions);
 
-        Intent intent = getIntent();
-        username = intent.getExtras().getString("username");
+        Gson gson = new Gson();
+        String serializedUser = getIntent().getStringExtra("user");
+        user = gson.fromJson(serializedUser, User.class);
+        username = user.getID();
 
         List<String[]> contactList = new ArrayList<String[]>();
 
@@ -111,8 +116,9 @@ public class EmotionActivity extends AppCompatActivity{
         graph.getLegendRenderer().setVisible(true);
     }
     public void onMenuButton(View v) {
-        Intent i = new Intent(this, MainActivity.class);
-        i.putExtra("username", username);
-        startActivity(i);
+        Intent intent = new Intent(this, MainActivity.class);
+        Gson gson = new Gson();
+        intent.putExtra("user", gson.toJson(user));
+        startActivity(intent);
     }
 }

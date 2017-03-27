@@ -45,8 +45,6 @@ public class DiaryLogActivity extends AppCompatActivity{
     }
     public void onSubmitButton(View v) {
 
-        Intent intent = getIntent();
-        username = intent.getExtras().getString("username");
         Date date = new Date();
 
         Intent i = new Intent(this, DiaryActivity.class);
