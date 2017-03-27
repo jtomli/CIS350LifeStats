@@ -1,13 +1,12 @@
-package com.example.jamietomlinson.iteration2;
+package project.cis350.upenn.edu.project;
 
-import android.content.ContentValues;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.EditText;
-
+import android.widget.*;
+import android.database.sqlite.SQLiteDatabase;
+import android.content.ContentValues;
 /**
  * Created by AK47 on 2/21/17.
  */

@@ -2,4 +2,5 @@
 <resources>
     <item name="mainMenu" type="id" />
     <item name="addAnother" type ="id"/>
+    <item name="allGoalsView" type ="id"/>
 </resources>
