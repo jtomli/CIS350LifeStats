@@ -1,6 +1,4 @@
 package project.cis350.upenn.edu.project;
-
-
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
@@ -70,6 +68,7 @@ public class EditGoalActivity extends AppCompatActivity implements AdapterView.O
 
         Intent intent = getIntent();
         username = intent.getExtras().getString("username");
+        goalName = intent.getExtras().getString("goalName");
 
         UserDatabaseOpenHelper dbHelper = new UserDatabaseOpenHelper(this);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
@@ -177,7 +176,7 @@ public class EditGoalActivity extends AppCompatActivity implements AdapterView.O
         String selectionGoals = GoalsDatabaseContract.GoalsDB.COL_GOALNAME + " = ?";
         String[] selectionArgsGoals = {goalName};
 
-        Cursor cursor = db.query( //TODO getting error here "GOALS_TABLE does not exist"
+        Cursor cursor = dbGoals.query( //TODO getting error here "GOALS_TABLE does not exist"
                 GoalsDatabaseContract.GoalsDB.TABLE_NAME,         // The table to query
                 projectionGoals,                                     // The columns to return
                 selectionGoals,                                      // The columns for the WHERE clause
@@ -214,12 +213,28 @@ public class EditGoalActivity extends AppCompatActivity implements AdapterView.O
             goalInput.setText(cursor.getString(cursor.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_GOALNAME)));
 
             checkDayBoxes(cursor.getString(cursor.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_REPEAT)));
+
+            startYear = cursor.getString(cursor.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_STARTYEAR));
+            startMonth = cursor.getString(cursor.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_STARTMONTH));
+            startDay = cursor.getString(cursor.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_STARTDAY));
+            startHour = cursor.getString(cursor.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_STARTHOUR));
+            startMin = cursor.getString(cursor.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_STARTMIN));
+            startAmPm = cursor.getString(cursor.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_STARTAMPM));
+            endYear = cursor.getString(cursor.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_ENDYEAR));
+            endMonth = cursor.getString(cursor.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_ENDMONTH));
+            endDay = cursor.getString(cursor.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_ENDDAY));
+            endHour = cursor.getString(cursor.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_ENDHOUR));
+            endMin = cursor.getString(cursor.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_ENDMIN));
+            endAmPm = cursor.getString(cursor.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_ENDAMPM));
+            reasonSelection = cursor.getString(cursor.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_REASON));
+            frequencySelection = cursor.getString(cursor.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_FREQUENCY));
+            reminderSelection = cursor.getString(cursor.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_REMINDME));
         }
 
 
 
         //should also switch intent here
-        final Button updateGoal = (Button) findViewById(R.id.updateGoalButton);
+        final Button updateGoal = (Button) findViewById(R.id.addGoalButton);
         updateGoal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {

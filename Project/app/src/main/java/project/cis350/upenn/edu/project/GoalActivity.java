@@ -8,8 +8,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,23 +17,9 @@ import java.util.List;
 
 public class GoalActivity extends AppCompatActivity {
     Goal goal;
-    User user;
-    String username;
-    ArrayList<String> reasons;
-    String sentiment;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
-        Gson gson = new Gson();
-        String serializedUser = getIntent().getStringExtra("user");
-        user = gson.fromJson(serializedUser, User.class);
-        username = user.getID();
-        reasons = user.getReasons();
-        sentiment = user.getSentiment();
-
-
         this.goal = (Goal) getIntent().getSerializableExtra("Goal");
         setContentView(R.layout.goal_view);
 

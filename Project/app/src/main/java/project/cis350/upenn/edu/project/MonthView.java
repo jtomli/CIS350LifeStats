@@ -46,6 +46,7 @@ public class MonthView extends TableLayout{
     public MonthView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(context);
+
     }
     public MonthView(Context context){
         super(context);

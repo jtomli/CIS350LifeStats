@@ -40,6 +40,12 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
 
         Intent intent = getIntent();
         username = intent.getExtras().getString("username");
+
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this, this)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                .build();
     }
 
     //go to Emotions
@@ -48,50 +54,33 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
         i.putExtra("username", username);
         startActivity(i);
 
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this, this)
-                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                .build();
-
-        Gson gson = new Gson();
-        String serializedUser = getIntent().getStringExtra("user");
-        user = gson.fromJson(serializedUser, User.class);
-        username = user.getID();
-        reasons = user.getReasons();
-        sentiment = user.getSentiment();
-
     }
 
     //go to Calendar
     public void calendarButtonClick(View v) {
         Intent intent = new Intent(this, CalendarActivity.class);
-        Gson gson = new Gson();
-        intent.putExtra("user", gson.toJson(user));
+        intent.putExtra("username", username);
         startActivity(intent);
     }
 
     //go to Goals
     public void createGoal(View v) {
         Intent intent = new Intent(this, CreateGoalActivity.class);
-        Gson gson = new Gson();
-        intent.putExtra("user", gson.toJson(user));
+        intent.putExtra("username", username);
         startActivity(intent);
     }
 
     //go to Goals
     public void viewGoalsButtonClick(View v) {
         Intent intent = new Intent(this, AllGoalsActivity.class);
-        Gson gson = new Gson();
-        intent.putExtra("user", gson.toJson(user));
+        intent.putExtra("username", username);
         startActivity(intent);
     }
 
     //go to Diary Log
     public void onDiaryLogButtonClick(View v) {
         Intent intent = new Intent(this, DiaryLogActivity.class);
-        Gson gson = new Gson();
-        intent.putExtra("user", gson.toJson(user));
+        intent.putExtra("username", username);
         startActivity(intent);
 
     }
@@ -100,8 +89,7 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
     public void onDiaryButtonClick(View v) {
 
         Intent intent = new Intent(this, DiaryActivity.class);
-        Gson gson = new Gson();
-        intent.putExtra("user", gson.toJson(user));
+        intent.putExtra("username", username);
         startActivity(intent);
 
     }
@@ -109,8 +97,7 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
     //go to setup
     public void setup(View view) {
         Intent intent = new Intent(this, SetupActivityReasons.class);
-        Gson gson = new Gson();
-        intent.putExtra("user", gson.toJson(user));
+        intent.putExtra("username", username);
         intent.putExtra("fromSetupButton", "yes");
         startActivity(intent);
     }
@@ -145,6 +132,4 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
         // be available.
         Toast.makeText(this, "Connection to Google APIs failed. (Not our fault!)", Toast.LENGTH_LONG).show();
     }
-
 }
-

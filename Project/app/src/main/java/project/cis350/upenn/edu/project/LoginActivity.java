@@ -153,11 +153,11 @@ public class LoginActivity extends AppCompatActivity implements
             Intent i;
             if (cursor.getCount() <= 0) {
                 i = new Intent(this, SetupActivityReasons.class);
-                i.putExtra("user", gson.toJson(u));
+                i.putExtra("username", u.getID());
                 startActivity(i);
             } else {
                 i = new Intent(this, MainActivity.class);
-                i.putExtra("user", gson.toJson(u));
+                i.putExtra("username", u.getID());
                 startActivity(i);
             }
 
