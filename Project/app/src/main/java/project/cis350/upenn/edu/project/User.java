@@ -1,9 +1,12 @@
 package project.cis350.upenn.edu.project;
+<<<<<<< HEAD
+=======
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.util.ArrayList;
+>>>>>>> master
 
 import static android.R.attr.id;
 import static android.R.attr.name;

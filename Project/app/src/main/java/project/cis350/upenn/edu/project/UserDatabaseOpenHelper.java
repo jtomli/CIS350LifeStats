@@ -1,5 +1,8 @@
 package project.cis350.upenn.edu.project;
+<<<<<<< HEAD
+=======
 
+>>>>>>> master
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;

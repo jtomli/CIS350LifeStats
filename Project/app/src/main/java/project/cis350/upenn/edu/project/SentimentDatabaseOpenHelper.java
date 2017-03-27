@@ -15,10 +15,12 @@ public class SentimentDatabaseOpenHelper extends SQLiteOpenHelper {
     private static final String USER_TABLE_CREATE =
             "CREATE TABLE " + SentimentDatabaseContract.SentimentDB.TABLE_NAME + "(" +
                     SentimentDatabaseContract.SentimentDB.COL_USERNAME + " TEXT," +
-                    SentimentDatabaseContract.SentimentDB.COL_YEAR + " INT," +
-                    SentimentDatabaseContract.SentimentDB.COL_MONTH + " INT," +
-                    SentimentDatabaseContract.SentimentDB.COL_DAY + " INT," +
-                    SentimentDatabaseContract.SentimentDB.COL_FEELINGS + " TEXT);";
+                    SentimentDatabaseContract.SentimentDB.COL_DATE + " INT," +
+                    SentimentDatabaseContract.SentimentDB.COL_ANGER + " DOUBLE," +
+                    SentimentDatabaseContract.SentimentDB.COL_DISGUST + " DOUBLE," +
+                    SentimentDatabaseContract.SentimentDB.COL_FEAR + " DOUBLE," +
+                    SentimentDatabaseContract.SentimentDB.COL_JOY + " DOUBLE," +
+                    SentimentDatabaseContract.SentimentDB.COL_SADNESS + " DOUBLE);";
 
 
     private static final String SQL_DELETE_ENTRIES =
