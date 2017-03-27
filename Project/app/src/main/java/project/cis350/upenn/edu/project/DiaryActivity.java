@@ -8,6 +8,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,10 +18,22 @@ import java.util.List;
  */
 
 public class DiaryActivity extends AppCompatActivity{
+    User user;
+    String username;
+    ArrayList<String> reasons;
+    String sentiment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.diary);
+
+        Gson gson = new Gson();
+        String serializedUser = getIntent().getStringExtra("user");
+        user = gson.fromJson(serializedUser, User.class);
+        username = user.getID();
+        reasons = user.getReasons();
+        sentiment = user.getSentiment();
 
         List<String[]> contactList = new ArrayList<String[]>();
         // Select All Query
@@ -40,7 +54,9 @@ public class DiaryActivity extends AppCompatActivity{
         }
     }
     public void onMenuButton(View v) {
-        Intent i = new Intent(this, MainActivity.class);
-        startActivity(i);
+        Intent intent = new Intent(this, MainActivity.class);
+        Gson gson = new Gson();
+        intent.putExtra("user", gson.toJson(user));
+        startActivity(intent);
     }
 }

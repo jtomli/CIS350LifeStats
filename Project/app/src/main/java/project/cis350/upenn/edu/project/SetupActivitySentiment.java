@@ -120,9 +120,12 @@ public class SetupActivitySentiment extends AppCompatActivity {
                     selectionArgsTwo);
         }
 
-        Intent intent = new Intent(this, CreateGoalActivity.class);
-        intent.putExtra("username", username);
-        startActivity(intent);
+        Gson gson = new Gson();
+        Intent i = new Intent(this, MainActivity.class);
+        user.setReasons(reasons);
+        user.setSentiment(sentiment);
+        i.putExtra("user", gson.toJson(user));
+        startActivity(i);
     }
 }
 

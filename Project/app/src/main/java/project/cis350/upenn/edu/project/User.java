@@ -18,6 +18,7 @@ public class User {
     String email;
     String name;
     ArrayList<String> reasons;
+    String sentiment;
 
 
     public User(String id, String name, String email) {
@@ -78,6 +79,13 @@ public class User {
         return reasons;
     }
 
+    public void setSentiment(String s) {
+        sentiment = s;
+    }
+
+    public String getSentiment() {
+        return sentiment;
+    }
     /*
     public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
         public User createFromParcel(Parcel in) {

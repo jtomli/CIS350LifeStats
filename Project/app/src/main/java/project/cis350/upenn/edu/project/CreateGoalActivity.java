@@ -23,6 +23,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import com.google.gson.Gson;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -58,19 +60,24 @@ public class CreateGoalActivity extends AppCompatActivity implements AdapterView
     private static String endMin;
     private static String endAmPm;
 
-
+    User user;
     String username;
     ArrayList<String> reasons;
+    String sentiment;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_goal);
 
-        Calendar c = Calendar.getInstance();
+        Gson gson = new Gson();
+        String serializedUser = getIntent().getStringExtra("user");
+        user = gson.fromJson(serializedUser, User.class);
+        username = user.getID();
+        reasons = user.getReasons();
+        sentiment = user.getSentiment();
 
-        Intent intent = getIntent();
-        username = intent.getExtras().getString("username");
+        Calendar c = Calendar.getInstance();
 
         UserDatabaseOpenHelper dbHelper = new UserDatabaseOpenHelper(this);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
@@ -181,13 +188,15 @@ public class CreateGoalActivity extends AppCompatActivity implements AdapterView
                     public boolean onMenuItemClick(MenuItem item) {
                         int itemId = item.getItemId();
                         if (itemId == R.id.addAnother) {
-                            Intent i = new Intent(v.getContext(), CreateGoalActivity.class);
-                            i.putExtra("username", username);
-                            startActivity(i);
+                            Intent intent = new Intent(v.getContext(), CreateGoalActivity.class);
+                            Gson gson = new Gson();
+                            intent.putExtra("user", gson.toJson(user));
+                            startActivity(intent);
                         } else if (itemId == R.id.mainMenu) {
-                            Intent i = new Intent(v.getContext(), MainActivity.class);
-                            i.putExtra("username", username);
-                            startActivity(i);
+                            Intent intent = new Intent(v.getContext(), MainActivity.class);
+                            Gson gson = new Gson();
+                            intent.putExtra("user", gson.toJson(user));
+                            startActivity(intent);
                         }
                         return true;
                     }

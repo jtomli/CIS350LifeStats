@@ -10,6 +10,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.google.gson.Gson;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -22,12 +24,21 @@ import java.util.TreeSet;
 
 public class AllGoalsActivity extends Activity  {
     Set<Goal> allGoals;
+    User user;
     String username;
+    ArrayList<String> reasons;
+    String sentiment;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Intent i = getIntent();
-        username = i.getExtras().getString("username");
+
+        Gson gson = new Gson();
+        String serializedUser = getIntent().getStringExtra("user");
+        user = gson.fromJson(serializedUser, User.class);
+        username = user.getID();
+        reasons = user.getReasons();
+        sentiment = user.getSentiment();
+
         setContentView(R.layout.all_goals_layout);
         // create a ListView to display all the user's goals into a ListView
         final ListView goals = (ListView) findViewById(R.id.all_goals);

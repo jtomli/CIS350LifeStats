@@ -1,6 +1,8 @@
 package project.cis350.upenn.edu.project;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -54,6 +56,56 @@ public class SetupActivityReasons extends AppCompatActivity {
         ugrText = new ArrayList<EditText>(maxOther);
         ugrLayout = new ArrayList<RelativeLayout>(maxOther);
         reasons = new ArrayList<String>(maxReasons);
+
+
+        UserDatabaseOpenHelper dbHelper = new UserDatabaseOpenHelper(this);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        String[] projection = {
+                UserDatabaseContract.UserDB.COL_USERNAME,
+                UserDatabaseContract.UserDB.COL_REASONS_1,
+                UserDatabaseContract.UserDB.COL_REASONS_2,
+                UserDatabaseContract.UserDB.COL_REASONS_3,
+                UserDatabaseContract.UserDB.COL_REASONS_4,
+                UserDatabaseContract.UserDB.COL_REASONS_5,
+                UserDatabaseContract.UserDB.COL_REASONS_6,
+                UserDatabaseContract.UserDB.COL_REASONS_7,
+                UserDatabaseContract.UserDB.COL_REASONS_8,
+                UserDatabaseContract.UserDB.COL_REASONS_9,
+                UserDatabaseContract.UserDB.COL_REASONS_10,
+                UserDatabaseContract.UserDB.COL_REASONS_11,
+                UserDatabaseContract.UserDB.COL_SENTIMENT
+
+        };
+
+        String selection = UserDatabaseContract.UserDB.COL_USERNAME + " = ?";
+        String[] selectionArgs = { gson.toJson(user) };
+
+        Cursor cursor = db.query(
+                UserDatabaseContract.UserDB.TABLE_NAME,         // The table to query
+                projection,                                     // The columns to return
+                selection,                                      // The columns for the WHERE clause
+                selectionArgs,                                  // The values for the WHERE clause
+                null,                                           // don't group the rows
+                null,                                           // don't filter by row groups
+                null                                            // The sort order
+        );
+
+        Intent i;
+        if (cursor.getCount() <= 0 && !getIntent().hasExtra("fromSetupButton")) {
+            // This user already has reasons, skip this activity
+
+
+            /*
+             * TODO: create reasons array, right now it is empty
+             */
+
+
+            i = new Intent(this, MainActivity.class);
+            user.setReasons(reasons);
+            i.putExtra("user", gson.toJson(user));
+            startActivity(i);
+        }
     }
 
     // go to next step of setup
