@@ -1,8 +1,6 @@
 package project.cis350.upenn.edu.project;
-<<<<<<< HEAD
 
-=======
->>>>>>> master
+
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
