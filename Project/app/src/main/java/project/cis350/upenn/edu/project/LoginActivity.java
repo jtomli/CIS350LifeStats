@@ -1,4 +1,4 @@
-package com.example.jamietomlinson.iteration2;
+package project.cis350.upenn.edu.project;
 
 import android.content.Intent;
 import android.os.Bundle;
