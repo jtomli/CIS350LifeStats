@@ -1,12 +1,10 @@
 package project.cis350.upenn.edu.project;
 
-import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -20,10 +18,12 @@ import java.util.List;
 
 public class SingleGoalActivity extends AppCompatActivity {
     Goal goal;
+    String username;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.goal = (Goal) getIntent().getSerializableExtra("Goal");
+        this.username = getIntent().getStringExtra("username");
         setContentView(R.layout.goal_view);
 
         // Make the top TextView display the name of the goal
@@ -64,8 +64,9 @@ public class SingleGoalActivity extends AppCompatActivity {
         int id = i.getItemId();
         switch (id) {
             case R.id.edit_goal_button:
-                // TODO: Take to menu to edit the current goal
-                return true;
+                Intent intent = new Intent(this, EditGoalActivity.class);
+                intent.putExtra("username", username);
+                startActivity(intent);
             case R.id.delete_goal_button:
                 // TODO: Show confirmation prompt
                 return true;

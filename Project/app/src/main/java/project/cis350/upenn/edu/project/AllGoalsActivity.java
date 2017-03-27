@@ -22,12 +22,12 @@ import java.util.TreeSet;
 
 public class AllGoalsActivity extends Activity  {
     Set<Goal> allGoals;
-    String userName;
+    String username;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Intent i = getIntent();
-        userName = i.getExtras().getString("username");
+        username = i.getExtras().getString("username");
         setContentView(R.layout.all_goals_layout);
         // create a ListView to display all the user's goals into a ListView
         final ListView goals = (ListView) findViewById(R.id.all_goals);
@@ -42,7 +42,7 @@ public class AllGoalsActivity extends Activity  {
                         Intent i = new Intent(getApplicationContext(), SingleGoalActivity.class);
                         // pass the goal to GoalAtivity
                         i.putExtra("Goal", goal);
-                        i.putExtra("username", userName);
+                        i.putExtra("username", username);
                         // start the game activity
                         startActivityForResult(i, 1);
                     }
@@ -51,7 +51,6 @@ public class AllGoalsActivity extends Activity  {
         });
 
         allGoals = new TreeSet<>();
-        // TODO: Retrieve set of Goals from database
         GoalsDatabaseOpenHelper dbGoalsHelper = new GoalsDatabaseOpenHelper(this);
         SQLiteDatabase dbGoals = dbGoalsHelper.getWritableDatabase();
 
@@ -78,7 +77,7 @@ public class AllGoalsActivity extends Activity  {
         };
 
         String selectionGoals = GoalsDatabaseContract.GoalsDB.COL_GOALNAME + " = ?";
-        String[] selectionArgsGoals = {userName};
+        String[] selectionArgsGoals = {username};
 
         Cursor cursorGoals = dbGoals.query(
                 GoalsDatabaseContract.GoalsDB.TABLE_NAME,         // The table to query
@@ -104,6 +103,7 @@ public class AllGoalsActivity extends Activity  {
                     Integer.parseInt(cursorGoals.getString(cursorGoals.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_ENDDAY))),
                     Integer.parseInt(cursorGoals.getString(cursorGoals.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_ENDHOUR))),
                     Integer.parseInt(cursorGoals.getString(cursorGoals.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_ENDMIN))));
+            Event e = new Event(startCal, endCal);
             Goal g = new Goal(cursorGoals.getString(cursorGoals.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_GOALNAME)));
             allGoals.add(g);
         }
