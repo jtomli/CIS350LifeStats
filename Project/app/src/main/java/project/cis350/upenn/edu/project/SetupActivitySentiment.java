@@ -9,11 +9,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.RadioButton;
 
+import com.google.gson.Gson;
+
 import java.util.ArrayList;
 
 public class SetupActivitySentiment extends AppCompatActivity {
 
     String username;
+    User user;
     ArrayList<String> reasons;
     String sentiment = "yes";
     int maxReasons = 11;
@@ -25,8 +28,12 @@ public class SetupActivitySentiment extends AppCompatActivity {
         Intent intent = getIntent();
 
         // get username, password, and reasons to add to database
-        username = intent.getExtras().getString("username");
-        reasons = intent.getStringArrayListExtra("reasons");
+        Gson gson = new Gson();
+        String serializedUser = getIntent().getStringExtra("user");
+        user = gson.fromJson(serializedUser, User.class);
+        username = user.getID();
+        reasons = user.getReasons();
+
 
         for (int i = 0; i < reasons.size(); i++) {
             System.out.println(reasons.get(i));
@@ -113,9 +120,12 @@ public class SetupActivitySentiment extends AppCompatActivity {
                     selectionArgsTwo);
         }
 
-        Intent intent = new Intent(this, CreateGoalActivity.class);
-        intent.putExtra("username", username);
-        startActivity(intent);
+        Gson gson = new Gson();
+        Intent i = new Intent(this, MainActivity.class);
+        user.setReasons(reasons);
+        user.setSentiment(sentiment);
+        i.putExtra("user", gson.toJson(user));
+        startActivity(i);
     }
 }
 

@@ -1,8 +1,10 @@
 package project.cis350.upenn.edu.project;
 
 import android.content.Intent;
-import android.os.Bundle;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.Checkable;
@@ -11,8 +13,11 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
 import java.util.ArrayList;
 
+import static android.R.attr.data;
 
 public class SetupActivityReasons extends AppCompatActivity {
 
@@ -24,8 +29,10 @@ public class SetupActivityReasons extends AppCompatActivity {
 
     final int idForAdditionalCheckboxLayout = 1;
 
+    User user;
+
     // database elements
-    String username;
+    String userID;
     ArrayList<String> reasons;
     int maxReasons = 11; // the maximum number of reasons that can be selected
     int maxOther = 8; // the maximum number of user-generated reasons that can be added
@@ -39,14 +46,66 @@ public class SetupActivityReasons extends AppCompatActivity {
         setContentView(R.layout.activity_setup_reasons);
 
         // get username and password
-        Intent intent = getIntent();
-        username = intent.getExtras().getString("username");
+        Gson gson = new Gson();
+        String serializedUser = getIntent().getStringExtra("user");
+        user = gson.fromJson(serializedUser, User.class);
+        userID = user.getID();
 
         layoutCheckBox = (LinearLayout) findViewById(R.id.otherCheckBoxLayout);
         ugrCheckbox = new ArrayList<CheckBox>(maxOther);
         ugrText = new ArrayList<EditText>(maxOther);
         ugrLayout = new ArrayList<RelativeLayout>(maxOther);
         reasons = new ArrayList<String>(maxReasons);
+
+
+        UserDatabaseOpenHelper dbHelper = new UserDatabaseOpenHelper(this);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        String[] projection = {
+                UserDatabaseContract.UserDB.COL_USERNAME,
+                UserDatabaseContract.UserDB.COL_REASONS_1,
+                UserDatabaseContract.UserDB.COL_REASONS_2,
+                UserDatabaseContract.UserDB.COL_REASONS_3,
+                UserDatabaseContract.UserDB.COL_REASONS_4,
+                UserDatabaseContract.UserDB.COL_REASONS_5,
+                UserDatabaseContract.UserDB.COL_REASONS_6,
+                UserDatabaseContract.UserDB.COL_REASONS_7,
+                UserDatabaseContract.UserDB.COL_REASONS_8,
+                UserDatabaseContract.UserDB.COL_REASONS_9,
+                UserDatabaseContract.UserDB.COL_REASONS_10,
+                UserDatabaseContract.UserDB.COL_REASONS_11,
+                UserDatabaseContract.UserDB.COL_SENTIMENT
+
+        };
+
+        String selection = UserDatabaseContract.UserDB.COL_USERNAME + " = ?";
+        String[] selectionArgs = { gson.toJson(user) };
+
+        Cursor cursor = db.query(
+                UserDatabaseContract.UserDB.TABLE_NAME,         // The table to query
+                projection,                                     // The columns to return
+                selection,                                      // The columns for the WHERE clause
+                selectionArgs,                                  // The values for the WHERE clause
+                null,                                           // don't group the rows
+                null,                                           // don't filter by row groups
+                null                                            // The sort order
+        );
+
+        Intent i;
+        if (cursor.getCount() <= 0 && !getIntent().hasExtra("fromSetupButton")) {
+            // This user already has reasons, skip this activity
+
+
+            /*
+             * TODO: create reasons array, right now it is empty
+             */
+
+
+            i = new Intent(this, MainActivity.class);
+            user.setReasons(reasons);
+            i.putExtra("user", gson.toJson(user));
+            startActivity(i);
+        }
     }
 
     // go to next step of setup
@@ -71,8 +130,11 @@ public class SetupActivityReasons extends AppCompatActivity {
 
         if (!reasons.isEmpty()) {
             Intent intent = new Intent(this, SetupActivitySentiment.class);
-            intent.putExtra("username", username);
-            intent.putExtra("reasons", reasons);
+            // Add reasons to the user object and pass the user object to the next activity
+
+            user.setReasons(reasons);
+            Gson gson = new Gson();
+            intent.putExtra("user", gson.toJson(user));
             startActivity(intent);
         } else {
             Toast.makeText(this, "Select at least one reason.", Toast.LENGTH_LONG).show();

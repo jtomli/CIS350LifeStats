@@ -7,18 +7,43 @@ import android.view.View;
 import android.widget.*;
 import android.database.sqlite.SQLiteDatabase;
 import android.content.ContentValues;
+<<<<<<< HEAD
 import java.util.Date;
+=======
+
+import com.google.gson.Gson;
+
+import java.util.ArrayList;
+
+import static project.cis350.upenn.edu.project.R.id.reasons;
+
+>>>>>>> master
 /**
  * Created by AK47 on 2/21/17.
  */
 
 public class DiaryLogActivity extends AppCompatActivity{
+<<<<<<< HEAD
     String username;
+=======
+    User user;
+    String username;
+    ArrayList<String> reasons;
+    String sentiment;
+>>>>>>> master
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.diary_log);
+
+        Gson gson = new Gson();
+        String serializedUser = getIntent().getStringExtra("user");
+        user = gson.fromJson(serializedUser, User.class);
+        username = user.getID();
+        reasons = user.getReasons();
+        sentiment = user.getSentiment();
+
     }
     public void onSubmitButton(View v) {
 
@@ -27,8 +52,13 @@ public class DiaryLogActivity extends AppCompatActivity{
         Date date = new Date();
 
         Intent i = new Intent(this, DiaryActivity.class);
+<<<<<<< HEAD
         i.putExtra("username", username);
 
+=======
+        Gson gson = new Gson();
+        i.putExtra("user", gson.toJson(user));
+>>>>>>> master
         //get diary entry
         String entry = ((EditText) findViewById(R.id.diary_text)).getText().toString();
 
@@ -50,9 +80,16 @@ public class DiaryLogActivity extends AppCompatActivity{
         startActivity(i);
     }
     public void onMenuButton(View v) {
+<<<<<<< HEAD
         Intent i = new Intent(this, MainActivity.class);
         i.putExtra("username", username);
         startActivity(i);
+=======
+        Intent intent = new Intent(this, MainActivity.class);
+        Gson gson = new Gson();
+        intent.putExtra("user", gson.toJson(user));
+        startActivity(intent);
+>>>>>>> master
     }
 
 }

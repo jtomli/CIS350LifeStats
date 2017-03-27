@@ -45,7 +45,7 @@
     <string name="server_client_id">655536071000-dccs4ddr1rlmoio83t1a1f3osakk0skb.apps.googleusercontent.com</string>
     <string name="loading">LOADING</string>
     <string name="signed_in_fmt">Welcome, %1$s!</string>
-=======
+    =======
     <string name="sunday">Sunday</string>
     <string name="monday">Monday</string>
     <string name="tuesday">Tuesday</string>

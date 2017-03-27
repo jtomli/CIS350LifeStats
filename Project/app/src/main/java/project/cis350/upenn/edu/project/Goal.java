@@ -1,5 +1,8 @@
 package project.cis350.upenn.edu.project;
+<<<<<<< HEAD
 
+=======
+>>>>>>> master
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashSet;

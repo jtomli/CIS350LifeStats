@@ -1,8 +1,5 @@
-package project.cis350.upenn.edu.project;
-<<<<<<< HEAD
+package com.example.jamietomlinson.iteration2;
 
-=======
->>>>>>> master
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
@@ -179,7 +176,7 @@ public class EditGoalActivity extends AppCompatActivity implements AdapterView.O
         String selectionGoals = GoalsDatabaseContract.GoalsDB.COL_GOALNAME + " = ?";
         String[] selectionArgsGoals = {goalName};
 
-        Cursor cursor = db.query( //TODO getting error here "GOALS_TABLE does not exist"
+        Cursor cursor = db.query(
                 GoalsDatabaseContract.GoalsDB.TABLE_NAME,         // The table to query
                 projectionGoals,                                     // The columns to return
                 selectionGoals,                                      // The columns for the WHERE clause
@@ -189,7 +186,7 @@ public class EditGoalActivity extends AppCompatActivity implements AdapterView.O
                 null                                            // The sort order
         );
 
-        //setting all info on EditGoal screen to match the previous goals info
+        //setting labels at start up for TIME
         while (cursor.moveToNext()) {
             startTimeText = (TextView) findViewById(R.id.setStartTime);
             startTimeText.setText(timePrinter(cursor.getString(cursor.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_STARTHOUR)),
@@ -256,6 +253,20 @@ public class EditGoalActivity extends AppCompatActivity implements AdapterView.O
 
     //TODO 3/24 add to database
     public void updateGoal(View v) {
+//        System.out.println(username);
+//        System.out.println(goalName);
+//        System.out.println(reasonSelection);
+//        System.out.println(allDay);
+//        System.out.println(startMonth);
+//        System.out.println(startDay);
+//        System.out.println(startYear);
+//        System.out.println(startHour);
+//        System.out.println(startMin);
+//        System.out.println(startAmPm);
+//        System.out.println(frequencySelection);
+//        System.out.println(reminderSelection);
+
+
         GoalsDatabaseOpenHelper dbHelper = new GoalsDatabaseOpenHelper(v.getContext());
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
@@ -491,34 +502,29 @@ public class EditGoalActivity extends AppCompatActivity implements AdapterView.O
 
     public static void setText(String selection) {
         if (startTimePressed) {
-            int index = 0;
-            if (selection.contains("A")) {
-                index = selection.indexOf("A");
-                startAmPm = "AM";
-            } else if (selection.contains("P")) {
-                index = selection.indexOf("P");
-                startAmPm = "PM";
-            }
-            String sub = selection.substring(0, index);
-            String[] hourMin = sub.split(":");
-            startHour = hourMin[0] ;
-            startMin = hourMin[1];
+            startHour = "12";
+            startMin = "00";
+            startAmPm = "PM";
+//            System.out.println(selection);
+//            Pattern p = Pattern.compile("\\d{2}\\W\\d{2}\\w{2}");
+//            Matcher m = p.matcher(selection);
+//            String[] hourMinuteAmPm = p.split(selection);
+//            startHour = hourMinuteAmPm[0];
+//            startMin = hourMinuteAmPm[1];
+//            startAmPm = hourMinuteAmPm[2];
+            //TODO test
             startTimeText.setText(selection);
             startTimePressed = false;
         } else if (endTimePressed) {
-            int index = 0;
-            if (selection.contains("A")) {
-                index = selection.indexOf("A");
-                endAmPm = "AM";
-            } else if (selection.contains("P")) {
-                index = selection.indexOf("P");
-                endAmPm = "PM";
-            }
-            String sub = selection.substring(0, index);
-            String[] hourMin = sub.split(":");
-            endHour = hourMin[0] ;
-            endMin = hourMin[1];
-            endTimeText.setText(selection);
+            endHour = "12";
+            endMin = "00";
+            endAmPm = "PM";
+//            Pattern p = Pattern.compile("\\d{2}\\W\\d{2}\\w{2}");
+//            String[] hourMinuteAmPm = p.split(selection);
+//            endHour = hourMinuteAmPm[0];
+//            endMin = hourMinuteAmPm[1];
+//            endAmPm = hourMinuteAmPm[2];
+//            endTimeText.setText(selection);
             endTimePressed = false;
         } else if (startDatePressed) {
             String[] monthDayYear = selection.split("-");

@@ -1,5 +1,8 @@
 package project.cis350.upenn.edu.project;
+<<<<<<< HEAD
 
+=======
+>>>>>>> master
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
@@ -23,6 +26,8 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
+
+import com.google.gson.Gson;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -59,19 +64,24 @@ public class CreateGoalActivity extends AppCompatActivity implements AdapterView
     private static String endMin;
     private static String endAmPm;
 
-
+    User user;
     String username;
     ArrayList<String> reasons;
+    String sentiment;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_goal);
 
-        Calendar c = Calendar.getInstance();
+        Gson gson = new Gson();
+        String serializedUser = getIntent().getStringExtra("user");
+        user = gson.fromJson(serializedUser, User.class);
+        username = user.getID();
+        reasons = user.getReasons();
+        sentiment = user.getSentiment();
 
-        Intent intent = getIntent();
-        username = intent.getExtras().getString("username");
+        Calendar c = Calendar.getInstance();
 
         UserDatabaseOpenHelper dbHelper = new UserDatabaseOpenHelper(this);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
@@ -182,13 +192,15 @@ public class CreateGoalActivity extends AppCompatActivity implements AdapterView
                     public boolean onMenuItemClick(MenuItem item) {
                         int itemId = item.getItemId();
                         if (itemId == R.id.addAnother) {
-                            Intent i = new Intent(v.getContext(), CreateGoalActivity.class);
-                            i.putExtra("username", username);
-                            startActivity(i);
+                            Intent intent = new Intent(v.getContext(), CreateGoalActivity.class);
+                            Gson gson = new Gson();
+                            intent.putExtra("user", gson.toJson(user));
+                            startActivity(intent);
                         } else if (itemId == R.id.mainMenu) {
-                            Intent i = new Intent(v.getContext(), MainActivity.class);
-                            i.putExtra("username", username);
-                            startActivity(i);
+                            Intent intent = new Intent(v.getContext(), MainActivity.class);
+                            Gson gson = new Gson();
+                            intent.putExtra("user", gson.toJson(user));
+                            startActivity(intent);
                         }
                         return true;
                     }
@@ -203,19 +215,6 @@ public class CreateGoalActivity extends AppCompatActivity implements AdapterView
 
     //TODO 3/24 add to database
     public void addGoal(View v) {
-//        System.out.println(username);
-//        System.out.println(goalName);
-//        System.out.println(reasonSelection);
-//        System.out.println(allDay);
-//        System.out.println(startMonth);
-//        System.out.println(startDay);
-//        System.out.println(startYear);
-//        System.out.println(startHour);
-//        System.out.println(startMin);
-//        System.out.println(startAmPm);
-//        System.out.println(frequencySelection);
-//        System.out.println(reminderSelection);
-
 
         GoalsDatabaseOpenHelper dbHelper = new GoalsDatabaseOpenHelper(v.getContext());
         SQLiteDatabase db = dbHelper.getWritableDatabase();
@@ -410,21 +409,33 @@ public class CreateGoalActivity extends AppCompatActivity implements AdapterView
 
     public static void setText(String selection) {
         if (startTimePressed) {
-//            Pattern p = Pattern.compile("\\d{2}\\W\\d{2}\\w{2}");
-//            Matcher m = p.matcher(selection);
-//            String[] hourMinuteAmPm = p.split(selection);
-//            startHour = hourMinuteAmPm[0];
-//            startMin = hourMinuteAmPm[1];
-//            startAmPm = hourMinuteAmPm[2];
-            //TODO test
+            int index = 0;
+            if (selection.contains("A")) {
+                index = selection.indexOf("A");
+                startAmPm = "AM";
+            } else if (selection.contains("P")) {
+                index = selection.indexOf("P");
+                startAmPm = "PM";
+            }
+            String sub = selection.substring(0, index);
+            String[] hourMin = sub.split(":");
+            startHour = hourMin[0] ;
+            startMin = hourMin[1];
             startTimeText.setText(selection);
             startTimePressed = false;
         } else if (endTimePressed) {
-//            Pattern p = Pattern.compile("\\d{2}\\W\\d{2}\\w{2}");
-//            String[] hourMinuteAmPm = p.split(selection);
-//            endHour = hourMinuteAmPm[0];
-//            endMin = hourMinuteAmPm[1];
-//            endAmPm = hourMinuteAmPm[2];
+            int index = 0;
+            if (selection.contains("A")) {
+                index = selection.indexOf("A");
+                endAmPm = "AM";
+            } else if (selection.contains("P")) {
+                index = selection.indexOf("P");
+                endAmPm = "PM";
+            }
+            String sub = selection.substring(0, index);
+            String[] hourMin = sub.split(":");
+            endHour = hourMin[0] ;
+            endMin = hourMin[1];
             endTimeText.setText(selection);
             endTimePressed = false;
         } else if (startDatePressed) {
@@ -482,7 +493,6 @@ public class CreateGoalActivity extends AppCompatActivity implements AdapterView
         }
     }
 }
-
 
 
 

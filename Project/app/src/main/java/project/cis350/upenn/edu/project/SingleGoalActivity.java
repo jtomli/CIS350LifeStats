@@ -1,4 +1,8 @@
 package project.cis350.upenn.edu.project;
+<<<<<<< HEAD
+=======
+
+>>>>>>> master
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -17,13 +21,12 @@ import java.util.List;
 
 public class SingleGoalActivity extends AppCompatActivity {
     Goal goal;
-    String userName;
+    String username;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Intent i = getIntent();
-        userName = i.getExtras().getString("username");
         this.goal = (Goal) getIntent().getSerializableExtra("Goal");
+        this.username = getIntent().getStringExtra("username");
         setContentView(R.layout.goal_view);
 
         // Make the top TextView display the name of the goal
@@ -60,16 +63,17 @@ public class SingleGoalActivity extends AppCompatActivity {
         return true;
     }
 
-    public boolean onOptionsItemSelected(MenuItem item) {
-            int itemId = item.getItemId();
-            if (itemId == R.id.edit_goal_button) {
-                Intent i = new Intent(this, EditGoalActivity.class);
-                i.putExtra("username", userName);
-                startActivity(i);
-            } else if (itemId == R.id.delete_goal_button) {
-                //TODO: add delete button?
-            }
-
+    public boolean onOptionsItemSelected(MenuItem i) {
+        int id = i.getItemId();
+        switch (id) {
+            case R.id.edit_goal_button:
+                Intent intent = new Intent(this, EditGoalActivity.class);
+                intent.putExtra("username", username);
+                startActivity(intent);
+            case R.id.delete_goal_button:
+                // TODO: Show confirmation prompt
+                return true;
+        }
         return false;
     }
 }
