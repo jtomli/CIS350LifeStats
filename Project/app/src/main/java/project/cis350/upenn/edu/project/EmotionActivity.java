@@ -1,36 +1,32 @@
 package project.cis350.upenn.edu.project;
 
-import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.view.View;
-import android.widget.TextView;
+        import android.content.Intent;
+        import android.database.Cursor;
+        import android.database.sqlite.SQLiteDatabase;
+        import android.os.Bundle;
+        import android.support.v7.app.AppCompatActivity;
+        import android.view.View;
+        import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.List;
+        import java.util.ArrayList;
+        import java.util.List;
 
-import com.google.gson.Gson;
-import com.jjoe64.graphview.*;
-import com.jjoe64.graphview.series.*;
-import android.graphics.*;
+        import com.google.gson.Gson;
+        import com.jjoe64.graphview.*;
+        import com.jjoe64.graphview.series.*;
+        import android.graphics.*;
 /**
  * Created by AK47 on 3/23/17.
  */
 
 public class EmotionActivity extends AppCompatActivity{
     String username;
-    User user;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.emotions);
 
-        Gson gson = new Gson();
-        String serializedUser = getIntent().getStringExtra("user");
-        user = gson.fromJson(serializedUser, User.class);
-        username = user.getID();
+        username = getIntent().getExtras().getString("username");
 
         List<String[]> contactList = new ArrayList<String[]>();
 
@@ -69,6 +65,7 @@ public class EmotionActivity extends AppCompatActivity{
 
         // looping through all rows and adding to list
         int i = 0;
+
         if (cursor.moveToFirst()) {
             do {
                 anger[i] = new DataPoint(i, cursor.getDouble(1));
@@ -117,8 +114,7 @@ public class EmotionActivity extends AppCompatActivity{
     }
     public void onMenuButton(View v) {
         Intent intent = new Intent(this, MainActivity.class);
-        Gson gson = new Gson();
-        intent.putExtra("user", gson.toJson(user));
+        intent.putExtra("username", username);
         startActivity(intent);
     }
 }

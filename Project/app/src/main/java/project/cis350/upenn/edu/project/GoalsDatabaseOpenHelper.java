@@ -1,5 +1,4 @@
 package project.cis350.upenn.edu.project;
-
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -10,7 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class GoalsDatabaseOpenHelper extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 6;
 
     private static final String GOALS_TABLE_CREATE =
             "CREATE TABLE " + GoalsDatabaseContract.GoalsDB.TABLE_NAME + "(" +
@@ -18,18 +17,18 @@ public class GoalsDatabaseOpenHelper extends SQLiteOpenHelper {
                     GoalsDatabaseContract.GoalsDB.COL_GOALNAME + " TEXT," +
                     GoalsDatabaseContract.GoalsDB.COL_REASON + " TEXT," +
                     GoalsDatabaseContract.GoalsDB.COL_ALLDAY + " TEXT," +
-                    GoalsDatabaseContract.GoalsDB.COL_STARTYEAR + " INT," +
-                    GoalsDatabaseContract.GoalsDB.COL_STARTMONTH + " INT," +
-                    GoalsDatabaseContract.GoalsDB.COL_STARTDAY + " INT," +
-                    GoalsDatabaseContract.GoalsDB.COL_STARTHOUR + " INT," +
-                    GoalsDatabaseContract.GoalsDB.COL_STARTMIN + " INT," +
-                    GoalsDatabaseContract.GoalsDB.COL_STARTAMPM + " INT," +
-                    GoalsDatabaseContract.GoalsDB.COL_ENDYEAR + " INT," +
-                    GoalsDatabaseContract.GoalsDB.COL_ENDMONTH + " INT," +
-                    GoalsDatabaseContract.GoalsDB.COL_ENDDAY + " INT," +
-                    GoalsDatabaseContract.GoalsDB.COL_ENDHOUR + " INT," +
-                    GoalsDatabaseContract.GoalsDB.COL_ENDMIN + " INT," +
-                    GoalsDatabaseContract.GoalsDB.COL_ENDAMPM + " INT," +
+                    GoalsDatabaseContract.GoalsDB.COL_STARTYEAR + " TEXT," +
+                    GoalsDatabaseContract.GoalsDB.COL_STARTMONTH + " TEXT," +
+                    GoalsDatabaseContract.GoalsDB.COL_STARTDAY + " TEXT," +
+                    GoalsDatabaseContract.GoalsDB.COL_STARTHOUR + " TEXT," +
+                    GoalsDatabaseContract.GoalsDB.COL_STARTMIN + " TEXT," +
+                    GoalsDatabaseContract.GoalsDB.COL_STARTAMPM + " TEXT," +
+                    GoalsDatabaseContract.GoalsDB.COL_ENDYEAR + " TEXT," +
+                    GoalsDatabaseContract.GoalsDB.COL_ENDMONTH + " TEXT," +
+                    GoalsDatabaseContract.GoalsDB.COL_ENDDAY + " TEXT," +
+                    GoalsDatabaseContract.GoalsDB.COL_ENDHOUR + " TEXT," +
+                    GoalsDatabaseContract.GoalsDB.COL_ENDMIN + " TEXT," +
+                    GoalsDatabaseContract.GoalsDB.COL_ENDAMPM + " TEXT," +
                     GoalsDatabaseContract.GoalsDB.COL_REPEAT + " TEXT," +
                     GoalsDatabaseContract.GoalsDB.COL_FREQUENCY + " TEXT," +
                     GoalsDatabaseContract.GoalsDB.COL_REMINDME + " TEXT);";

@@ -13,11 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-
 import java.util.ArrayList;
-
-import static android.R.attr.data;
 
 public class SetupActivityReasons extends AppCompatActivity {
 
@@ -29,10 +25,8 @@ public class SetupActivityReasons extends AppCompatActivity {
 
     final int idForAdditionalCheckboxLayout = 1;
 
-    User user;
-
     // database elements
-    String userID;
+    String username;
     ArrayList<String> reasons;
     int maxReasons = 11; // the maximum number of reasons that can be selected
     int maxOther = 8; // the maximum number of user-generated reasons that can be added
@@ -46,17 +40,14 @@ public class SetupActivityReasons extends AppCompatActivity {
         setContentView(R.layout.activity_setup_reasons);
 
         // get username and password
-        Gson gson = new Gson();
-        String serializedUser = getIntent().getStringExtra("user");
-        user = gson.fromJson(serializedUser, User.class);
-        userID = user.getID();
+        Intent intent = getIntent();
+        username = intent.getExtras().getString("username");
 
         layoutCheckBox = (LinearLayout) findViewById(R.id.otherCheckBoxLayout);
         ugrCheckbox = new ArrayList<CheckBox>(maxOther);
         ugrText = new ArrayList<EditText>(maxOther);
         ugrLayout = new ArrayList<RelativeLayout>(maxOther);
         reasons = new ArrayList<String>(maxReasons);
-
 
         UserDatabaseOpenHelper dbHelper = new UserDatabaseOpenHelper(this);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
@@ -79,7 +70,7 @@ public class SetupActivityReasons extends AppCompatActivity {
         };
 
         String selection = UserDatabaseContract.UserDB.COL_USERNAME + " = ?";
-        String[] selectionArgs = { gson.toJson(user) };
+        String[] selectionArgs = { username };
 
         Cursor cursor = db.query(
                 UserDatabaseContract.UserDB.TABLE_NAME,         // The table to query
@@ -92,21 +83,14 @@ public class SetupActivityReasons extends AppCompatActivity {
         );
 
         Intent i;
-        if (cursor.getCount() <= 0 && !getIntent().hasExtra("fromSetupButton")) {
-            // This user already has reasons, skip this activity
-
-
-            /*
-             * TODO: create reasons array, right now it is empty
-             */
-
+        if (cursor.getCount() > 0 && !getIntent().hasExtra("fromSetupButton")) {
 
             i = new Intent(this, MainActivity.class);
-            user.setReasons(reasons);
-            i.putExtra("user", gson.toJson(user));
+            i.putExtra("username", username);
             startActivity(i);
         }
     }
+
 
     // go to next step of setup
     public void onContinue(View view) {
@@ -130,11 +114,8 @@ public class SetupActivityReasons extends AppCompatActivity {
 
         if (!reasons.isEmpty()) {
             Intent intent = new Intent(this, SetupActivitySentiment.class);
-            // Add reasons to the user object and pass the user object to the next activity
-
-            user.setReasons(reasons);
-            Gson gson = new Gson();
-            intent.putExtra("user", gson.toJson(user));
+            intent.putExtra("username", username);
+            intent.putExtra("reasons", reasons);
             startActivity(intent);
         } else {
             Toast.makeText(this, "Select at least one reason.", Toast.LENGTH_LONG).show();

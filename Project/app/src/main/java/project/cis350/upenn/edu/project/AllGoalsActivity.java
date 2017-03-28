@@ -10,8 +10,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.google.gson.Gson;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -24,20 +22,12 @@ import java.util.TreeSet;
 
 public class AllGoalsActivity extends Activity  {
     Set<Goal> allGoals;
-    User user;
     String username;
-    ArrayList<String> reasons;
-    String sentiment;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        Gson gson = new Gson();
-        String serializedUser = getIntent().getStringExtra("user");
-        user = gson.fromJson(serializedUser, User.class);
-        username = user.getID();
-        reasons = user.getReasons();
-        sentiment = user.getSentiment();
+        Intent i = getIntent();
+        username = i.getExtras().getString("username");
 
         setContentView(R.layout.all_goals_layout);
         // create a ListView to display all the user's goals into a ListView
@@ -51,7 +41,7 @@ public class AllGoalsActivity extends Activity  {
                     if (goal.toString().equals(selectedFromList)) {
                         // create a new Intent using the current activity and GoalActivity class
                         Intent i = new Intent(getApplicationContext(), SingleGoalActivity.class);
-                        // pass the goal to GoalAtivity
+                        // pass the goal to GoalActivity
                         i.putExtra("Goal", goal);
                         i.putExtra("username", username);
                         // start the game activity
@@ -87,7 +77,7 @@ public class AllGoalsActivity extends Activity  {
                 GoalsDatabaseContract.GoalsDB.COL_REMINDME
         };
 
-        String selectionGoals = GoalsDatabaseContract.GoalsDB.COL_GOALNAME + " = ?";
+        String selectionGoals = GoalsDatabaseContract.GoalsDB.COL_USERNAME + " = ?";
         String[] selectionArgsGoals = {username};
 
         Cursor cursorGoals = dbGoals.query(
@@ -115,7 +105,11 @@ public class AllGoalsActivity extends Activity  {
                     Integer.parseInt(cursorGoals.getString(cursorGoals.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_ENDHOUR))),
                     Integer.parseInt(cursorGoals.getString(cursorGoals.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_ENDMIN))));
             Event e = new Event(startCal, endCal);
-            Goal g = new Goal(cursorGoals.getString(cursorGoals.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_GOALNAME)));
+            String goalN = cursorGoals.getString(cursorGoals.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_GOALNAME));
+            Goal g = new Goal(goalN);
+            String reason = cursorGoals.getString(cursorGoals.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_REASON));
+            g.addReason(reason);
+            g.addEvent(e);
             allGoals.add(g);
         }
 

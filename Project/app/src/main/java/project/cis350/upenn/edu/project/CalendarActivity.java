@@ -1,4 +1,3 @@
-
 package project.cis350.upenn.edu.project;
 
 import android.app.Activity;
@@ -12,4 +11,3 @@ public class CalendarActivity extends Activity {
     }
 
 }
-

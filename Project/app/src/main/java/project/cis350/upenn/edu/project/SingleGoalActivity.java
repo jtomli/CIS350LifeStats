@@ -35,7 +35,6 @@ public class SingleGoalActivity extends AppCompatActivity {
         StringBuilder s = new StringBuilder();
         for (String reason : goal.getReasons()) {
             s.append(reason);
-            s.append(", ");
         }
         reasons.setText("Reasons: " + s.toString());
 
@@ -66,6 +65,7 @@ public class SingleGoalActivity extends AppCompatActivity {
             case R.id.edit_goal_button:
                 Intent intent = new Intent(this, EditGoalActivity.class);
                 intent.putExtra("username", username);
+                intent.putExtra("goalName", goal.getName());
                 startActivity(intent);
             case R.id.delete_goal_button:
                 // TODO: Show confirmation prompt

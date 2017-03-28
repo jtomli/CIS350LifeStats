@@ -10,7 +10,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class SentimentDatabaseOpenHelper extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 3;
 
     private static final String USER_TABLE_CREATE =
             "CREATE TABLE " + SentimentDatabaseContract.SentimentDB.TABLE_NAME + "(" +
