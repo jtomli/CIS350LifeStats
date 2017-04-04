@@ -28,13 +28,8 @@ public class GoalActivity extends AppCompatActivity {
         goalName.setText(goal.getName());
 
         // Populate the reasons TextView with all of the reasons associated with this goal
-        TextView reasons = (TextView) findViewById(R.id.reasons);
-        StringBuilder s = new StringBuilder();
-        for (String reason : goal.getReasons()) {
-            s.append(reason);
-            s.append(", ");
-        }
-        reasons.setText("Reasons: " + s.toString());
+        TextView reasons = (TextView) findViewById(R.id.reason);
+        reasons.setText("Reasons: " + goal.getReason());
 
         // Display current goal progress
         TextView totalProgress = (TextView) findViewById(R.id.total_progress);

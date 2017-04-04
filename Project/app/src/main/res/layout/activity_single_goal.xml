@@ -10,4 +10,89 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="project.cis350.upenn.edu.project.SingleGoalActivity">
 
+    <TextView
+        android:text="Goal Name"
+        android:layout_width="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/goal_name"
+        android:layout_height="50dp"
+        android:fontFamily="serif"
+        android:textSize="30sp"
+        android:textStyle="normal|bold"
+        android:textAlignment="center"
+        android:textAllCaps="false" />
+
+    <ProgressBar
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/progress_bar_total"
+        android:layout_below="@+id/progress_total_text"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:text="This Month's Progress:"
+        android:layout_width="match_parent"
+        android:layout_below="@+id/progress_bar_total"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/progress_month_text"
+        android:fontFamily="serif"
+        android:layout_height="25dp" />
+
+    <ProgressBar
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/progress_month_text"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/progress_bar_month" />
+
+    <TextView
+        android:text="Reasons for Goal:"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@+id/goal_name"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/reason"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:fontFamily="serif"
+        android:textStyle="normal|bold" />
+
+    <TextView
+        android:text="Total Progress:"
+        android:layout_width="match_parent"
+        android:id="@+id/progress_total_text"
+        android:fontFamily="serif"
+        android:layout_below="@+id/reason"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_height="25dp" />
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:weightSum="1"
+        android:layout_height="500dp"
+        android:layout_below="@+id/progress_bar_month">
+
+        <Space
+            android:layout_width="match_parent"
+            android:id="@+id/space"
+            android:layout_height="20dp" />
+
+        <project.cis350.upenn.edu.project.MonthView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/month_view"/>
+
+
+    </LinearLayout>
+
 </RelativeLayout>
