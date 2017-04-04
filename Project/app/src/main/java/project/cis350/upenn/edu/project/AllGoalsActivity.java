@@ -33,23 +33,6 @@ public class AllGoalsActivity extends Activity  {
         // create a ListView to display all the user's goals into a ListView
         final ListView goals = (ListView) findViewById(R.id.all_goals);
         goals.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-        // add a listener to the ListView so that specific goals can be selected
-        goals.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> myAdapter, View myView, int pos, long mylng) {
-                String selectedFromList =(goals.getItemAtPosition(pos).toString());
-                for (Goal goal : allGoals) {
-                    if (goal.toString().equals(selectedFromList)) {
-                        // create a new Intent using the current activity and GoalActivity class
-                        Intent i = new Intent(getApplicationContext(), SingleGoalActivity.class);
-                        // pass the goal to GoalActivity
-                        i.putExtra("Goal", goal);
-                        i.putExtra("username", username);
-                        // start the game activity
-                        startActivityForResult(i, 1);
-                    }
-                }
-            }
-        });
 
         allGoals = new TreeSet<>();
         GoalsDatabaseOpenHelper dbGoalsHelper = new GoalsDatabaseOpenHelper(this);
@@ -108,19 +91,28 @@ public class AllGoalsActivity extends Activity  {
             String goalN = cursorGoals.getString(cursorGoals.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_GOALNAME));
             Goal g = new Goal(goalN);
             String reason = cursorGoals.getString(cursorGoals.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_REASON));
-            g.addReason(reason);
+            g.setReason(reason);
             g.addEvent(e);
             allGoals.add(g);
         }
 
 
         // populate the ListView with all of the user's goals
-        List<String> list = new ArrayList<>();
+        List<Goal> list = new ArrayList<>();
         for (Goal goal : allGoals) {
-            list.add(goal.toString());
+            list.add(goal);
         }
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(),
-                R.layout.goals_layout, list);
+        CustomAdapter adapter = new CustomAdapter(this, list);
         goals.setAdapter(adapter);
+    }
+
+    public void goToSingleGoal(Goal goal) {
+        // create a new Intent using the current activity and GoalActivity class
+        Intent i = new Intent(getApplicationContext(), SingleGoalActivity.class);
+        // pass the goal to GoalActivity
+        i.putExtra("Goal", goal);
+        i.putExtra("username", username);
+        // start the game activity
+        startActivityForResult(i, 1);
     }
 }
