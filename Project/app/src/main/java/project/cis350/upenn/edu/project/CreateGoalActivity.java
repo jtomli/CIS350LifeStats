@@ -226,7 +226,6 @@ public class CreateGoalActivity extends AppCompatActivity implements AdapterView
 
     }
 
-    //TODO 3/24 add to database
     public void addGoal(View v) {
 
         GoalsDatabaseOpenHelper dbHelper = new GoalsDatabaseOpenHelper(v.getContext());
