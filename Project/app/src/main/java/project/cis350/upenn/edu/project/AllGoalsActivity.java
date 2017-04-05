@@ -5,9 +5,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -93,6 +90,7 @@ public class AllGoalsActivity extends Activity  {
             String reason = cursorGoals.getString(cursorGoals.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_REASON));
             g.setReason(reason);
             g.addEvent(e);
+            //TODO add this event to the event database, and repeating events
             allGoals.add(g);
         }
 

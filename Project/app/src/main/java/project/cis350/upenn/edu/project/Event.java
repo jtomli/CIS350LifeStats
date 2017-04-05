@@ -19,6 +19,7 @@ public class Event implements Serializable, Comparable<Event> {
         completed = false;
     }
 
+
     public Calendar getStart() { return start; }
 
     public Calendar getEnd() { return end; }
