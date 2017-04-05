@@ -1,12 +1,12 @@
 package project.cis350.upenn.edu.project;
 
-import android.support.v7.app.AppCompatActivity;
+import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.*;
-import android.content.*;
-import android.widget.*;
+import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -14,11 +14,9 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
-import com.google.gson.Gson;
 
 import java.util.ArrayList;
 
-import static project.cis350.upenn.edu.project.R.id.reasons;
 
 public class MainActivity extends AppCompatActivity implements OnItemSelectedListener,
         GoogleApiClient.OnConnectionFailedListener {

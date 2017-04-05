@@ -41,7 +41,6 @@ public class EditGoalActivity extends AppCompatActivity implements AdapterView.O
     List<String> daysChecked;
     private String frequencySelection;
     private String reminderSelection;
-    //TODO info to be sent to DB!!!!!
     private String goalName;
     private String reasonSelection;
     private static String startMonth;
@@ -63,7 +62,7 @@ public class EditGoalActivity extends AppCompatActivity implements AdapterView.O
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_goal);
+        setContentView(R.layout.edit_goal_layout);
 
 
         Intent intent = getIntent();
@@ -176,7 +175,7 @@ public class EditGoalActivity extends AppCompatActivity implements AdapterView.O
         String selectionGoals = GoalsDatabaseContract.GoalsDB.COL_GOALNAME + " = ?";
         String[] selectionArgsGoals = {goalName};
 
-        Cursor cursor = dbGoals.query( //TODO getting error here "GOALS_TABLE does not exist"
+        Cursor cursor = dbGoals.query(
                 GoalsDatabaseContract.GoalsDB.TABLE_NAME,         // The table to query
                 projectionGoals,                                     // The columns to return
                 selectionGoals,                                      // The columns for the WHERE clause
@@ -234,7 +233,7 @@ public class EditGoalActivity extends AppCompatActivity implements AdapterView.O
 
 
         //should also switch intent here
-        final Button updateGoal = (Button) findViewById(R.id.addGoalButton);
+        final Button updateGoal = (Button) findViewById(R.id.updateGoalButton);
         updateGoal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
@@ -267,7 +266,6 @@ public class EditGoalActivity extends AppCompatActivity implements AdapterView.O
 
 
 
-    //TODO 3/24 add to database
     public void updateGoal(View v) {
         GoalsDatabaseOpenHelper dbHelper = new GoalsDatabaseOpenHelper(v.getContext());
         SQLiteDatabase db = dbHelper.getWritableDatabase();
@@ -477,25 +475,26 @@ public class EditGoalActivity extends AppCompatActivity implements AdapterView.O
     }
 
     public void onSetStartTimeClick(View v) {
-        DialogFragment startTimePicker = new CreateGoalActivity.TimePickerFragment();
+        System.out.println("HERE");
+        DialogFragment startTimePicker = new TimePickerFragment();
         startTimePicker.show(getSupportFragmentManager(), "startTimePicker");
         startTimePressed = true;
     }
 
     public void onSetEndTimeClick(View v) {
-        DialogFragment endTimePicker = new CreateGoalActivity.TimePickerFragment();
+        DialogFragment endTimePicker = new TimePickerFragment();
         endTimePicker.show(getSupportFragmentManager(), "endTimePicker");
         endTimePressed = true;
     }
 
     public void onSetStartDateClick(View v) {
-        DialogFragment startDatePicker = new CreateGoalActivity.DatePickerFragment();
+        DialogFragment startDatePicker = new DatePickerFragment();
         startDatePicker.show(getSupportFragmentManager(), "startDatePicker");
         startDatePressed = true;
     }
 
     public void onSetEndDateClick(View v) {
-        DialogFragment endDatePicker = new CreateGoalActivity.DatePickerFragment();
+        DialogFragment endDatePicker = new DatePickerFragment();
         endDatePicker.show(getSupportFragmentManager(), "endDatePicker");
         endDatePressed = true;
     }

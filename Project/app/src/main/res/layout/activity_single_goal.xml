@@ -36,6 +36,7 @@
     <TextView
         android:text="This Month's Progress:"
         android:layout_width="match_parent"
+        android:onClick="onProgressClick"
         android:layout_below="@+id/progress_bar_total"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"

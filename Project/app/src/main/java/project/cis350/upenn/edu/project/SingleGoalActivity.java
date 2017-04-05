@@ -440,4 +440,8 @@ public class SingleGoalActivity extends AppCompatActivity {
         }
         return false;
     }
+
+    public void onProgressClick(View v) {
+
+    }
 }
