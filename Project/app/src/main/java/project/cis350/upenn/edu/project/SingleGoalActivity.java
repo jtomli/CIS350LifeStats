@@ -3,6 +3,8 @@ package project.cis350.upenn.edu.project;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -42,7 +44,7 @@ public class SingleGoalActivity extends AppCompatActivity {
         setContentView(R.layout.activity_single_goal);
 
         // Make the top TextView display the name of the goal
-        TextView goalName = (TextView) findViewById(R.id.goal_name);
+        final TextView goalName = (TextView) findViewById(R.id.goal_name);
         goalName.setText(goal.getName());
 
         // Populate the reasons TextView with all of the reasons associated with this goal
@@ -144,8 +146,67 @@ public class SingleGoalActivity extends AppCompatActivity {
                     DisplayMonth(true);
                 }};
             //Main function for displaying the current selected month
-            private void checkForEvents()
-            {
+            private void checkForEvents() {
+
+                // clear the map and array because this happens each time the month is changed
+                allEvents.clear();
+                hasEvents = new boolean[32];
+
+                //load events and goals from database
+                EventsDatabaseOpenHelper dbHelper = new EventsDatabaseOpenHelper(context);
+                SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+                String[] projection = {
+                        EventsDatabaseContract.EventsDB.COL_USERNAME,
+                        EventsDatabaseContract.EventsDB.COL_GOALNAME,
+                        EventsDatabaseContract.EventsDB.COL_YEAR,
+                        EventsDatabaseContract.EventsDB.COL_MONTH,
+                        EventsDatabaseContract.EventsDB.COL_DAY,
+                        EventsDatabaseContract.EventsDB.COL_LOG
+                };
+
+                String selection = EventsDatabaseContract.EventsDB.COL_GOALNAME + " = ?";
+                String[] selectionArgs = { goal.getName() };
+
+                Cursor cursor = db.query(
+                        EventsDatabaseContract.EventsDB.TABLE_NAME,         // The table to query
+                        projection,                                     // The columns to return
+                        selection,                                      // The columns for the WHERE clause
+                        selectionArgs,                                  // The values for the WHERE clause
+                        null,                                           // don't group the rows
+                        null,                                           // don't filter by row groups
+                        null                                            // The sort order
+                );
+
+                while(cursor.moveToNext()) {
+                    int year = cursor.getInt(cursor.getColumnIndex(EventsDatabaseContract.EventsDB.COL_YEAR));
+                    int month = cursor.getInt(cursor.getColumnIndex(EventsDatabaseContract.EventsDB.COL_MONTH));
+                    int day = cursor.getInt(cursor.getColumnIndex(EventsDatabaseContract.EventsDB.COL_DAY));
+
+                    Calendar cal = Calendar.getInstance();
+                    cal.set(year, month, day);
+
+                    Event event = new Event(cal, cal);
+
+                    String completed = cursor.getString(cursor.getColumnIndex(EventsDatabaseContract.EventsDB.COL_LOG));
+                    if (completed.equals("yes")) {
+                        event.markCompleted(true);
+                    }
+
+                    String username = cursor.getString(cursor.getColumnIndex(EventsDatabaseContract.EventsDB.COL_USERNAME));
+
+                    System.out.println(username + "' goal " + goal.getName() + " on " + day +
+                    "/" + month + "/" + year + ", completed = " + completed);
+
+                    //if the event is in this month, add it to the map "allEvents"
+                    if (event.getStart().get(Calendar.MONTH) == cal.get(Calendar.MONTH)) {
+                        allEvents.put(event, goal.getName());
+                        hasEvents[event.getStart().get(Calendar.DATE)] = true;
+                    }
+                }
+                cursor.close();
+
+
 		/*
 		// TODO: Pseudo-Code: Text me if you need help
 		// clear the map and array because this happens each time the month is changed
@@ -433,9 +494,13 @@ public class SingleGoalActivity extends AppCompatActivity {
                 intent.putExtra("username", username);
                 intent.putExtra("goalName", goal.getName());
                 startActivity(intent);
+                break;
             case R.id.delete_goal_button:
                 // TODO: Show confirmation prompt
                 // TODO: remove goal from database
+                Intent intent2 = new Intent(this, MainActivity.class);
+                intent2.putExtra("username", username);
+                startActivity(intent2);
                 return true;
         }
         return false;
