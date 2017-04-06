@@ -85,13 +85,10 @@ public class Event implements Serializable, Comparable<Event> {
 
     @Override
     public String toString() {
-        return  "Completed = " + completed + "/n" +
+        return  "Completed = " + completed + "\n" +
                 "Start: " + start.get(Calendar.HOUR_OF_DAY) + ":" + start.get(Calendar.MINUTE) + " on " +
-                start.get(Calendar.YEAR)+ start.get(Calendar.MONTH) + "/" + start.get(Calendar.DATE) + "/" +
-                start.get(Calendar.YEAR) + "/n" +
+                start.get(Calendar.DATE) + "/" + start.get(Calendar.MONTH) + "/" + start.get(Calendar.YEAR) + "\n" +
                 "End:  " + end.get(Calendar.HOUR_OF_DAY) + ":" + end.get(Calendar.MINUTE) + " on " +
-                end.get(Calendar.YEAR)+ end.get(Calendar.MONTH) + "/" + end.get(Calendar.DATE) + "/" +
-                end.get(Calendar.YEAR);
+                end.get(Calendar.DATE) + "/" + end.get(Calendar.MONTH) + "/" + end.get(Calendar.YEAR);
     }
-
 }

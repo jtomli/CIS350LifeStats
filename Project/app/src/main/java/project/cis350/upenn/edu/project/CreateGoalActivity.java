@@ -365,12 +365,12 @@ public class CreateGoalActivity extends AppCompatActivity implements AdapterView
     public void createEvents() {
 
         Calendar end = Calendar.getInstance();
-        end.set(Integer.parseInt(endYear), Integer.parseInt(endMonth), Integer.parseInt(endDay));
+        end.set(Integer.parseInt(endYear), Integer.parseInt(endMonth) - 1, Integer.parseInt(endDay));
 
         for (int i = 0; i < daysChecked.size(); i++) {
 
             Calendar cal = Calendar.getInstance();
-            cal.set(Integer.parseInt(startYear), Integer.parseInt(startMonth), Integer.parseInt(startDay));
+            cal.set(Integer.parseInt(startYear), Integer.parseInt(startMonth) - 1, Integer.parseInt(startDay));
 
             if (daysChecked.get(i).equals("Sunday")) {
                 increment(cal, end, Calendar.SUNDAY);

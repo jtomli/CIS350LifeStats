@@ -195,7 +195,7 @@ public class SingleGoalActivity extends AppCompatActivity {
 
                     String username = cursor.getString(cursor.getColumnIndex(EventsDatabaseContract.EventsDB.COL_USERNAME));
 
-                    System.out.println(username + "' goal " + goal.getName() + " on " + day +
+                    System.out.println(username + "'s goal: " + goal.getName() + " on " + day +
                     "/" + month + "/" + year + ", completed = " + completed);
 
                     //if the event is in this month, add it to the map "allEvents"
@@ -498,6 +498,23 @@ public class SingleGoalActivity extends AppCompatActivity {
             case R.id.delete_goal_button:
                 // TODO: Show confirmation prompt
                 // TODO: remove goal from database
+
+                GoalsDatabaseOpenHelper dbHelper = new GoalsDatabaseOpenHelper(this);
+                SQLiteDatabase db = dbHelper.getWritableDatabase();
+                String selection = GoalsDatabaseContract.GoalsDB.COL_USERNAME + " LIKE ? AND " +
+                        GoalsDatabaseContract.GoalsDB.COL_GOALNAME + " LIKE ?";
+
+                String[] selectionArgs = { username, goal.getName() };
+                db.delete(GoalsDatabaseContract.GoalsDB.TABLE_NAME, selection, selectionArgs);
+
+                EventsDatabaseOpenHelper dbEHelper = new EventsDatabaseOpenHelper(this);
+                SQLiteDatabase dbE = dbEHelper.getWritableDatabase();
+                String selectionE = EventsDatabaseContract.EventsDB.COL_USERNAME + " LIKE ? AND " +
+                        EventsDatabaseContract.EventsDB.COL_GOALNAME + " LIKE ?";
+
+                String[] selectionArgsE = { username, goal.getName() };
+                dbE.delete(EventsDatabaseContract.EventsDB.TABLE_NAME, selectionE, selectionArgsE);
+
                 Intent intent2 = new Intent(this, MainActivity.class);
                 intent2.putExtra("username", username);
                 startActivity(intent2);

@@ -119,6 +119,7 @@ public class AllGoalsActivity extends Activity  {
                         event.markCompleted(true);
                     }
 
+                    System.out.println(goal.getName() + ": " + event.toString());
                     goal.addEvent(event);
                 }
             }
