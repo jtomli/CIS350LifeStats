@@ -60,12 +60,10 @@ public class SingleGoalActivity extends AppCompatActivity {
 
         // Display current goal's monthly progress
         TextView monthProgressText = (TextView) findViewById(R.id.progress_month_text);
-        monthProgressText.setText("This Month's Progress: " + goal.getMonthlyCompletion(Calendar.getInstance().get(Calendar.MONTH)));
+        monthProgressText.setText("This Month's Progress: " + goal.getMonthlyCompletionPercent(Calendar.getInstance().get(Calendar.MONTH)));
 
         ProgressBar monthProgressBar = (ProgressBar) findViewById(R.id.progress_bar_month);
         monthProgressBar.setProgress((int) (goal.getMonthlyCompletion(Calendar.getInstance().get(Calendar.MONTH))*100));
-
-        // TODO: Populate weekly progress
 
         // Handles all calendar activity
         class MonthView extends TableLayout {

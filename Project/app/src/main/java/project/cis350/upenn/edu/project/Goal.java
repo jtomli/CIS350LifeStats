@@ -44,7 +44,8 @@ public class Goal implements Serializable, Comparable<Goal> {
             if (e.isCompleted()) completed++;
         }
         System.out.println("goal" + name + "'s completion  = " + completed + "/" + total);
-        return (double) completed / (double) total;
+        if (total == 0) return 1.0;
+        else return (double) completed / (double) total;
     }
 
     /**
@@ -71,7 +72,8 @@ public class Goal implements Serializable, Comparable<Goal> {
             }
         }
         System.out.println("goal" + name + "'s monthly completion  = " + completed + "/" + total);
-        return (double) completed / (double) total;
+        if (total == 0) return 1.0;
+        else return (double) completed / (double) total;
     }
 
     public String getMonthlyCompletionPercent(int month) {
