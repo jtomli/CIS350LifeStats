@@ -55,6 +55,7 @@ public class EditGoalActivity extends AppCompatActivity implements AdapterView.O
     private static String endHour;
     private static String endMin;
     private static String endAmPm;
+    private String originalGoalName;
 
     String username;
     ArrayList<String> reasons;
@@ -68,6 +69,7 @@ public class EditGoalActivity extends AppCompatActivity implements AdapterView.O
         Intent intent = getIntent();
         username = intent.getExtras().getString("username");
         goalName = intent.getExtras().getString("goalName");
+        originalGoalName = intent.getExtras().getString("goalName");
 
         UserDatabaseOpenHelper dbHelper = new UserDatabaseOpenHelper(this);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
@@ -141,6 +143,7 @@ public class EditGoalActivity extends AppCompatActivity implements AdapterView.O
                 this, android.R.layout.simple_spinner_item, reasons);
         adapterThree.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         reasonsSpinner.setAdapter(adapterThree);
+        reasonsSpinner.setOnItemSelectedListener(this);
 
         //GOAL NAME
         final EditText goalInput = (EditText) findViewById(R.id.goalNameInput);
@@ -292,8 +295,9 @@ public class EditGoalActivity extends AppCompatActivity implements AdapterView.O
                 GoalsDatabaseContract.GoalsDB.COL_REMINDME
         };
 
-        String selection = GoalsDatabaseContract.GoalsDB.COL_GOALNAME + " = ?";
-        String[] selectionArgs = { goalName };
+        String selection = GoalsDatabaseContract.GoalsDB.COL_GOALNAME + " = ? AND " +
+                GoalsDatabaseContract.GoalsDB.COL_USERNAME + " = ?";
+        String[] selectionArgs = { originalGoalName, username };
 
         Cursor cursor = db.query(
                 GoalsDatabaseContract.GoalsDB.TABLE_NAME,         // The table to query
@@ -330,7 +334,7 @@ public class EditGoalActivity extends AppCompatActivity implements AdapterView.O
             long newRowId = db.insert(GoalsDatabaseContract.GoalsDB.TABLE_NAME, null, values);
         } else {
             String selectionTwo = GoalsDatabaseContract.GoalsDB.COL_GOALNAME + " LIKE ?";
-            String[] selectionArgsTwo = {goalName};
+            String[] selectionArgsTwo = {originalGoalName};
 
             int count = db.update(
                     GoalsDatabaseContract.GoalsDB.TABLE_NAME,
@@ -361,24 +365,31 @@ public class EditGoalActivity extends AppCompatActivity implements AdapterView.O
             if (daysArr[i].equals("Sunday")) {
                 CheckBox x = (CheckBox) findViewById(R.id.sundayBox);
                 x.setChecked(true);
+                daysChecked.add("Sunday");
             } else if (daysArr[i].equals("Monday")) {
                 CheckBox x = (CheckBox) findViewById(R.id.mondayBox);
                 x.setChecked(true);
+                daysChecked.add("Monday");
             } else if (daysArr[i].equals("Tuesday")) {
                 CheckBox x = (CheckBox) findViewById(R.id.tuesdayBox);
                 x.setChecked(true);
+                daysChecked.add("Tuesday");
             } else if (daysArr[i].equals("Wednesday")) {
                 CheckBox x = (CheckBox) findViewById(R.id.wednesdayBox);
                 x.setChecked(true);
+                daysChecked.add("Wednesday");
             } else if (daysArr[i].equals("Thursday")) {
                 CheckBox x = (CheckBox) findViewById(R.id.thursdayBox);
                 x.setChecked(true);
+                daysChecked.add("Thursday");
             } else if (daysArr[i].equals("Friday")) {
                 CheckBox x = (CheckBox) findViewById(R.id.fridayBox);
                 x.setChecked(true);
+                daysChecked.add("Friday");
             } else if (daysArr[i].equals("Saturday")) {
                 CheckBox x = (CheckBox) findViewById(R.id.saturdayBox);
                 x.setChecked(true);
+                daysChecked.add("Saturday");
             }
         }
     }

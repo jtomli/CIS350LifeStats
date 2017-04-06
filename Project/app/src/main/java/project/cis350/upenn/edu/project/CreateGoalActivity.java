@@ -201,6 +201,7 @@ public class CreateGoalActivity extends AppCompatActivity implements AdapterView
             public void onClick(final View v) {
                 goalName = goalInput.getText().toString();
                 addGoal(v);
+                createEvents();
                 PopupMenu popup = new PopupMenu(CreateGoalActivity.this, addGoal);
                 popup.getMenuInflater().inflate(R.menu.add_goal_popup_menu, popup.getMenu());
                 popup.show();
@@ -322,6 +323,72 @@ public class CreateGoalActivity extends AppCompatActivity implements AdapterView
         }
     }
 
+    public void increment(Calendar cal, Calendar end, int dayOfWeek) {
+
+        EventsDatabaseOpenHelper dbHelper = new EventsDatabaseOpenHelper(this);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        while (cal.compareTo(end) <= 0){
+            while (!(cal.get(Calendar.DAY_OF_WEEK) == dayOfWeek)) {
+                cal.add(Calendar.DAY_OF_MONTH, 1);
+            }
+
+            ContentValues values = new ContentValues();
+            values.put(EventsDatabaseContract.EventsDB.COL_USERNAME, username);
+            values.put(EventsDatabaseContract.EventsDB.COL_GOALNAME, goalName);
+            values.put(EventsDatabaseContract.EventsDB.COL_YEAR, cal.get(Calendar.YEAR));
+            values.put(EventsDatabaseContract.EventsDB.COL_MONTH, cal.get(Calendar.MONTH));
+            values.put(EventsDatabaseContract.EventsDB.COL_DAY, cal.get(Calendar.DAY_OF_MONTH));
+            values.put(EventsDatabaseContract.EventsDB.COL_LOG, "no");
+
+            long newRowId = db.insert(EventsDatabaseContract.EventsDB.TABLE_NAME, null, values);
+            System.out.println("EVENT CREATED");
+            System.out.println(username);
+            System.out.println(goalName);
+            System.out.println(cal.get(Calendar.YEAR));
+            System.out.println(cal.get(Calendar.MONTH));
+            System.out.println(cal.get(Calendar.DAY_OF_MONTH));
+            System.out.println("no");
+
+            if (frequencySelection.equals("Weekly")) {
+                cal.add(Calendar.DAY_OF_MONTH, 7);
+            } else if (frequencySelection.equals("Biweekly")) {
+                cal.add(Calendar.DAY_OF_MONTH, 14);
+            } else if (frequencySelection.equals("Monthly")) {
+                cal.add(Calendar.MONTH, 1);
+            } else {
+                break;
+            }
+        }
+    }
+
+    public void createEvents() {
+
+        Calendar end = Calendar.getInstance();
+        end.set(Integer.parseInt(endYear), Integer.parseInt(endMonth) - 1, Integer.parseInt(endDay));
+
+        for (int i = 0; i < daysChecked.size(); i++) {
+
+            Calendar cal = Calendar.getInstance();
+            cal.set(Integer.parseInt(startYear), Integer.parseInt(startMonth) - 1, Integer.parseInt(startDay));
+
+            if (daysChecked.get(i).equals("Sunday")) {
+                increment(cal, end, Calendar.SUNDAY);
+            } else if (daysChecked.get(i).equals("Monday")) {
+                increment(cal, end, Calendar.MONDAY);
+            } else if (daysChecked.get(i).equals("Tuesday")) {
+                increment(cal, end, Calendar.TUESDAY);
+            } else if (daysChecked.get(i).equals("Wednesday")) {
+                increment(cal, end, Calendar.WEDNESDAY);
+            } else if (daysChecked.get(i).equals("Thursday")) {
+                increment(cal, end, Calendar.THURSDAY);
+            } else if (daysChecked.get(i).equals("Friday")) {
+                increment(cal, end, Calendar.FRIDAY);
+            } else if (daysChecked.get(i).equals("Saturday")){
+                increment(cal, end, Calendar.SATURDAY);
+            }
+        }
+    }
 
     public void allDayCheckBox(View v) {
         allDay = ((CheckBox) v).isChecked();
