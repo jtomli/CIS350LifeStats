@@ -19,6 +19,27 @@ public class Event implements Serializable, Comparable<Event> {
         completed = false;
     }
 
+    public String getYear() {
+        String year = "";
+        int asInt = start.get(Calendar.YEAR);
+        year = year + asInt;
+        return year;
+    }
+
+    public String getMonth() {
+        String month = "";
+        int asInt = start.get(Calendar.MONTH);
+        month = month + asInt;
+        return month;
+    }
+
+    public String getDay() {
+        String day = "";
+        int asInt = start.get(Calendar.DAY_OF_MONTH);
+        day = day + asInt;
+        return day;
+    }
+
 
     public Calendar getStart() { return start; }
 

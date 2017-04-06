@@ -6,8 +6,12 @@ import java.util.Date;
 import java.util.Map;
 import java.util.TreeMap;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.text.Html;
 import android.util.AttributeSet;
@@ -41,6 +45,8 @@ public class MonthView extends TableLayout{
 
     private String[] months = new String[12];
 
+    String username;
+
     Calendar cal,prevCal,today;	//today will be used for setting a box around today's date
     //prevCal will be used to display last few dates of previous month in the calendar
     public MonthView(Context context, AttributeSet attrs) {
@@ -55,6 +61,9 @@ public class MonthView extends TableLayout{
 
     private void init(Context contxt)
     {
+        Activity source = (Activity) contxt;
+        Intent intent = source.getIntent();
+        username = intent.getExtras().getString("username");
         context = contxt; //initializing the context variable
         Resources res = getResources();
         for(int i=0;i<12;i++) {
@@ -100,8 +109,64 @@ public class MonthView extends TableLayout{
             DisplayMonth(true);
         }};
     //Main function for displaying the current selected month
-    private void checkForEvents()
-    {
+    private void checkForEvents() {
+
+        // clear the map and array because this happens each time the month is changed
+        allEvents.clear();
+        hasEvents = new boolean[32];
+
+        //load events and goals from database
+        EventsDatabaseOpenHelper dbHelper = new EventsDatabaseOpenHelper(context);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        String[] projection = {
+                EventsDatabaseContract.EventsDB.COL_USERNAME,
+                EventsDatabaseContract.EventsDB.COL_GOALNAME,
+                EventsDatabaseContract.EventsDB.COL_YEAR,
+                EventsDatabaseContract.EventsDB.COL_MONTH,
+                EventsDatabaseContract.EventsDB.COL_DAY,
+                EventsDatabaseContract.EventsDB.COL_LOG
+        };
+
+        String selection = EventsDatabaseContract.EventsDB.COL_USERNAME + " = ?";
+        String[] selectionArgs = { username };
+
+        Cursor cursor = db.query(
+                EventsDatabaseContract.EventsDB.TABLE_NAME,         // The table to query
+                projection,                                     // The columns to return
+                selection,                                      // The columns for the WHERE clause
+                selectionArgs,                                  // The values for the WHERE clause
+                null,                                           // don't group the rows
+                null,                                           // don't filter by row groups
+                null                                            // The sort order
+        );
+
+        while(cursor.moveToNext()) {
+            int year = cursor.getInt(cursor.getColumnIndex(EventsDatabaseContract.EventsDB.COL_YEAR));
+            int month = cursor.getInt(cursor.getColumnIndex(EventsDatabaseContract.EventsDB.COL_MONTH));
+            int day = cursor.getInt(cursor.getColumnIndex(EventsDatabaseContract.EventsDB.COL_DAY));
+
+            String goalName = cursor.getString(cursor.getColumnIndex(EventsDatabaseContract.EventsDB.COL_GOALNAME));
+
+            Calendar cal = Calendar.getInstance();
+            cal.set(year, month, day);
+
+            Event event = new Event(cal, cal);
+
+            String completed = cursor.getString(cursor.getColumnIndex(EventsDatabaseContract.EventsDB.COL_LOG));
+            if (completed.equals("yes")) {
+                event.markCompleted(true);
+            }
+
+            //if the event is in this month, add it to the map "allEvents"
+            if (event.getStart().get(Calendar.MONTH) == cal.get(Calendar.MONTH)) {
+                allEvents.put(event, goalName);
+                hasEvents[event.getStart().get(Calendar.DATE)] = true;
+            }
+        }
+        cursor.close();
+
+    }
 		/*
 		// TODO: Pseudo-Code: Text me if you need help
 		// clear the map and array because this happens each time the month is changed
@@ -118,7 +183,7 @@ public class MonthView extends TableLayout{
 
 		// that should be it, the rest is handled below
 		*/
-    }
+
     int selected_day=0;
     void DisplayMonth(boolean animationEnabled)
     {

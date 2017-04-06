@@ -55,6 +55,7 @@ public class EditGoalActivity extends AppCompatActivity implements AdapterView.O
     private static String endHour;
     private static String endMin;
     private static String endAmPm;
+    private String originalGoalName;
 
     String username;
     ArrayList<String> reasons;
@@ -68,6 +69,7 @@ public class EditGoalActivity extends AppCompatActivity implements AdapterView.O
         Intent intent = getIntent();
         username = intent.getExtras().getString("username");
         goalName = intent.getExtras().getString("goalName");
+        originalGoalName = intent.getExtras().getString("goalName");
 
         UserDatabaseOpenHelper dbHelper = new UserDatabaseOpenHelper(this);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
@@ -141,6 +143,7 @@ public class EditGoalActivity extends AppCompatActivity implements AdapterView.O
                 this, android.R.layout.simple_spinner_item, reasons);
         adapterThree.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         reasonsSpinner.setAdapter(adapterThree);
+        reasonsSpinner.setOnItemSelectedListener(this);
 
         //GOAL NAME
         final EditText goalInput = (EditText) findViewById(R.id.goalNameInput);
@@ -292,8 +295,9 @@ public class EditGoalActivity extends AppCompatActivity implements AdapterView.O
                 GoalsDatabaseContract.GoalsDB.COL_REMINDME
         };
 
-        String selection = GoalsDatabaseContract.GoalsDB.COL_GOALNAME + " = ?";
-        String[] selectionArgs = { goalName };
+        String selection = GoalsDatabaseContract.GoalsDB.COL_GOALNAME + " = ? AND " +
+                GoalsDatabaseContract.GoalsDB.COL_USERNAME + " = ?";
+        String[] selectionArgs = { originalGoalName, username };
 
         Cursor cursor = db.query(
                 GoalsDatabaseContract.GoalsDB.TABLE_NAME,         // The table to query
@@ -330,7 +334,7 @@ public class EditGoalActivity extends AppCompatActivity implements AdapterView.O
             long newRowId = db.insert(GoalsDatabaseContract.GoalsDB.TABLE_NAME, null, values);
         } else {
             String selectionTwo = GoalsDatabaseContract.GoalsDB.COL_GOALNAME + " LIKE ?";
-            String[] selectionArgsTwo = {goalName};
+            String[] selectionArgsTwo = {originalGoalName};
 
             int count = db.update(
                     GoalsDatabaseContract.GoalsDB.TABLE_NAME,

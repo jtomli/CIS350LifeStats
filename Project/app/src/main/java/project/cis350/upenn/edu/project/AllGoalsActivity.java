@@ -71,27 +71,57 @@ public class AllGoalsActivity extends Activity  {
         );
 
         while (cursorGoals.moveToNext()) {
-            //create an event using Calendar objects
-            Calendar startCal = Calendar.getInstance();
-            Calendar endCal = Calendar.getInstance();
-            startCal.set(Integer.parseInt(cursorGoals.getString(cursorGoals.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_STARTYEAR))),
-                    Integer.parseInt(cursorGoals.getString(cursorGoals.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_STARTMONTH))),
-                    Integer.parseInt(cursorGoals.getString(cursorGoals.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_STARTDAY))),
-                    Integer.parseInt(cursorGoals.getString(cursorGoals.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_STARTHOUR))),
-                    Integer.parseInt(cursorGoals.getString(cursorGoals.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_STARTMIN))));
-            endCal.set(Integer.parseInt(cursorGoals.getString(cursorGoals.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_ENDYEAR))),
-                    Integer.parseInt(cursorGoals.getString(cursorGoals.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_ENDMONTH))),
-                    Integer.parseInt(cursorGoals.getString(cursorGoals.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_ENDDAY))),
-                    Integer.parseInt(cursorGoals.getString(cursorGoals.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_ENDHOUR))),
-                    Integer.parseInt(cursorGoals.getString(cursorGoals.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_ENDMIN))));
-            Event e = new Event(startCal, endCal);
             String goalN = cursorGoals.getString(cursorGoals.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_GOALNAME));
             Goal g = new Goal(goalN);
             String reason = cursorGoals.getString(cursorGoals.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_REASON));
             g.setReason(reason);
-            g.addEvent(e);
-            //TODO add this event to the event database, and repeating events
             allGoals.add(g);
+
+            for (Goal goal : allGoals) {
+                String name = goal.getName();
+                EventsDatabaseOpenHelper dbEventsHelper = new EventsDatabaseOpenHelper(this);
+                SQLiteDatabase dbEvents = dbEventsHelper.getWritableDatabase();
+
+                String[] projectionEvents = {
+                        EventsDatabaseContract.EventsDB.COL_USERNAME,
+                        EventsDatabaseContract.EventsDB.COL_GOALNAME,
+                        EventsDatabaseContract.EventsDB.COL_YEAR,
+                        EventsDatabaseContract.EventsDB.COL_MONTH,
+                        EventsDatabaseContract.EventsDB.COL_DAY,
+                        EventsDatabaseContract.EventsDB.COL_LOG
+                };
+
+                String selectionEvents = GoalsDatabaseContract.GoalsDB.COL_GOALNAME + " = ?";
+                String[] selectionArgsEvents = {name};
+
+                Cursor cursorEvents = dbEvents.query(
+                        EventsDatabaseContract.EventsDB.TABLE_NAME,         // The table to query
+                        projectionEvents,                                     // The columns to return
+                        selectionEvents,                                      // The columns for the WHERE clause
+                        selectionArgsEvents,                                  // The values for the WHERE clause
+                        null,                                           // don't group the rows
+                        null,                                           // don't filter by row groups
+                        null                                            // The sort order
+                );
+
+                while (cursorEvents.moveToNext()) {
+                    int year = cursorEvents.getInt(cursorEvents.getColumnIndex(EventsDatabaseContract.EventsDB.COL_YEAR));
+                    int month = cursorEvents.getInt(cursorEvents.getColumnIndex(EventsDatabaseContract.EventsDB.COL_MONTH));
+                    int day = cursorEvents.getInt(cursorEvents.getColumnIndex(EventsDatabaseContract.EventsDB.COL_DAY));
+
+                    Calendar cal = Calendar.getInstance();
+                    cal.set(year, month, day);
+
+                    Event event = new Event(cal, cal);
+
+                    String completed = cursorEvents.getString(cursorEvents.getColumnIndex(EventsDatabaseContract.EventsDB.COL_LOG));
+                    if (completed.equals("yes")) {
+                        event.markCompleted(true);
+                    }
+
+                    goal.addEvent(event);
+                }
+            }
         }
 
 
