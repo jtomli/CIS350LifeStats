@@ -149,7 +149,7 @@ public class MonthView extends TableLayout{
             String goalName = cursor.getString(cursor.getColumnIndex(EventsDatabaseContract.EventsDB.COL_GOALNAME));
 
             Calendar cal = Calendar.getInstance();
-            cal.set(year, month, day);
+            cal.set(year, month-1, day);
 
             Event event = new Event(cal, cal);
 
@@ -159,7 +159,7 @@ public class MonthView extends TableLayout{
             }
 
             //if the event is in this month, add it to the map "allEvents"
-            if (event.getStart().get(Calendar.MONTH) == cal.get(Calendar.MONTH)) {
+            if (event.getStart().get(Calendar.MONTH) == this.cal.get(Calendar.MONTH)) {
                 allEvents.put(event, goalName);
                 hasEvents[event.getStart().get(Calendar.DATE)] = true;
             }
@@ -167,22 +167,6 @@ public class MonthView extends TableLayout{
         cursor.close();
 
     }
-		/*
-		// TODO: Pseudo-Code: Text me if you need help
-		// clear the map and array because this happens each time the month is changed
-		allEvents.clear()
-		hasEvents = new boolean[32];
-
-		//load events and goals from database, not sure what that looks like
-		//if the event is in this month, add it to the map "allEvents", looks like the lines below
-
-		if (event.getStart().get(Calendar.MONTH) == cal.get(Calendar.MONTH)) {
-			allEvents.put(event, goalName);
-			hasEvents[event.getStart().get(Calendar.DATE)] = true;
-		}
-
-		// that should be it, the rest is handled below
-		*/
 
     int selected_day=0;
     void DisplayMonth(boolean animationEnabled)
@@ -207,7 +191,7 @@ public class MonthView extends TableLayout{
         removeAllViews();//Clears the calendar so that a new month can be displayed, removes all child elements (days,week numbers, day labels)
 
         int firstDayOfWeek,prevMonthDay,nextMonthDay,week;
-        cal.set(Calendar.DAY_OF_MONTH, 1); //Set date = 1st of current month so that we can know in next step which day is the first day of the week.
+        cal.set(Calendar.DATE, 1); //Set date = 1st of current month so that we can know in next step which day is the first day of the week.
         firstDayOfWeek = cal.get(Calendar.DAY_OF_WEEK)-1; //get which day is on the first date of the month
         week = cal.get(Calendar.WEEK_OF_YEAR)-1; //get which week is the current week.
         if(firstDayOfWeek==0 && cal.get(Calendar.MONTH)==Calendar.JANUARY) //adjustment for week number when january starts with first day of month as sunday
@@ -219,7 +203,7 @@ public class MonthView extends TableLayout{
         prevCal.add(Calendar.MONTH, -1);	//1 from the current month
 
         //get the number of days in the previous month to display last few days of previous month
-        prevMonthDay = prevCal.getActualMaximum(Calendar.DAY_OF_MONTH)-firstDayOfWeek+1;
+        prevMonthDay = prevCal.getActualMaximum(Calendar.DATE)-firstDayOfWeek+1;
         nextMonthDay = 1;	//set the next month counter to date 1
         android.widget.TableRow.LayoutParams lp;
 
@@ -276,7 +260,7 @@ public class MonthView extends TableLayout{
         lp.weight = 0.1f;
         for(int i=0;i<6;i++)
         {
-            if(day>cal.getActualMaximum(Calendar.DAY_OF_MONTH))
+            if(day>cal.getActualMaximum(Calendar.DATE))
                 break;
             tr = new TableRow(context);
             tr.setWeightSum(0.7f);
@@ -291,7 +275,7 @@ public class MonthView extends TableLayout{
                 btn.setTextColor(Color.GRAY);
                 if(j<firstDayOfWeek && day==1)  //checks if the first day of the week has arrived or previous month's date should be printed
                     btn.setText(Html.fromHtml(String.valueOf("<b>"+prevMonthDay+++"</b>")));
-                else if(day>cal.getActualMaximum(Calendar.DAY_OF_MONTH)) //checks to see whether to print next month's date
+                else if(day>cal.getActualMaximum(Calendar.DATE)) //checks to see whether to print next month's date
                 {
                     btn.setText(Html.fromHtml("<b>"+nextMonthDay+++"</b>"));
                 }
@@ -300,7 +284,16 @@ public class MonthView extends TableLayout{
                     try{
                         // draw the individual buttons with appropriate events
                         if(hasEvents[day]) {
-                            btn.setBackgroundResource(R.drawable.dayinmonth);
+                            for (Event e : allEvents.keySet()) {
+                                if (e.getStart().get(Calendar.DATE) == day) {
+                                    if (e.isCompleted()) {
+                                        btn.setBackgroundResource(R.drawable.complete_event);
+                                    } else {
+                                        btn.setBackgroundResource(R.drawable.incomplete_event);
+                                    }
+                                    break;
+                                }
+                            }
                         } else {
                             btn.setBackgroundResource(R.drawable.rectgrad);
                         }
@@ -308,7 +301,7 @@ public class MonthView extends TableLayout{
                     {
                         btn.setBackgroundResource(R.drawable.rectgrad);
                     }
-                    cal.set(Calendar.DAY_OF_MONTH, day);
+                    cal.set(Calendar.DATE, day);
                     btn.setTag(day); //tag to be used when closing the calendar view
                     btn.setOnClickListener(dayClickedListener);
                     if(cal.equals(today))//if the day is today then set different background and text color
@@ -384,7 +377,6 @@ public class MonthView extends TableLayout{
     private TextView tv;
 
     private boolean eventIsOnDay(Calendar cal, Calendar event) {
-        cal.set(Calendar.DATE, cal.get(Calendar.DAY_OF_MONTH));
         if (event.get(Calendar.YEAR) == cal.get(Calendar.YEAR)) {
             if (event.get(Calendar.MONTH) == cal.get(Calendar.MONTH)) {
                 if (event.get(Calendar.DATE) == cal.get(Calendar.DATE)) {
@@ -402,15 +394,23 @@ public class MonthView extends TableLayout{
             if(tv!=null)
             {
                 try{
-                    if(hasEvents[day])
-                    {
-                        tv.setBackgroundResource(R.drawable.dayinmonth);
+                    if(hasEvents[day]) {
+                        System.out.println("allEvents.size() = " + allEvents.size());
+                        for (Event e : allEvents.keySet()) {
+                            if (eventIsOnDay(cal, e.getStart())) {
+                                if (e.isCompleted()) {
+                                    tv.setBackgroundResource(R.drawable.complete_event);
+                                } else {
+                                    tv.setBackgroundResource(R.drawable.incomplete_event);
+                                }
+                                break;
+                            }
+                        }
                     }
                     else
                         tv.setBackgroundResource(R.drawable.rectgrad);
 
-                }catch(Exception ex)
-                {
+                }catch(Exception ex) {
                     tv.setBackgroundResource(R.drawable.rectgrad);
                 }
                 tv.setPadding(8,8,8,8);
@@ -427,7 +427,7 @@ public class MonthView extends TableLayout{
 			/*save the day,month and year in the public int variables day,month and year
 			 so that they can be used when the calendar is closed */
 
-            cal.set(Calendar.DAY_OF_MONTH, day);
+            cal.set(Calendar.DATE, day);
         }
     };
 

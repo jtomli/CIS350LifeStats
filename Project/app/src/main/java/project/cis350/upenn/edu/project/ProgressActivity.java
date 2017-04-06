@@ -1,6 +1,7 @@
 package project.cis350.upenn.edu.project;
 
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.PopupMenu;
@@ -9,6 +10,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
+
+import java.util.Calendar;
 
 /**
  * Created by jamietomlinson on 4/4/17.
@@ -31,9 +34,21 @@ public class ProgressActivity extends AppCompatActivity {
 
         setContentView(R.layout.log_progress);
 
+        Calendar cal = Calendar.getInstance();
+        int year = cal.get(Calendar.YEAR);
+        int month = cal.get(Calendar.MONTH);
+        int day = cal.get(Calendar.DAY_OF_MONTH);
+
         //TODO get from events database
         //get start calendar to get these values, not worrying about end since irrelevant for only
         //this indidivual event
+        EventsDatabaseOpenHelper dbEHelper = new EventsDatabaseOpenHelper(this);
+        SQLiteDatabase dbE = dbEHelper.getWritableDatabase();
+        String selectionE = EventsDatabaseContract.EventsDB.COL_USERNAME + " LIKE ? AND " +
+                EventsDatabaseContract.EventsDB.COL_GOALNAME + " LIKE ?";
+
+        String[] selectionArgsE = { username, goalname };
+
 
         setTime = (TextView) findViewById(R.id.setTime);
         //setTime.setText();
