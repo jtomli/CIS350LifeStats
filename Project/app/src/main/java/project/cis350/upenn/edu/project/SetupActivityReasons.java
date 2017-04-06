@@ -88,6 +88,53 @@ public class SetupActivityReasons extends AppCompatActivity {
             i = new Intent(this, MainActivity.class);
             i.putExtra("username", username);
             startActivity(i);
+        } else if (cursor.getCount() > 0) {
+            while (cursor.moveToNext()) {
+                for (int j = 0; j < 11; j++) {
+                    String reason = cursor.getString(cursor.getColumnIndex("reasons" + j));
+                    if (reason.equals("improve health")) {
+                        CheckBox x = (CheckBox) findViewById(R.id.health);
+                        x.setChecked(true);
+                        reasons.add("improve health");
+                    } else if (reason.equals("reduce stress")) {
+                        CheckBox x = (CheckBox) findViewById(R.id.stress);
+                        x.setChecked(true);
+                        reasons.add("reduce stress");
+                    } else if (reason.equals("improve grades")) {
+                        CheckBox x = (CheckBox) findViewById(R.id.grades);
+                        x.setChecked(true);
+                        reasons.add("improve grades");
+                    } else if (reason != null && !reason.equals("")){
+                        CheckBox other = (CheckBox) findViewById(R.id.other);
+                        if (!other.isChecked()) {
+                            other.setChecked(true);
+                            EditText otherText = (EditText) findViewById(R.id.otherText);
+                            otherText.setText(reason);
+                        } else {
+                            int layout = ugrLayout.size();
+                            layoutCheckBox.addView(createNewRelativeLayout());
+                            CheckBox x = createNewCheckBox();
+                            x.setChecked(true);
+                            ugrLayout.get(layout).addView(x);
+                            EditText y = createNewTextBox();
+                            y.setText(reason);
+                            ugrLayout.get(layout).addView(y);
+                        }
+                    }
+                }
+                CheckBox other = (CheckBox) findViewById(R.id.other);
+                if (other.isChecked() && ugrCheckbox.isEmpty()) {
+                    int layout = ugrLayout.size();
+                    layoutCheckBox.addView(createNewRelativeLayout());
+                    ugrLayout.get(layout).addView(createNewCheckBox());
+                    ugrLayout.get(layout).addView(createNewTextBox());
+                } else if (!ugrCheckbox.isEmpty() && ugrCheckbox.size() < maxOther) {
+                    int layout = ugrLayout.size();
+                    layoutCheckBox.addView(createNewRelativeLayout());
+                    ugrLayout.get(layout).addView(createNewCheckBox());
+                    ugrLayout.get(layout).addView(createNewTextBox());
+                }
+            }
         }
     }
 
@@ -116,6 +163,9 @@ public class SetupActivityReasons extends AppCompatActivity {
             Intent intent = new Intent(this, SetupActivitySentiment.class);
             intent.putExtra("username", username);
             intent.putExtra("reasons", reasons);
+            if (getIntent().hasExtra("fromSetupButton")) {
+                intent.putExtra("fromSetupButton", "true");
+            }
             startActivity(intent);
         } else {
             Toast.makeText(this, "Select at least one reason.", Toast.LENGTH_LONG).show();
@@ -217,7 +267,7 @@ public class SetupActivityReasons extends AppCompatActivity {
     }
 
     private void deleteLastCheckBox() {
-        if (!ugrCheckbox.isEmpty()) {
+        if (!ugrCheckbox.isEmpty() && !ugrLayout.isEmpty() && !ugrText.isEmpty()) {
             int last = ugrCheckbox.size() - 1;
 
             // remove from view

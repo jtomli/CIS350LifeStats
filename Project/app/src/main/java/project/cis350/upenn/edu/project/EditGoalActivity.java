@@ -365,24 +365,31 @@ public class EditGoalActivity extends AppCompatActivity implements AdapterView.O
             if (daysArr[i].equals("Sunday")) {
                 CheckBox x = (CheckBox) findViewById(R.id.sundayBox);
                 x.setChecked(true);
+                daysChecked.add("Sunday");
             } else if (daysArr[i].equals("Monday")) {
                 CheckBox x = (CheckBox) findViewById(R.id.mondayBox);
                 x.setChecked(true);
+                daysChecked.add("Monday");
             } else if (daysArr[i].equals("Tuesday")) {
                 CheckBox x = (CheckBox) findViewById(R.id.tuesdayBox);
                 x.setChecked(true);
+                daysChecked.add("Tuesday");
             } else if (daysArr[i].equals("Wednesday")) {
                 CheckBox x = (CheckBox) findViewById(R.id.wednesdayBox);
                 x.setChecked(true);
+                daysChecked.add("Wednesday");
             } else if (daysArr[i].equals("Thursday")) {
                 CheckBox x = (CheckBox) findViewById(R.id.thursdayBox);
                 x.setChecked(true);
+                daysChecked.add("Thursday");
             } else if (daysArr[i].equals("Friday")) {
                 CheckBox x = (CheckBox) findViewById(R.id.fridayBox);
                 x.setChecked(true);
+                daysChecked.add("Friday");
             } else if (daysArr[i].equals("Saturday")) {
                 CheckBox x = (CheckBox) findViewById(R.id.saturdayBox);
                 x.setChecked(true);
+                daysChecked.add("Saturday");
             }
         }
     }

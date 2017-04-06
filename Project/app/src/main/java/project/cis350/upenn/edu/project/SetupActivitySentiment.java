@@ -113,9 +113,15 @@ public class SetupActivitySentiment extends AppCompatActivity {
                     selectionArgsTwo);
         }
 
-        Intent intent = new Intent(this, CreateGoalActivity.class);
-        intent.putExtra("username", username);
-        startActivity(intent);
+        if (getIntent().hasExtra("fromSetupButton")) {
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.putExtra("username", username);
+            startActivity(intent);
+        } else {
+            Intent intent = new Intent(this, CreateGoalActivity.class);
+            intent.putExtra("username", username);
+            startActivity(intent);
+        }
     }
 }
 
