@@ -8,8 +8,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,23 +17,9 @@ import java.util.List;
 
 public class GoalActivity extends AppCompatActivity {
     Goal goal;
-    User user;
-    String username;
-    ArrayList<String> reasons;
-    String sentiment;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
-        Gson gson = new Gson();
-        String serializedUser = getIntent().getStringExtra("user");
-        user = gson.fromJson(serializedUser, User.class);
-        username = user.getID();
-        reasons = user.getReasons();
-        sentiment = user.getSentiment();
-
-
         this.goal = (Goal) getIntent().getSerializableExtra("Goal");
         setContentView(R.layout.goal_view);
 
@@ -44,13 +28,8 @@ public class GoalActivity extends AppCompatActivity {
         goalName.setText(goal.getName());
 
         // Populate the reasons TextView with all of the reasons associated with this goal
-        TextView reasons = (TextView) findViewById(R.id.reasons);
-        StringBuilder s = new StringBuilder();
-        for (String reason : goal.getReasons()) {
-            s.append(reason);
-            s.append(", ");
-        }
-        reasons.setText("Reasons: " + s.toString());
+        TextView reasons = (TextView) findViewById(R.id.reason);
+        reasons.setText("Reasons: " + goal.getReason());
 
         // Display current goal progress
         TextView totalProgress = (TextView) findViewById(R.id.total_progress);

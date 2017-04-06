@@ -10,7 +10,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class EventsDatabaseOpenHelper extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     private static final String EVENTS_TABLE_CREATE =
             "CREATE TABLE " + EventsDatabaseContract.EventsDB.TABLE_NAME + "(" +
@@ -19,11 +19,7 @@ public class EventsDatabaseOpenHelper extends SQLiteOpenHelper {
                     EventsDatabaseContract.EventsDB.COL_YEAR + " INT," +
                     EventsDatabaseContract.EventsDB.COL_MONTH + " INT," +
                     EventsDatabaseContract.EventsDB.COL_DAY + " INT," +
-                    EventsDatabaseContract.EventsDB.COL_STARTHOUR + " INT," +
-                    EventsDatabaseContract.EventsDB.COL_STARTMIN + " INT," +
-                    EventsDatabaseContract.EventsDB.COL_ENDHOUR + " INT," +
-                    EventsDatabaseContract.EventsDB.COL_ENDMIN + " INT," +
-                    EventsDatabaseContract.EventsDB.COL_ALLDAY + " TEXT);";
+                    EventsDatabaseContract.EventsDB.COL_LOG + " TEXT);";
 
     private static final String SQL_DELETE_ENTRIES =
             "DROP TABLE IF EXISTS " + EventsDatabaseContract.EventsDB.TABLE_NAME;

@@ -1,22 +1,16 @@
 package project.cis350.upenn.edu.project;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.view.View;
-import android.widget.*;
-import android.database.sqlite.SQLiteDatabase;
-import android.content.ContentValues;
+        import android.content.Intent;
+        import android.os.Bundle;
+        import android.support.v7.app.AppCompatActivity;
+        import android.view.View;
+        import android.widget.*;
+        import android.database.sqlite.SQLiteDatabase;
+        import android.content.ContentValues;
 
-import java.util.Date;
-
-
-import com.google.gson.Gson;
-
-import java.util.ArrayList;
-
-import static project.cis350.upenn.edu.project.R.id.reasons;
-
+        import java.text.SimpleDateFormat;
+        import java.util.Calendar;
+        import java.util.Date;
 
 /**
  * Created by AK47 on 2/21/17.
@@ -24,9 +18,7 @@ import static project.cis350.upenn.edu.project.R.id.reasons;
 
 public class DiaryLogActivity extends AppCompatActivity{
 
-    User user;
     String username;
-    ArrayList<String> reasons;
     String sentiment;
 
 
@@ -35,12 +27,7 @@ public class DiaryLogActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.diary_log);
 
-        Gson gson = new Gson();
-        String serializedUser = getIntent().getStringExtra("user");
-        user = gson.fromJson(serializedUser, User.class);
-        username = user.getID();
-        reasons = user.getReasons();
-        sentiment = user.getSentiment();
+        username = getIntent().getExtras().getString("username");
 
     }
     public void onSubmitButton(View v) {
@@ -49,8 +36,7 @@ public class DiaryLogActivity extends AppCompatActivity{
 
         Intent i = new Intent(this, DiaryActivity.class);
 
-        Gson gson = new Gson();
-        i.putExtra("user", gson.toJson(user));
+        i.putExtra("username", username);
 
         //get diary entry
         String entry = ((EditText) findViewById(R.id.diary_text)).getText().toString();
@@ -75,10 +61,8 @@ public class DiaryLogActivity extends AppCompatActivity{
     public void onMenuButton(View v) {
 
         Intent intent = new Intent(this, MainActivity.class);
-        Gson gson = new Gson();
-        intent.putExtra("user", gson.toJson(user));
+        intent.putExtra("username", username);
         startActivity(intent);
 
     }
-
 }

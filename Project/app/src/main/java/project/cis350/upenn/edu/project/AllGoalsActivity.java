@@ -5,12 +5,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
-
-import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -24,42 +19,17 @@ import java.util.TreeSet;
 
 public class AllGoalsActivity extends Activity  {
     Set<Goal> allGoals;
-    User user;
     String username;
-    ArrayList<String> reasons;
-    String sentiment;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        Gson gson = new Gson();
-        String serializedUser = getIntent().getStringExtra("user");
-        user = gson.fromJson(serializedUser, User.class);
-        username = user.getID();
-        reasons = user.getReasons();
-        sentiment = user.getSentiment();
+        Intent i = getIntent();
+        username = i.getExtras().getString("username");
 
         setContentView(R.layout.all_goals_layout);
         // create a ListView to display all the user's goals into a ListView
         final ListView goals = (ListView) findViewById(R.id.all_goals);
         goals.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-        // add a listener to the ListView so that specific goals can be selected
-        goals.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> myAdapter, View myView, int pos, long mylng) {
-                String selectedFromList =(goals.getItemAtPosition(pos).toString());
-                for (Goal goal : allGoals) {
-                    if (goal.toString().equals(selectedFromList)) {
-                        // create a new Intent using the current activity and GoalActivity class
-                        Intent i = new Intent(getApplicationContext(), SingleGoalActivity.class);
-                        // pass the goal to GoalAtivity
-                        i.putExtra("Goal", goal);
-                        i.putExtra("username", username);
-                        // start the game activity
-                        startActivityForResult(i, 1);
-                    }
-                }
-            }
-        });
 
         allGoals = new TreeSet<>();
         GoalsDatabaseOpenHelper dbGoalsHelper = new GoalsDatabaseOpenHelper(this);
@@ -87,7 +57,7 @@ public class AllGoalsActivity extends Activity  {
                 GoalsDatabaseContract.GoalsDB.COL_REMINDME
         };
 
-        String selectionGoals = GoalsDatabaseContract.GoalsDB.COL_GOALNAME + " = ?";
+        String selectionGoals = GoalsDatabaseContract.GoalsDB.COL_USERNAME + " = ?";
         String[] selectionArgsGoals = {username};
 
         Cursor cursorGoals = dbGoals.query(
@@ -101,32 +71,76 @@ public class AllGoalsActivity extends Activity  {
         );
 
         while (cursorGoals.moveToNext()) {
-            //create an event using Calendar objects
-            Calendar startCal = Calendar.getInstance();
-            Calendar endCal = Calendar.getInstance();
-            startCal.set(Integer.parseInt(cursorGoals.getString(cursorGoals.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_STARTYEAR))),
-                    Integer.parseInt(cursorGoals.getString(cursorGoals.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_STARTMONTH))),
-                    Integer.parseInt(cursorGoals.getString(cursorGoals.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_STARTDAY))),
-                    Integer.parseInt(cursorGoals.getString(cursorGoals.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_STARTHOUR))),
-                    Integer.parseInt(cursorGoals.getString(cursorGoals.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_STARTMIN))));
-            endCal.set(Integer.parseInt(cursorGoals.getString(cursorGoals.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_ENDYEAR))),
-                    Integer.parseInt(cursorGoals.getString(cursorGoals.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_ENDMONTH))),
-                    Integer.parseInt(cursorGoals.getString(cursorGoals.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_ENDDAY))),
-                    Integer.parseInt(cursorGoals.getString(cursorGoals.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_ENDHOUR))),
-                    Integer.parseInt(cursorGoals.getString(cursorGoals.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_ENDMIN))));
-            Event e = new Event(startCal, endCal);
-            Goal g = new Goal(cursorGoals.getString(cursorGoals.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_GOALNAME)));
+            String goalN = cursorGoals.getString(cursorGoals.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_GOALNAME));
+            Goal g = new Goal(goalN);
+            String reason = cursorGoals.getString(cursorGoals.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_REASON));
+            g.setReason(reason);
             allGoals.add(g);
+
+            for (Goal goal : allGoals) {
+                String name = goal.getName();
+                EventsDatabaseOpenHelper dbEventsHelper = new EventsDatabaseOpenHelper(this);
+                SQLiteDatabase dbEvents = dbEventsHelper.getWritableDatabase();
+
+                String[] projectionEvents = {
+                        EventsDatabaseContract.EventsDB.COL_USERNAME,
+                        EventsDatabaseContract.EventsDB.COL_GOALNAME,
+                        EventsDatabaseContract.EventsDB.COL_YEAR,
+                        EventsDatabaseContract.EventsDB.COL_MONTH,
+                        EventsDatabaseContract.EventsDB.COL_DAY,
+                        EventsDatabaseContract.EventsDB.COL_LOG
+                };
+
+                String selectionEvents = GoalsDatabaseContract.GoalsDB.COL_GOALNAME + " = ?";
+                String[] selectionArgsEvents = {name};
+
+                Cursor cursorEvents = dbEvents.query(
+                        EventsDatabaseContract.EventsDB.TABLE_NAME,         // The table to query
+                        projectionEvents,                                     // The columns to return
+                        selectionEvents,                                      // The columns for the WHERE clause
+                        selectionArgsEvents,                                  // The values for the WHERE clause
+                        null,                                           // don't group the rows
+                        null,                                           // don't filter by row groups
+                        null                                            // The sort order
+                );
+
+                while (cursorEvents.moveToNext()) {
+                    int year = cursorEvents.getInt(cursorEvents.getColumnIndex(EventsDatabaseContract.EventsDB.COL_YEAR));
+                    int month = cursorEvents.getInt(cursorEvents.getColumnIndex(EventsDatabaseContract.EventsDB.COL_MONTH));
+                    int day = cursorEvents.getInt(cursorEvents.getColumnIndex(EventsDatabaseContract.EventsDB.COL_DAY));
+
+                    Calendar cal = Calendar.getInstance();
+                    cal.set(year, month, day);
+
+                    Event event = new Event(cal, cal);
+
+                    String completed = cursorEvents.getString(cursorEvents.getColumnIndex(EventsDatabaseContract.EventsDB.COL_LOG));
+                    if (completed.equals("yes")) {
+                        event.markCompleted(true);
+                    }
+
+                    goal.addEvent(event);
+                }
+            }
         }
 
 
         // populate the ListView with all of the user's goals
-        List<String> list = new ArrayList<>();
+        List<Goal> list = new ArrayList<>();
         for (Goal goal : allGoals) {
-            list.add(goal.toString());
+            list.add(goal);
         }
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(),
-                R.layout.goals_layout, list);
+        CustomAdapter adapter = new CustomAdapter(this, list);
         goals.setAdapter(adapter);
+    }
+
+    public void goToSingleGoal(Goal goal) {
+        // create a new Intent using the current activity and GoalActivity class
+        Intent i = new Intent(getApplicationContext(), SingleGoalActivity.class);
+        // pass the goal to GoalActivity
+        i.putExtra("Goal", goal);
+        i.putExtra("username", username);
+        // start the game activity
+        startActivityForResult(i, 1);
     }
 }

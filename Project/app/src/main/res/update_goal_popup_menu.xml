@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item
-        android:id="@id/mainMenu"
-        android:title="Return to main menu" />
-    <item
-        android:id="@id/allGoalsView"
-        android:title="Return to all goals"/>
-</menu>

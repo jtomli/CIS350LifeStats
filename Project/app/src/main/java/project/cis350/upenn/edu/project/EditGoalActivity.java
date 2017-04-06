@@ -1,6 +1,4 @@
 package project.cis350.upenn.edu.project;
-
-
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
@@ -43,7 +41,6 @@ public class EditGoalActivity extends AppCompatActivity implements AdapterView.O
     List<String> daysChecked;
     private String frequencySelection;
     private String reminderSelection;
-    //TODO info to be sent to DB!!!!!
     private String goalName;
     private String reasonSelection;
     private static String startMonth;
@@ -58,6 +55,7 @@ public class EditGoalActivity extends AppCompatActivity implements AdapterView.O
     private static String endHour;
     private static String endMin;
     private static String endAmPm;
+    private String originalGoalName;
 
     String username;
     ArrayList<String> reasons;
@@ -65,11 +63,13 @@ public class EditGoalActivity extends AppCompatActivity implements AdapterView.O
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_goal);
+        setContentView(R.layout.edit_goal_layout);
 
 
         Intent intent = getIntent();
         username = intent.getExtras().getString("username");
+        goalName = intent.getExtras().getString("goalName");
+        originalGoalName = intent.getExtras().getString("goalName");
 
         UserDatabaseOpenHelper dbHelper = new UserDatabaseOpenHelper(this);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
@@ -143,6 +143,7 @@ public class EditGoalActivity extends AppCompatActivity implements AdapterView.O
                 this, android.R.layout.simple_spinner_item, reasons);
         adapterThree.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         reasonsSpinner.setAdapter(adapterThree);
+        reasonsSpinner.setOnItemSelectedListener(this);
 
         //GOAL NAME
         final EditText goalInput = (EditText) findViewById(R.id.goalNameInput);
@@ -177,7 +178,7 @@ public class EditGoalActivity extends AppCompatActivity implements AdapterView.O
         String selectionGoals = GoalsDatabaseContract.GoalsDB.COL_GOALNAME + " = ?";
         String[] selectionArgsGoals = {goalName};
 
-        Cursor cursor = db.query( //TODO getting error here "GOALS_TABLE does not exist"
+        Cursor cursor = dbGoals.query(
                 GoalsDatabaseContract.GoalsDB.TABLE_NAME,         // The table to query
                 projectionGoals,                                     // The columns to return
                 selectionGoals,                                      // The columns for the WHERE clause
@@ -214,6 +215,22 @@ public class EditGoalActivity extends AppCompatActivity implements AdapterView.O
             goalInput.setText(cursor.getString(cursor.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_GOALNAME)));
 
             checkDayBoxes(cursor.getString(cursor.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_REPEAT)));
+
+            startYear = cursor.getString(cursor.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_STARTYEAR));
+            startMonth = cursor.getString(cursor.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_STARTMONTH));
+            startDay = cursor.getString(cursor.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_STARTDAY));
+            startHour = cursor.getString(cursor.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_STARTHOUR));
+            startMin = cursor.getString(cursor.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_STARTMIN));
+            startAmPm = cursor.getString(cursor.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_STARTAMPM));
+            endYear = cursor.getString(cursor.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_ENDYEAR));
+            endMonth = cursor.getString(cursor.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_ENDMONTH));
+            endDay = cursor.getString(cursor.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_ENDDAY));
+            endHour = cursor.getString(cursor.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_ENDHOUR));
+            endMin = cursor.getString(cursor.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_ENDMIN));
+            endAmPm = cursor.getString(cursor.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_ENDAMPM));
+            reasonSelection = cursor.getString(cursor.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_REASON));
+            frequencySelection = cursor.getString(cursor.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_FREQUENCY));
+            reminderSelection = cursor.getString(cursor.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_REMINDME));
         }
 
 
@@ -252,7 +269,6 @@ public class EditGoalActivity extends AppCompatActivity implements AdapterView.O
 
 
 
-    //TODO 3/24 add to database
     public void updateGoal(View v) {
         GoalsDatabaseOpenHelper dbHelper = new GoalsDatabaseOpenHelper(v.getContext());
         SQLiteDatabase db = dbHelper.getWritableDatabase();
@@ -279,8 +295,9 @@ public class EditGoalActivity extends AppCompatActivity implements AdapterView.O
                 GoalsDatabaseContract.GoalsDB.COL_REMINDME
         };
 
-        String selection = GoalsDatabaseContract.GoalsDB.COL_GOALNAME + " = ?";
-        String[] selectionArgs = { goalName };
+        String selection = GoalsDatabaseContract.GoalsDB.COL_GOALNAME + " = ? AND " +
+                GoalsDatabaseContract.GoalsDB.COL_USERNAME + " = ?";
+        String[] selectionArgs = { originalGoalName, username };
 
         Cursor cursor = db.query(
                 GoalsDatabaseContract.GoalsDB.TABLE_NAME,         // The table to query
@@ -317,7 +334,7 @@ public class EditGoalActivity extends AppCompatActivity implements AdapterView.O
             long newRowId = db.insert(GoalsDatabaseContract.GoalsDB.TABLE_NAME, null, values);
         } else {
             String selectionTwo = GoalsDatabaseContract.GoalsDB.COL_GOALNAME + " LIKE ?";
-            String[] selectionArgsTwo = {goalName};
+            String[] selectionArgsTwo = {originalGoalName};
 
             int count = db.update(
                     GoalsDatabaseContract.GoalsDB.TABLE_NAME,
@@ -462,25 +479,26 @@ public class EditGoalActivity extends AppCompatActivity implements AdapterView.O
     }
 
     public void onSetStartTimeClick(View v) {
-        DialogFragment startTimePicker = new CreateGoalActivity.TimePickerFragment();
+        System.out.println("HERE");
+        DialogFragment startTimePicker = new TimePickerFragment();
         startTimePicker.show(getSupportFragmentManager(), "startTimePicker");
         startTimePressed = true;
     }
 
     public void onSetEndTimeClick(View v) {
-        DialogFragment endTimePicker = new CreateGoalActivity.TimePickerFragment();
+        DialogFragment endTimePicker = new TimePickerFragment();
         endTimePicker.show(getSupportFragmentManager(), "endTimePicker");
         endTimePressed = true;
     }
 
     public void onSetStartDateClick(View v) {
-        DialogFragment startDatePicker = new CreateGoalActivity.DatePickerFragment();
+        DialogFragment startDatePicker = new DatePickerFragment();
         startDatePicker.show(getSupportFragmentManager(), "startDatePicker");
         startDatePressed = true;
     }
 
     public void onSetEndDateClick(View v) {
-        DialogFragment endDatePicker = new CreateGoalActivity.DatePickerFragment();
+        DialogFragment endDatePicker = new DatePickerFragment();
         endDatePicker.show(getSupportFragmentManager(), "endDatePicker");
         endDatePressed = true;
     }

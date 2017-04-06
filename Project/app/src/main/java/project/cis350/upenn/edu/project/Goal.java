@@ -1,6 +1,6 @@
 package project.cis350.upenn.edu.project;
-
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -13,12 +13,11 @@ import java.util.TreeSet;
 public class Goal implements Serializable, Comparable<Goal> {
     private String name;
     private Set<Event> events;
-    private Set<String> reasons;
+    private String reason = "";
 
     public Goal(String name) {
         this.name = name;
         events = new TreeSet<>();
-        reasons = new HashSet<>();
     }
 
     public String getName() {
@@ -58,16 +57,34 @@ public class Goal implements Serializable, Comparable<Goal> {
         return s + "%";
     }
 
-    public void addReason(String reason) {
-        reasons.add(reason);
+    public double getMonthlyCompletion(int month) {
+        int total = 0;
+        int completed = 0;
+        for (Event e : events) {
+            if (e.getStart().get(Calendar.MONTH) == month) {
+                total++;
+                if (e.isCompleted()) { completed++; }
+            }
+        }
+        return (double) completed / (double) total;
+    }
+
+    public String getMonthlyCompletionPercent(int month) {
+        String s = "" + getMonthlyCompletion(month)*100;
+        if (s.length() > 5) { s = s.substring(0, 5); }
+        return s + "%";
+    }
+
+    public void setReason(String reason) {
+        this.reason = reason;
     }
 
     public void removeReason(String reason) {
-        reasons.remove(reason);
+        this.reason = "";
     }
 
-    public Set<String> getReasons() {
-        return Collections.unmodifiableSet(reasons);
+    public String getReason() {
+        return reason;
     }
 
     public Set<Event> getEvents() {

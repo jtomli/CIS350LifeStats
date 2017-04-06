@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:title="Return to Calendar"
+        android:id="@+id/returnCal"/>
+    <item
+        android:title="Return to Main Menu"
+        android:id="@+id/mainMenu"/>
+</menu>

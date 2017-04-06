@@ -1,6 +1,4 @@
 package project.cis350.upenn.edu.project;
-
-
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
@@ -25,8 +23,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
-import com.google.gson.Gson;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -42,44 +38,40 @@ public class CreateGoalActivity extends AppCompatActivity implements AdapterView
     protected static boolean endTimePressed = false;
     protected static boolean startDatePressed = false;
     protected static boolean endDatePressed = false;
+
+    // for DB
     private boolean allDay = false;
     List<String> daysChecked;
-    private String frequencySelection;
+    private String frequencySelection; // default added
     private String reminderSelection;
-    //TODO info to be sent to DB!!!!!
     private String goalName;
-    private String reasonSelection;
-    private static String startMonth;
-    private static String startDay;
-    private static String startYear;
-    private static String endMonth;
-    private static String endDay;
-    private static String endYear;
-    private static String startHour;
-    private static String startMin;
-    private static String startAmPm;
-    private static String endHour;
-    private static String endMin;
-    private static String endAmPm;
+    private String reasonSelection; // default added
+    private static String startMonth; // default added
+    private static String startDay; // default added
+    private static String startYear; // default added
+    private static String endMonth; // default added
+    private static String endDay; // default added
+    private static String endYear; // default added
+    private static String startHour; // default added
+    private static String startMin; // default added
+    private static String startAmPm; // default added
+    private static String endHour; // default added
+    private static String endMin; // default added
+    private static String endAmPm; // default added
 
-    User user;
+
     String username;
     ArrayList<String> reasons;
-    String sentiment;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_goal);
 
-        Gson gson = new Gson();
-        String serializedUser = getIntent().getStringExtra("user");
-        user = gson.fromJson(serializedUser, User.class);
-        username = user.getID();
-        reasons = user.getReasons();
-        sentiment = user.getSentiment();
-
         Calendar c = Calendar.getInstance();
+
+        Intent intent = getIntent();
+        username = intent.getExtras().getString("username");
 
         UserDatabaseOpenHelper dbHelper = new UserDatabaseOpenHelper(this);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
@@ -122,6 +114,10 @@ public class CreateGoalActivity extends AppCompatActivity implements AdapterView
                 String item = cursor.getString(cursor.getColumnIndex("reasons" + i));
                 if (!item.isEmpty()) {
                     reasons.add(item);
+
+                    if (i == 0) {
+                        reasonSelection = item;
+                    }
                 }
             }
         }
@@ -129,13 +125,25 @@ public class CreateGoalActivity extends AppCompatActivity implements AdapterView
         // reasons are saved in reason
         // reason can now populate a spinner
 
-        //setting labels at start up for TIME
+        // setting labels at start up for startTime
         String currTime = hourConverter(c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE));
-        String currEndTime = hourConverter(c.get(Calendar.HOUR_OF_DAY) + 1, c.get(Calendar.MINUTE));
         startTimeText = (TextView) findViewById(R.id.setStartTime);
         startTimeText.setText(currTime);
+
+        // set default values: startHour & startMin
+        startHour = "" + c.get(Calendar.HOUR_OF_DAY);
+        startMin = "" + c.get(Calendar.MINUTE);
+        startAmPm = "PM";
+
+        // setting labels at start up for endTime
+        String currEndTime = hourConverter(c.get(Calendar.HOUR_OF_DAY) + 1, c.get(Calendar.MINUTE));
         endTimeText = (TextView) findViewById(R.id.setEndTime);
         endTimeText.setText(currEndTime);
+
+        // set default values: endHour & EndMin
+        endHour = "" + (c.get(Calendar.HOUR_OF_DAY) + 1);
+        endMin = "" + c.get(Calendar.MINUTE);
+        endAmPm = "PM";
 
         //setting labels at start up for DATE
         c.add(Calendar.DATE, 0);
@@ -145,6 +153,16 @@ public class CreateGoalActivity extends AppCompatActivity implements AdapterView
         startDateText.setText(currDate);
         endDateText = (TextView) findViewById(R.id.setEndDate);
         endDateText.setText(currDate);
+
+        startYear = currDate.substring(6);
+        startMonth = currDate.substring(0, 2);
+        startDay = currDate.substring(3, 5);
+        endYear = currDate.substring(6);
+        endMonth = currDate.substring(0, 2);
+        endDay = currDate.substring(3, 5);
+
+        frequencySelection = "One time only";
+        reminderSelection = "Never";
 
         //creating reminder spinner
         Spinner reminderSpinner = (Spinner) findViewById(R.id.reminderSpinner);
@@ -168,6 +186,7 @@ public class CreateGoalActivity extends AppCompatActivity implements AdapterView
                 this, android.R.layout.simple_spinner_item, reasons);
         adapterThree.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         reasonsSpinner.setAdapter(adapterThree);
+        reasonsSpinner.setOnItemSelectedListener(this);
 
         //GOAL NAME
         final EditText goalInput = (EditText) findViewById(R.id.goalNameInput);
@@ -182,6 +201,7 @@ public class CreateGoalActivity extends AppCompatActivity implements AdapterView
             public void onClick(final View v) {
                 goalName = goalInput.getText().toString();
                 addGoal(v);
+                createEvents();
                 PopupMenu popup = new PopupMenu(CreateGoalActivity.this, addGoal);
                 popup.getMenuInflater().inflate(R.menu.add_goal_popup_menu, popup.getMenu());
                 popup.show();
@@ -190,28 +210,23 @@ public class CreateGoalActivity extends AppCompatActivity implements AdapterView
                     public boolean onMenuItemClick(MenuItem item) {
                         int itemId = item.getItemId();
                         if (itemId == R.id.addAnother) {
-                            Intent intent = new Intent(v.getContext(), CreateGoalActivity.class);
-                            Gson gson = new Gson();
-                            intent.putExtra("user", gson.toJson(user));
-                            startActivity(intent);
+                            Intent i = new Intent(v.getContext(), CreateGoalActivity.class);
+                            i.putExtra("username", username);
+                            startActivity(i);
                         } else if (itemId == R.id.mainMenu) {
-                            Intent intent = new Intent(v.getContext(), MainActivity.class);
-                            Gson gson = new Gson();
-                            intent.putExtra("user", gson.toJson(user));
-                            startActivity(intent);
+                            Intent i = new Intent(v.getContext(), MainActivity.class);
+                            i.putExtra("username", username);
+                            startActivity(i);
                         }
                         return true;
                     }
                 });
-
-                System.out.println("are we printing this " + goalName);
             }
         });
 
 
     }
 
-    //TODO 3/24 add to database
     public void addGoal(View v) {
 
         GoalsDatabaseOpenHelper dbHelper = new GoalsDatabaseOpenHelper(v.getContext());
@@ -273,6 +288,27 @@ public class CreateGoalActivity extends AppCompatActivity implements AdapterView
         values.put(GoalsDatabaseContract.GoalsDB.COL_FREQUENCY, frequencySelection);
         values.put(GoalsDatabaseContract.GoalsDB.COL_REASON, reasonSelection);
 
+        System.out.println(username);
+        System.out.println(goalName);
+        System.out.println(startYear);
+        System.out.println(startMonth);
+        System.out.println(startDay);
+        System.out.println(startHour);
+        System.out.println(startMin);
+        System.out.println(startAmPm);
+        System.out.println(endYear);
+        System.out.println(endMonth);
+        System.out.println(endDay);
+        System.out.println(endHour);
+        System.out.println(endMin);
+        System.out.println(endAmPm);
+        System.out.println(daysChecked.toString());
+        System.out.println(allDay);
+        System.out.println(reminderSelection);
+        System.out.println(frequencySelection);
+        System.out.println(reasonSelection);
+
+
         if (cursor.getCount() <=0) {
             long newRowId = db.insert(GoalsDatabaseContract.GoalsDB.TABLE_NAME, null, values);
         } else {
@@ -283,10 +319,76 @@ public class CreateGoalActivity extends AppCompatActivity implements AdapterView
                     GoalsDatabaseContract.GoalsDB.TABLE_NAME,
                     values,
                     selectionTwo, selectionArgsTwo);
-        }
 
+        }
     }
 
+    public void increment(Calendar cal, Calendar end, int dayOfWeek) {
+
+        EventsDatabaseOpenHelper dbHelper = new EventsDatabaseOpenHelper(this);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        while (cal.compareTo(end) <= 0){
+            while (!(cal.get(Calendar.DAY_OF_WEEK) == dayOfWeek)) {
+                cal.add(Calendar.DAY_OF_MONTH, 1);
+            }
+
+            ContentValues values = new ContentValues();
+            values.put(EventsDatabaseContract.EventsDB.COL_USERNAME, username);
+            values.put(EventsDatabaseContract.EventsDB.COL_GOALNAME, goalName);
+            values.put(EventsDatabaseContract.EventsDB.COL_YEAR, cal.get(Calendar.YEAR));
+            values.put(EventsDatabaseContract.EventsDB.COL_MONTH, cal.get(Calendar.MONTH));
+            values.put(EventsDatabaseContract.EventsDB.COL_DAY, cal.get(Calendar.DAY_OF_MONTH));
+            values.put(EventsDatabaseContract.EventsDB.COL_LOG, "no");
+
+            long newRowId = db.insert(EventsDatabaseContract.EventsDB.TABLE_NAME, null, values);
+            System.out.println("EVENT CREATED");
+            System.out.println(username);
+            System.out.println(goalName);
+            System.out.println(cal.get(Calendar.YEAR));
+            System.out.println(cal.get(Calendar.MONTH));
+            System.out.println(cal.get(Calendar.DAY_OF_MONTH));
+            System.out.println("no");
+
+            if (frequencySelection.equals("Weekly")) {
+                cal.add(Calendar.DAY_OF_MONTH, 7);
+            } else if (frequencySelection.equals("Biweekly")) {
+                cal.add(Calendar.DAY_OF_MONTH, 14);
+            } else if (frequencySelection.equals("Monthly")) {
+                cal.add(Calendar.MONTH, 1);
+            } else {
+                break;
+            }
+        }
+    }
+
+    public void createEvents() {
+
+        Calendar end = Calendar.getInstance();
+        end.set(Integer.parseInt(endYear), Integer.parseInt(endMonth), Integer.parseInt(endDay));
+
+        for (int i = 0; i < daysChecked.size(); i++) {
+
+            Calendar cal = Calendar.getInstance();
+            cal.set(Integer.parseInt(startYear), Integer.parseInt(startMonth), Integer.parseInt(startDay));
+
+            if (daysChecked.get(i).equals("Sunday")) {
+                increment(cal, end, Calendar.SUNDAY);
+            } else if (daysChecked.get(i).equals("Monday")) {
+                increment(cal, end, Calendar.MONDAY);
+            } else if (daysChecked.get(i).equals("Tuesday")) {
+                increment(cal, end, Calendar.TUESDAY);
+            } else if (daysChecked.get(i).equals("Wednesday")) {
+                increment(cal, end, Calendar.WEDNESDAY);
+            } else if (daysChecked.get(i).equals("Thursday")) {
+                increment(cal, end, Calendar.THURSDAY);
+            } else if (daysChecked.get(i).equals("Friday")) {
+                increment(cal, end, Calendar.FRIDAY);
+            } else if (daysChecked.get(i).equals("Saturday")){
+                increment(cal, end, Calendar.SATURDAY);
+            }
+        }
+    }
 
     public void allDayCheckBox(View v) {
         allDay = ((CheckBox) v).isChecked();
@@ -491,6 +593,5 @@ public class CreateGoalActivity extends AppCompatActivity implements AdapterView
         }
     }
 }
-
 
 

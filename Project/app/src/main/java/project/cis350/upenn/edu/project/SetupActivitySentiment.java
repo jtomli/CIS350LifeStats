@@ -4,19 +4,16 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.view.View;
 import android.widget.RadioButton;
-
-import com.google.gson.Gson;
 
 import java.util.ArrayList;
 
 public class SetupActivitySentiment extends AppCompatActivity {
 
     String username;
-    User user;
     ArrayList<String> reasons;
     String sentiment = "yes";
     int maxReasons = 11;
@@ -28,12 +25,8 @@ public class SetupActivitySentiment extends AppCompatActivity {
         Intent intent = getIntent();
 
         // get username, password, and reasons to add to database
-        Gson gson = new Gson();
-        String serializedUser = getIntent().getStringExtra("user");
-        user = gson.fromJson(serializedUser, User.class);
-        username = user.getID();
-        reasons = user.getReasons();
-
+        username = intent.getExtras().getString("username");
+        reasons = intent.getStringArrayListExtra("reasons");
 
         for (int i = 0; i < reasons.size(); i++) {
             System.out.println(reasons.get(i));
@@ -120,12 +113,9 @@ public class SetupActivitySentiment extends AppCompatActivity {
                     selectionArgsTwo);
         }
 
-        Gson gson = new Gson();
-        Intent i = new Intent(this, MainActivity.class);
-        user.setReasons(reasons);
-        user.setSentiment(sentiment);
-        i.putExtra("user", gson.toJson(user));
-        startActivity(i);
+        Intent intent = new Intent(this, CreateGoalActivity.class);
+        intent.putExtra("username", username);
+        startActivity(intent);
     }
 }
 
