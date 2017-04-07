@@ -1,60 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<android.support.v4.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Main Menu"
-        android:id="@+id/diary_menu_button"
-        android:onClick="onMenuButton"/>
-    <com.jjoe64.graphview.GraphView
-        android:layout_width="match_parent"
-        android:layout_height="200dip"
-        android:id="@+id/graph" />
-    <TextView
-        android:id="@+id/chooseStats"
-        android:text="Choose timeframe for statistics:"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/graph"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="20dp" />
-    <Spinner
-        android:id="@+id/emotion_spinner"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_alignTop="@+id/chooseStats"
-         />
-    <TextView
-        android:id="@+id/avg"
-        android:text="Averages:"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/graph"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="20dp" />
-    <TextView
-        android:id="@+id/min"
-        android:text="Minimums:"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/graph"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="20dp" />
-    <TextView
-        android:id="@+id/max"
-        android:text="Maximums:"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/graph"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="20dp" />
 
-</LinearLayout>
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/activity_main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="16dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingTop="16dp"
+        android:orientation="vertical"
+        android:gravity="center">
+
+
+<TextView
+android:id="@+id/chooseStats"
+android:text="Choose timeframe for statistics:"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:layout_below="@+id/graph"
+android:layout_alignParentLeft="true"
+android:layout_alignParentStart="true"
+android:layout_marginTop="20dp" />
+<Spinner
+android:id="@+id/emotion_spinner"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:layout_centerHorizontal="true"
+android:layout_alignTop="@+id/chooseStats"
+/>
+<TextView
+android:id="@+id/avg"
+android:text="Averages:"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:layout_below="@+id/graph"
+android:layout_alignParentLeft="true"
+android:layout_alignParentStart="true"
+android:layout_marginTop="20dp" />
+<TextView
+android:id="@+id/min"
+android:text="Minimums:"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:layout_below="@+id/graph"
+android:layout_alignParentLeft="true"
+android:layout_alignParentStart="true"
+android:layout_marginTop="20dp" />
+<TextView
+android:id="@+id/max"
+android:text="Maximums:"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:layout_below="@+id/graph"
+android:layout_alignParentLeft="true"
+android:layout_alignParentStart="true"
+android:layout_marginTop="20dp" />
+
+    </RelativeLayout>
+
+    <!-- Side navigation drawer UI -->
+    <ListView
+        android:id="@+id/navList"
+        android:layout_width="200dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="left|start"
+        android:background="#ffeeeeee"/>
+
+</android.support.v4.widget.DrawerLayout>

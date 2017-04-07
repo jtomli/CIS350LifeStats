@@ -1,10 +1,23 @@
 package project.cis350.upenn.edu.project;
 
+import project.cis350.upenn.edu.project.CustomAdapter;
+import project.cis350.upenn.edu.project.EventsDatabaseContract;
+import project.cis350.upenn.edu.project.EventsDatabaseOpenHelper;
+import project.cis350.upenn.edu.project.Goal;
+import project.cis350.upenn.edu.project.GoalsDatabaseContract;
+import project.cis350.upenn.edu.project.GoalsDatabaseOpenHelper;
+import project.cis350.upenn.edu.project.R;
+import project.cis350.upenn.edu.project.SideMenuActivity;
+import project.cis350.upenn.edu.project.SingleGoalActivity;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -17,16 +30,26 @@ import java.util.TreeSet;
  * Created by nkeen_000 on 2/23/2017.
  */
 
-public class AllGoalsActivity extends Activity  {
+public class AllGoalsActivity extends SideMenuActivity  {
     Set<Goal> allGoals;
     String username;
+
+    public static void openActivity(Activity from_activity, String username) {
+        Intent intent = new Intent(from_activity, AllGoalsActivity.class);
+
+        Bundle bundle = new Bundle();
+        bundle.putInt(SideMenuActivity.KEY_LAYOUT_ID, R.layout.all_goals_layout);
+        bundle.putBoolean(SideMenuActivity.KEY_HAS_DRAWER, true);
+        intent.putExtra(MainActivity.KEY_MAIN_BUNDLE, bundle);
+        intent.putExtra("username", username);
+        from_activity.startActivity(intent);
+    }
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Intent i = getIntent();
         username = i.getExtras().getString("username");
 
-        setContentView(R.layout.all_goals_layout);
         // create a ListView to display all the user's goals into a ListView
         final ListView goals = (ListView) findViewById(R.id.all_goals);
         goals.setChoiceMode(ListView.CHOICE_MODE_SINGLE);

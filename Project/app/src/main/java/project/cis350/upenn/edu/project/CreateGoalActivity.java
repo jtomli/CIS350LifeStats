@@ -1,4 +1,5 @@
 package project.cis350.upenn.edu.project;
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
@@ -28,7 +29,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-public class CreateGoalActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+public class CreateGoalActivity extends SideMenuActivity implements AdapterView.OnItemSelectedListener {
 
     private static TextView startTimeText;
     private static TextView endTimeText;
@@ -63,10 +64,20 @@ public class CreateGoalActivity extends AppCompatActivity implements AdapterView
     String username;
     ArrayList<String> reasons;
 
+    public static void openActivity(Activity from_activity, String username) {
+        Intent intent = new Intent(from_activity, CreateGoalActivity.class);
+
+        Bundle bundle = new Bundle();
+        bundle.putInt(SideMenuActivity.KEY_LAYOUT_ID, R.layout.activity_goal);
+        bundle.putBoolean(SideMenuActivity.KEY_HAS_DRAWER, true);
+        intent.putExtra(MainActivity.KEY_MAIN_BUNDLE, bundle);
+        intent.putExtra("username", username);
+        from_activity.startActivity(intent);
+    }
+
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_goal);
 
         Calendar c = Calendar.getInstance();
 

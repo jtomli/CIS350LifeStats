@@ -31,11 +31,9 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".DiaryActivity"
-            android:screenOrientation="landscape" />
+            android:name=".DiaryActivity" />
         <activity
-            android:name=".DiaryLogActivity"
-            android:screenOrientation="landscape" />
+            android:name=".DiaryLogActivity" />
         <activity android:name=".EmotionActivity" />
         <activity android:name=".SetupActivityReasons" />
         <activity android:name=".SetupActivitySentiment" />
