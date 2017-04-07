@@ -15,7 +15,7 @@ public class SentimentDatabaseOpenHelper extends SQLiteOpenHelper {
     private static final String USER_TABLE_CREATE =
             "CREATE TABLE " + SentimentDatabaseContract.SentimentDB.TABLE_NAME + "(" +
                     SentimentDatabaseContract.SentimentDB.COL_USERNAME + " TEXT," +
-                    SentimentDatabaseContract.SentimentDB.COL_DATE + " INT," +
+                    SentimentDatabaseContract.SentimentDB.COL_DATE + " TEXT," +
                     SentimentDatabaseContract.SentimentDB.COL_ANGER + " DOUBLE," +
                     SentimentDatabaseContract.SentimentDB.COL_DISGUST + " DOUBLE," +
                     SentimentDatabaseContract.SentimentDB.COL_FEAR + " DOUBLE," +

@@ -46,10 +46,13 @@ public class Mood extends AsyncTask<String, Void, String> {
         Double joy = sentiment.getEmotion().getJoy();
         Double sadness = sentiment.getEmotion().getSadness();
 
+        Calendar date = Calendar.getInstance();
+        String d = date.get(Calendar.MONTH) + ", " + date.get(Calendar.DAY_OF_MONTH) + ", " + date.get(Calendar.YEAR);
+
         SentimentDatabaseOpenHelper dbh = new SentimentDatabaseOpenHelper(context);
         SQLiteDatabase db = dbh.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(SentimentDatabaseContract.SentimentDB.COL_DATE, "Feb 20");
+        values.put(SentimentDatabaseContract.SentimentDB.COL_DATE, d + "");
         values.put(SentimentDatabaseContract.SentimentDB.COL_ANGER, anger);
         values.put(SentimentDatabaseContract.SentimentDB.COL_DISGUST, disgust);
         values.put(SentimentDatabaseContract.SentimentDB.COL_FEAR, fear);
