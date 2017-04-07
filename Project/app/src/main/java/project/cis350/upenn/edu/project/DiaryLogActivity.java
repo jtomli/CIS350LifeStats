@@ -1,31 +1,44 @@
 package project.cis350.upenn.edu.project;
 
-        import android.content.Intent;
-        import android.os.Bundle;
-        import android.support.v7.app.AppCompatActivity;
-        import android.view.View;
-        import android.widget.*;
-        import android.database.sqlite.SQLiteDatabase;
-        import android.content.ContentValues;
+import android.app.Activity;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.*;
+import android.database.sqlite.SQLiteDatabase;
+import android.content.ContentValues;
 
-        import java.text.SimpleDateFormat;
-        import java.util.Calendar;
-        import java.util.Date;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 /**
  * Created by AK47 on 2/21/17.
  */
 
-public class DiaryLogActivity extends AppCompatActivity{
+public class DiaryLogActivity extends SideMenuActivity {
 
     String username;
     String sentiment;
 
 
+    public static void openActivity(Activity from_activity, String username) {
+        Intent intent = new Intent(from_activity, DiaryLogActivity.class);
+
+        Bundle bundle = new Bundle();
+        bundle.putInt(SideMenuActivity.KEY_LAYOUT_ID, R.layout.diary_log);
+        bundle.putBoolean(SideMenuActivity.KEY_HAS_DRAWER, true);
+        intent.putExtra(MainActivity.KEY_MAIN_BUNDLE, bundle);
+        intent.putExtra("username", username);
+        from_activity.startActivity(intent);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.diary_log);
+        //setContentView(R.layout.diary_log);
+
 
 
         username = getIntent().getExtras().getString("username");

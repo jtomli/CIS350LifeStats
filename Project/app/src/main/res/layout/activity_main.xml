@@ -1,77 +1,118 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_main"
+    android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingBottom="16dp"
-    android:paddingLeft="16dp"
-    android:paddingRight="16dp"
-    android:paddingTop="16dp"
-    android:orientation="vertical"
-    android:gravity="center">>
-    tools:context="project.cis350.upenn.edu.project.MainActivity">
+    android:layout_height="match_parent">
 
-    <Button
-        android:text="Calendar"
-        android:onClick="calendarButtonClick"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/calendar_button" />
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/activity_main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="16dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingTop="16dp"
+        android:orientation="vertical"
+        android:gravity="center">
 
-    <Button
-        android:text="Create Goal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/button3"
-        android:onClick="createGoal" />
+        <Button
+            android:text="Setup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/button4"
+            android:onClick="setup"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true" />
 
-    <Button
-        android:text="View Goals"
-        android:onClick="viewGoalsButtonClick"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/view_goals_button" />
+        <Button
+            android:text="Sign Out"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/button2"
+            android:onClick="signOut"
+            android:layout_above="@+id/button4"
+            android:layout_centerHorizontal="true" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Emotion Graph"
-        android:id="@+id/emotion_button"
+        <Button
+            android:text="View Goals"
+            android:onClick="viewGoalsButtonClick"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/view_goals_button"
+            android:layout_above="@+id/button2"
+            android:layout_alignLeft="@+id/diary_button"
+            android:layout_alignStart="@+id/diary_button" />
 
-        android:layout_centerHorizontal="true"
-        android:onClick="onEmotionButtonClick"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add Diary Entry"
+            android:id="@+id/log_button"
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Add Diary Entry"
-        android:id="@+id/log_button"
+            android:onClick="onDiaryLogButtonClick"
+            android:layout_below="@+id/button4"
+            android:layout_alignLeft="@+id/emotion_button"
+            android:layout_alignStart="@+id/emotion_button" />
 
-        android:layout_centerHorizontal="true"
-        android:onClick="onDiaryLogButtonClick"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Emotion Graph"
+            android:id="@+id/emotion_button"
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="View Diary"
-        android:id="@+id/diary_button"
-        android:layout_centerHorizontal="true"
-        android:onClick="onDiaryButtonClick"/>
+            android:onClick="onEmotionButtonClick"
+            android:layout_below="@+id/log_button"
+            android:layout_centerHorizontal="true" />
 
-    <Button
-        android:text="Setup"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/button4"
-        android:onClick="setup"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="View Diary"
+            android:id="@+id/diary_button"
+            android:onClick="onDiaryButtonClick"
+            android:layout_below="@+id/emotion_button"
+            android:layout_centerHorizontal="true" />
 
-    <Button
-        android:text="Sign Out"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/button2"
-        android:onClick="signOut" />
-</LinearLayout>
+        <Button
+            android:text="Calendar"
+            android:onClick="calendarButtonClick"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/calendar_button"
+            android:layout_above="@+id/button5"
+            android:layout_alignRight="@+id/diary_button"
+            android:layout_alignEnd="@+id/diary_button" />
+
+        <Button
+            android:text="Mood"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/button5"
+            android:onClick="moodButtonClick"
+            android:layout_below="@+id/diary_button"
+            android:layout_alignLeft="@+id/button4"
+            android:layout_alignStart="@+id/button4" />
+
+        <Button
+            android:text="Create Goal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/button3"
+            android:onClick="createGoal"
+            android:layout_above="@+id/view_goals_button"
+            android:layout_centerHorizontal="true" />
+
+    </RelativeLayout>
+
+    <!-- Side navigation drawer UI -->
+    <ListView
+        android:id="@+id/navList"
+        android:layout_width="200dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="left|start"
+        android:background="#ffeeeeee"/>
+
+</android.support.v4.widget.DrawerLayout>

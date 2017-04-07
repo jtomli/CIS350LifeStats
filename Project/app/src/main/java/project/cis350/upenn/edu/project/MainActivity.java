@@ -1,5 +1,7 @@
 package project.cis350.upenn.edu.project;
 
+import android.app.Activity;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -10,109 +12,32 @@ import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
 
-import java.util.ArrayList;
+public class MainActivity extends SideMenuActivity implements OnItemSelectedListener {
 
-
-public class MainActivity extends AppCompatActivity implements OnItemSelectedListener,
-        GoogleApiClient.OnConnectionFailedListener {
-
-    public static final int GameActivity_ID = 1;
-
-    private GoogleApiClient mGoogleApiClient;
     User user;
     String username;
-    ArrayList<String> reasons;
-    String sentiment;
 
+    public static void openActivity(Activity from_activity, String username) {
+        Intent intent = new Intent(from_activity, MainActivity.class);
+
+        Bundle bundle = new Bundle();
+        bundle.putInt(SideMenuActivity.KEY_LAYOUT_ID, R.layout.activity_main);
+        bundle.putBoolean(SideMenuActivity.KEY_HAS_DRAWER, true);
+        intent.putExtra(MainActivity.KEY_MAIN_BUNDLE, bundle);
+        intent.putExtra("username", username);
+        from_activity.startActivity(intent);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        //setContentView(R.layout.activity_main);
 
 
         Intent intent = getIntent();
         username = intent.getExtras().getString("username");
-
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this, this)
-                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                .build();
-
-
-    }
-
-    //go to Emotions
-    public void onEmotionButtonClick(View v) {
-        Intent i = new Intent(this, EmotionActivity.class);
-        i.putExtra("username", username);
-        startActivity(i);
-
-    }
-
-    //go to Calendar
-    public void calendarButtonClick(View v) {
-        Intent intent = new Intent(this, CalendarActivity.class);
-        intent.putExtra("username", username);
-        startActivity(intent);
-    }
-
-    //go to Goals
-    public void createGoal(View v) {
-        Intent intent = new Intent(this, CreateGoalActivity.class);
-        intent.putExtra("username", username);
-        startActivity(intent);
-    }
-
-    //go to Goals
-    public void viewGoalsButtonClick(View v) {
-        Intent intent = new Intent(this, AllGoalsActivity.class);
-        intent.putExtra("username", username);
-        startActivity(intent);
-    }
-
-    //go to Diary Log
-    public void onDiaryLogButtonClick(View v) {
-        Intent intent = new Intent(this, DiaryLogActivity.class);
-        intent.putExtra("username", username);
-        startActivity(intent);
-
-    }
-
-    //go to Diary Log
-    public void onDiaryButtonClick(View v) {
-
-        Intent intent = new Intent(this, DiaryActivity.class);
-        intent.putExtra("username", username);
-        startActivity(intent);
-
-    }
-
-    //go to setup
-    public void setup(View view) {
-        Intent intent = new Intent(this, SetupActivityReasons.class);
-        intent.putExtra("username", username);
-        intent.putExtra("fromSetupButton", "yes");
-        startActivity(intent);
-    }
-
-    //sign out
-    public void signOut(View v) {
-        Toast.makeText(this, "You are now signed out.", Toast.LENGTH_LONG).show();
-        Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
-                new ResultCallback<Status>() {
-                    @Override
-                    public void onResult(Status status) {
-                        Intent i = new Intent(MainActivity.this, LoginActivity.class);
-                        startActivity(i);
-                    }
-                });
 
     }
 
@@ -124,12 +49,5 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
 
     public void onNothingSelected(AdapterView<?> parent) {
         // Another interface callback
-    }
-
-    @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
-        // An unresolvable error has occurred and Google APIs (including Sign-In) will not
-        // be available.
-        Toast.makeText(this, "Connection to Google APIs failed. (Not our fault!)", Toast.LENGTH_LONG).show();
     }
 }
