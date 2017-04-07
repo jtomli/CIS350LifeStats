@@ -27,6 +27,7 @@ import android.widget.TextView;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 
 /**
@@ -150,7 +151,15 @@ public class SingleGoalActivity extends AppCompatActivity {
                 allEvents.clear();
                 hasEvents = new boolean[32];
 
-                //load events and goals from database
+                Set<Event> events = goal.getEvents();
+                for (Event e : events) {
+                    if (e.getStart().get(Calendar.MONTH) == cal.get(Calendar.MONTH)) {
+                        allEvents.put(e, goal.getName());
+                        hasEvents[e.getStart().get(Calendar.DATE)] = true;
+                    }
+                }
+
+                /*//load events and goals from database
                 EventsDatabaseOpenHelper dbHelper = new EventsDatabaseOpenHelper(context);
                 SQLiteDatabase db = dbHelper.getWritableDatabase();
 
@@ -193,16 +202,13 @@ public class SingleGoalActivity extends AppCompatActivity {
 
                     String username = cursor.getString(cursor.getColumnIndex(EventsDatabaseContract.EventsDB.COL_USERNAME));
 
-                    System.out.println(username + "'s goal: " + goal.getName() + " on " + day +
-                    "/" + month + "/" + year + ", completed = " + completed);
-
                     //if the event is in this month, add it to the map "allEvents"
                     if (event.getStart().get(Calendar.MONTH) == cal.get(Calendar.MONTH)) {
                         allEvents.put(event, goal.getName());
                         hasEvents[event.getStart().get(Calendar.DATE)] = true;
                     }
                 }
-                cursor.close();
+                cursor.close();*/
 
 
 		/*
@@ -491,6 +497,7 @@ public class SingleGoalActivity extends AppCompatActivity {
                 Intent intent = new Intent(this, EditGoalActivity.class);
                 intent.putExtra("username", username);
                 intent.putExtra("goalName", goal.getName());
+                intent.putExtra("Goal", goal);
                 startActivity(intent);
                 break;
             case R.id.delete_goal_button:
@@ -516,7 +523,13 @@ public class SingleGoalActivity extends AppCompatActivity {
                 Intent intent2 = new Intent(this, MainActivity.class);
                 intent2.putExtra("username", username);
                 startActivity(intent2);
-                return true;
+                break;
+            case R.id.log_goal_button:
+                Intent intent3 = new Intent(this, ProgressActivity.class);
+                intent3.putExtra("username", username);
+                intent3.putExtra("goalName", goal.getName());
+                startActivity(intent3);
+                break;
         }
         return false;
     }

@@ -10,7 +10,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class EventsDatabaseOpenHelper extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
 
     private static final String EVENTS_TABLE_CREATE =
             "CREATE TABLE " + EventsDatabaseContract.EventsDB.TABLE_NAME + "(" +

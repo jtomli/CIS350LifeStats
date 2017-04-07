@@ -43,7 +43,6 @@ public class Goal implements Serializable, Comparable<Goal> {
             total++;
             if (e.isCompleted()) completed++;
         }
-        System.out.println("goal" + name + "'s completion  = " + completed + "/" + total);
         if (total == 0) return 1.0;
         else return (double) completed / (double) total;
     }
@@ -56,7 +55,6 @@ public class Goal implements Serializable, Comparable<Goal> {
     public String getTotalCompletionPercent() {
         String s = "" + getTotalCompletion()*100;
         if (s.length() > 5) { s = s.substring(0, 5); }
-        System.out.println("goal" + name + "'s completion percent = " + s + "%");
         return s + "%";
     }
 
@@ -64,14 +62,11 @@ public class Goal implements Serializable, Comparable<Goal> {
         int total = 0;
         int completed = 0;
         for (Event e : events) {
-            System.out.println("THE MONTH OF THIS EVENT IS: " + e.getStart().get(Calendar.MONTH));
-            System.out.println("THIS MONTH IS: " + month);
             if (e.getStart().get(Calendar.MONTH) == month) {
                 total++;
                 if (e.isCompleted()) { completed++; }
             }
         }
-        System.out.println("goal" + name + "'s monthly completion  = " + completed + "/" + total);
         if (total == 0) return 1.0;
         else return (double) completed / (double) total;
     }
@@ -79,7 +74,6 @@ public class Goal implements Serializable, Comparable<Goal> {
     public String getMonthlyCompletionPercent(int month) {
         String s = "" + getMonthlyCompletion(month)*100;
         if (s.length() > 5) { s = s.substring(0, 5); }
-        System.out.println("goal" + name + "'s monthly completion percent = " + s + "%");
         return s + "%";
     }
 
