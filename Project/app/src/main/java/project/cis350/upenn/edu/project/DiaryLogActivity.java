@@ -27,16 +27,59 @@ public class DiaryLogActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.diary_log);
 
+
         username = getIntent().getExtras().getString("username");
+
+
 
     }
     public void onSubmitButton(View v) {
 
-        Date date = new Date();
+        Calendar date = Calendar.getInstance();
+        int month = date.get(Calendar.MONTH);
+        String d = "";
+        switch (month) {
+            case 0:
+                d += "January ";
+                break;
+            case 1:
+                d += "Febuary ";
+                break;
+            case 2:
+                d += "March ";
+                break;
+            case 3:
+                d += "April ";
+                break;
+            case 4:
+                d += "May ";
+                break;
+            case 5:
+                d += "June ";
+                break;
+            case 6:
+                d += "July ";
+                break;
+            case 7:
+                d += "August ";
+                break;
+            case 8:
+                d += "September ";
+                break;
+            case 9:
+                d += "October ";
+                break;
+            case 10:
+                d += "November ";
+                break;
+            case 11:
+                d += "December ";
+                break;
+        }
+        d += date.get(Calendar.DAY_OF_MONTH) + ", " + date.get(Calendar.YEAR);
 
-        Intent i = new Intent(this, DiaryActivity.class);
 
-        i.putExtra("username", username);
+
 
         //get diary entry
         String entry = ((EditText) findViewById(R.id.diary_text)).getText().toString();
@@ -46,16 +89,19 @@ public class DiaryLogActivity extends AppCompatActivity{
         m.execute(new String[]{entry, username});
 
 
+
         //store entry
         DiaryDatabaseHelper dbh = new DiaryDatabaseHelper(v.getContext());
         SQLiteDatabase db = dbh.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(DiaryDatabaseContract.DiaryDB.COL_DATE, date + "");
+        values.put(DiaryDatabaseContract.DiaryDB.COL_DATE, d + "");
         values.put(DiaryDatabaseContract.DiaryDB.COL_ENTRY, entry);
         values.put(DiaryDatabaseContract.DiaryDB.COL_USERNAME, username);
         db.insert(DiaryDatabaseContract.DiaryDB.TABLE_NAME, null, values);
         db.close();
 
+        Intent i = new Intent(this, MainActivity.class);
+        i.putExtra("username", username);
         startActivity(i);
     }
     public void onMenuButton(View v) {

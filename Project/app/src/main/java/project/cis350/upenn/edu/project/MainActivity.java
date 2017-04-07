@@ -44,6 +44,8 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
                 .enableAutoManage(this, this)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
+
+
     }
 
     //go to Emotions
