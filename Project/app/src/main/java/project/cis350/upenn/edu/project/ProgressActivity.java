@@ -1,6 +1,8 @@
 package project.cis350.upenn.edu.project;
 
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -26,40 +28,62 @@ public class ProgressActivity extends AppCompatActivity {
     private boolean completed;
     private Event currEvent;
 
+    int year;
+    int month;
+    int day;
+
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Intent i = getIntent();
         username = i.getExtras().getString("username");
-        goalname = i.getExtras().getString("goalname");
+        goalname = i.getExtras().getString("goalName");
 
         setContentView(R.layout.log_progress);
 
         Calendar cal = Calendar.getInstance();
-        int year = cal.get(Calendar.YEAR);
-        int month = cal.get(Calendar.MONTH);
-        int day = cal.get(Calendar.DAY_OF_MONTH);
+        year = cal.get(Calendar.YEAR);
+        month = cal.get(Calendar.MONTH);
+        day = cal.get(Calendar.DAY_OF_MONTH);
 
         //TODO get from events database
         //get start calendar to get these values, not worrying about end since irrelevant for only
         //this indidivual event
-        EventsDatabaseOpenHelper dbEHelper = new EventsDatabaseOpenHelper(this);
-        SQLiteDatabase dbE = dbEHelper.getWritableDatabase();
-        String selectionE = EventsDatabaseContract.EventsDB.COL_USERNAME + " LIKE ? AND " +
-                EventsDatabaseContract.EventsDB.COL_GOALNAME + " LIKE ?";
-
-        String[] selectionArgsE = { username, goalname };
 
 
-        setTime = (TextView) findViewById(R.id.setTime);
+        //setTime = (TextView) findViewById(R.id.setTime);
         //setTime.setText();
         setDate = (TextView) findViewById(R.id.setDate);
-        //setDate.setTest();
+        setDate.setText(day + "/" + (month + 1) + "/" + year);
+        TextView goalNAME = (TextView) findViewById(R.id.goalName);
+        goalNAME.setText(goalname);
 
         final Button save = (Button) findViewById(R.id.saveButton);
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
-                //TODO need to update current event in the database to include completed
+                if (completed) {
+                    EventsDatabaseOpenHelper dbEHelper = new EventsDatabaseOpenHelper(v.getContext());
+                    SQLiteDatabase dbE = dbEHelper.getWritableDatabase();
+                    String selectionE = EventsDatabaseContract.EventsDB.COL_USERNAME + " LIKE ? AND " +
+                            EventsDatabaseContract.EventsDB.COL_GOALNAME + " LIKE ? AND " +
+                            EventsDatabaseContract.EventsDB.COL_YEAR + " LIKE ? AND " +
+                            EventsDatabaseContract.EventsDB.COL_MONTH + " LIKE ? AND " +
+                            EventsDatabaseContract.EventsDB.COL_DAY + " LIKE ?";
+
+                    String[] selectionArgsE = {username, goalname, year + "", month + "", day + ""};
+                    ContentValues values = new ContentValues();
+                    values.put(EventsDatabaseContract.EventsDB.COL_USERNAME, username);
+                    values.put(EventsDatabaseContract.EventsDB.COL_GOALNAME, goalname);
+                    values.put(EventsDatabaseContract.EventsDB.COL_YEAR, year);
+                    values.put(EventsDatabaseContract.EventsDB.COL_MONTH, month);
+                    values.put(EventsDatabaseContract.EventsDB.COL_DAY, day);
+                    values.put(EventsDatabaseContract.EventsDB.COL_LOG, "yes");
+                    int count = dbE.update(
+                            EventsDatabaseContract.EventsDB.TABLE_NAME,
+                            values,
+                            selectionE,
+                            selectionArgsE);
+                }
 
                 PopupMenu popup = new PopupMenu(ProgressActivity.this, save);
                 popup.getMenuInflater().inflate(R.menu.add_goal_popup_menu, popup.getMenu());

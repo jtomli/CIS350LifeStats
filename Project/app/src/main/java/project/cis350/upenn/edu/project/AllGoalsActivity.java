@@ -76,6 +76,15 @@ public class AllGoalsActivity extends Activity  {
             String reason = cursorGoals.getString(cursorGoals.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_REASON));
             g.setReason(reason);
             allGoals.add(g);
+            String startH = cursorGoals.getString(cursorGoals.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_STARTHOUR));
+            String endH = cursorGoals.getString(cursorGoals.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_ENDHOUR));
+            String startM = cursorGoals.getString(cursorGoals.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_STARTMIN));
+            String endM = cursorGoals.getString(cursorGoals.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_ENDMIN));
+
+            int startHour = Integer.parseInt(startH);
+            int startMin = Integer.parseInt(startM);
+            int endHour = Integer.parseInt(endH);
+            int endMin = Integer.parseInt(endM);
 
             for (Goal goal : allGoals) {
                 String name = goal.getName();
@@ -110,16 +119,17 @@ public class AllGoalsActivity extends Activity  {
                     int day = cursorEvents.getInt(cursorEvents.getColumnIndex(EventsDatabaseContract.EventsDB.COL_DAY));
 
                     Calendar cal = Calendar.getInstance();
-                    cal.set(year, month, day);
+                    cal.set(year, month, day, startHour, startMin);
+                    Calendar end = Calendar.getInstance();
+                    cal.set(year, month, day, endHour, endMin);
 
-                    Event event = new Event(cal, cal);
+                    Event event = new Event(cal, end);
 
                     String completed = cursorEvents.getString(cursorEvents.getColumnIndex(EventsDatabaseContract.EventsDB.COL_LOG));
                     if (completed.equals("yes")) {
                         event.markCompleted(true);
                     }
 
-                    System.out.println(goal.getName() + ": " + event.toString());
                     goal.addEvent(event);
                 }
             }

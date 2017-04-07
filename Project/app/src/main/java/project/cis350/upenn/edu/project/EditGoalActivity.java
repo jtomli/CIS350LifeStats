@@ -26,6 +26,7 @@ import android.widget.TimePicker;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Set;
 
 public class EditGoalActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
@@ -60,6 +61,8 @@ public class EditGoalActivity extends AppCompatActivity implements AdapterView.O
     String username;
     ArrayList<String> reasons;
 
+    Goal fromGoal;
+
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,6 +73,7 @@ public class EditGoalActivity extends AppCompatActivity implements AdapterView.O
         username = intent.getExtras().getString("username");
         goalName = intent.getExtras().getString("goalName");
         originalGoalName = intent.getExtras().getString("goalName");
+        fromGoal = (Goal) intent.getSerializableExtra("Goal");
 
         UserDatabaseOpenHelper dbHelper = new UserDatabaseOpenHelper(this);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
@@ -242,6 +246,7 @@ public class EditGoalActivity extends AppCompatActivity implements AdapterView.O
             public void onClick(final View v) {
                 goalName = goalInput.getText().toString();
                 updateGoal(v);
+                updateEvents(v);
                 PopupMenu popup = new PopupMenu(EditGoalActivity.this, updateGoal);
                 popup.getMenuInflater().inflate(R.menu.update_goal_popup_menu, popup.getMenu());
                 popup.show();
@@ -265,9 +270,6 @@ public class EditGoalActivity extends AppCompatActivity implements AdapterView.O
             }
         });
     }
-
-
-
 
     public void updateGoal(View v) {
         GoalsDatabaseOpenHelper dbHelper = new GoalsDatabaseOpenHelper(v.getContext());
@@ -342,6 +344,93 @@ public class EditGoalActivity extends AppCompatActivity implements AdapterView.O
                     selectionTwo, selectionArgsTwo);
         }
 
+    }
+
+    public void updateEvents(View v) {
+        Set<Event> eventSet = fromGoal.getEvents();
+        EventsDatabaseOpenHelper dbEHelper = new EventsDatabaseOpenHelper(this);
+        SQLiteDatabase dbE = dbEHelper.getWritableDatabase();
+        String selectionE = EventsDatabaseContract.EventsDB.COL_USERNAME + " LIKE ? AND " +
+                EventsDatabaseContract.EventsDB.COL_GOALNAME + " LIKE ?";
+
+        String[] selectionArgsE = { username, fromGoal.getName() };
+        dbE.delete(EventsDatabaseContract.EventsDB.TABLE_NAME, selectionE, selectionArgsE);
+
+        for (Event e : eventSet) {
+            Calendar start = e.getStart();
+            Calendar current = Calendar.getInstance();
+            if (start.compareTo(current) < 0){
+                ContentValues values = new ContentValues();
+                values.put(EventsDatabaseContract.EventsDB.COL_USERNAME, username);
+                values.put(EventsDatabaseContract.EventsDB.COL_GOALNAME, goalName);
+                values.put(EventsDatabaseContract.EventsDB.COL_YEAR, e.getYear());
+                values.put(EventsDatabaseContract.EventsDB.COL_MONTH, e.getMonth());
+                values.put(EventsDatabaseContract.EventsDB.COL_DAY, e.getDay());
+                if (e.isCompleted()) {
+                    values.put(EventsDatabaseContract.EventsDB.COL_LOG, "yes");
+                } else {
+                    values.put(EventsDatabaseContract.EventsDB.COL_LOG, "no");
+                }
+                long newRowId = dbE.insert(EventsDatabaseContract.EventsDB.TABLE_NAME, null, values);
+
+            }
+        }
+
+        Calendar end = Calendar.getInstance();
+        end.set(Integer.parseInt(endYear), Integer.parseInt(endMonth) - 1, Integer.parseInt(endDay));
+
+        for (int i = 0; i < daysChecked.size(); i++) {
+
+            Calendar cal = Calendar.getInstance();
+
+            if (daysChecked.get(i).equals("Sunday")) {
+                increment(cal, end, Calendar.SUNDAY);
+            } else if (daysChecked.get(i).equals("Monday")) {
+                increment(cal, end, Calendar.MONDAY);
+            } else if (daysChecked.get(i).equals("Tuesday")) {
+                increment(cal, end, Calendar.TUESDAY);
+            } else if (daysChecked.get(i).equals("Wednesday")) {
+                increment(cal, end, Calendar.WEDNESDAY);
+            } else if (daysChecked.get(i).equals("Thursday")) {
+                increment(cal, end, Calendar.THURSDAY);
+            } else if (daysChecked.get(i).equals("Friday")) {
+                increment(cal, end, Calendar.FRIDAY);
+            } else if (daysChecked.get(i).equals("Saturday")){
+                increment(cal, end, Calendar.SATURDAY);
+            }
+        }
+    }
+
+    public void increment(Calendar cal, Calendar end, int dayOfWeek) {
+
+        EventsDatabaseOpenHelper dbHelper = new EventsDatabaseOpenHelper(this);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        while (cal.compareTo(end) <= 0){
+            while (!(cal.get(Calendar.DAY_OF_WEEK) == dayOfWeek)) {
+                cal.add(Calendar.DAY_OF_MONTH, 1);
+            }
+
+            ContentValues values = new ContentValues();
+            values.put(EventsDatabaseContract.EventsDB.COL_USERNAME, username);
+            values.put(EventsDatabaseContract.EventsDB.COL_GOALNAME, goalName);
+            values.put(EventsDatabaseContract.EventsDB.COL_YEAR, cal.get(Calendar.YEAR));
+            values.put(EventsDatabaseContract.EventsDB.COL_MONTH, cal.get(Calendar.MONTH));
+            values.put(EventsDatabaseContract.EventsDB.COL_DAY, cal.get(Calendar.DAY_OF_MONTH));
+            values.put(EventsDatabaseContract.EventsDB.COL_LOG, "no");
+
+            long newRowId = db.insert(EventsDatabaseContract.EventsDB.TABLE_NAME, null, values);
+
+            if (frequencySelection.equals("Weekly")) {
+                cal.add(Calendar.DAY_OF_MONTH, 7);
+            } else if (frequencySelection.equals("Biweekly")) {
+                cal.add(Calendar.DAY_OF_MONTH, 14);
+            } else if (frequencySelection.equals("Monthly")) {
+                cal.add(Calendar.MONTH, 1);
+            } else {
+                break;
+            }
+        }
     }
 
     private String datePrinter(String month, String day, String year) {
@@ -486,7 +575,6 @@ public class EditGoalActivity extends AppCompatActivity implements AdapterView.O
     }
 
     public void onSetStartTimeClick(View v) {
-        System.out.println("HERE");
         DialogFragment startTimePicker = new TimePickerFragment();
         startTimePicker.show(getSupportFragmentManager(), "startTimePicker");
         startTimePressed = true;

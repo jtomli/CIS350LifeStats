@@ -288,25 +288,6 @@ public class CreateGoalActivity extends AppCompatActivity implements AdapterView
         values.put(GoalsDatabaseContract.GoalsDB.COL_FREQUENCY, frequencySelection);
         values.put(GoalsDatabaseContract.GoalsDB.COL_REASON, reasonSelection);
 
-        System.out.println(username);
-        System.out.println(goalName);
-        System.out.println(startYear);
-        System.out.println(startMonth);
-        System.out.println(startDay);
-        System.out.println(startHour);
-        System.out.println(startMin);
-        System.out.println(startAmPm);
-        System.out.println(endYear);
-        System.out.println(endMonth);
-        System.out.println(endDay);
-        System.out.println(endHour);
-        System.out.println(endMin);
-        System.out.println(endAmPm);
-        System.out.println(daysChecked.toString());
-        System.out.println(allDay);
-        System.out.println(reminderSelection);
-        System.out.println(frequencySelection);
-        System.out.println(reasonSelection);
 
 
         if (cursor.getCount() <=0) {
@@ -342,13 +323,6 @@ public class CreateGoalActivity extends AppCompatActivity implements AdapterView
             values.put(EventsDatabaseContract.EventsDB.COL_LOG, "no");
 
             long newRowId = db.insert(EventsDatabaseContract.EventsDB.TABLE_NAME, null, values);
-            System.out.println("EVENT CREATED");
-            System.out.println(username);
-            System.out.println(goalName);
-            System.out.println(cal.get(Calendar.YEAR));
-            System.out.println(cal.get(Calendar.MONTH));
-            System.out.println(cal.get(Calendar.DAY_OF_MONTH));
-            System.out.println("no");
 
             if (frequencySelection.equals("Weekly")) {
                 cal.add(Calendar.DAY_OF_MONTH, 7);
