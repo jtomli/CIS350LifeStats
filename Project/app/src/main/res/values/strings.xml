@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">LifeStats</string>
+    <string name="app_name"></string>
     <string name="setup">SETUP</string>
     <string name="titleActivitySetupSentiment">SetupActivitySentiment</string>
     <string name="health">To get in better shape</string>
@@ -66,5 +66,6 @@
     <string name="november">November</string>
     <string name="december">December</string>
     <string name="app_calendar_name">Calendar Widget</string>
-
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
 </resources>

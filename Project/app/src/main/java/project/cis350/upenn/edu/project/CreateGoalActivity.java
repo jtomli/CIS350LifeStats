@@ -1,4 +1,5 @@
 package project.cis350.upenn.edu.project;
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
@@ -28,7 +29,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-public class CreateGoalActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+public class CreateGoalActivity extends SideMenuActivity implements AdapterView.OnItemSelectedListener {
 
     private static TextView startTimeText;
     private static TextView endTimeText;
@@ -63,10 +64,20 @@ public class CreateGoalActivity extends AppCompatActivity implements AdapterView
     String username;
     ArrayList<String> reasons;
 
+    public static void openActivity(Activity from_activity, String username) {
+        Intent intent = new Intent(from_activity, CreateGoalActivity.class);
+
+        Bundle bundle = new Bundle();
+        bundle.putInt(SideMenuActivity.KEY_LAYOUT_ID, R.layout.activity_goal);
+        bundle.putBoolean(SideMenuActivity.KEY_HAS_DRAWER, true);
+        intent.putExtra(MainActivity.KEY_MAIN_BUNDLE, bundle);
+        intent.putExtra("username", username);
+        from_activity.startActivity(intent);
+    }
+
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_goal);
 
         Calendar c = Calendar.getInstance();
 
@@ -288,25 +299,6 @@ public class CreateGoalActivity extends AppCompatActivity implements AdapterView
         values.put(GoalsDatabaseContract.GoalsDB.COL_FREQUENCY, frequencySelection);
         values.put(GoalsDatabaseContract.GoalsDB.COL_REASON, reasonSelection);
 
-        System.out.println(username);
-        System.out.println(goalName);
-        System.out.println(startYear);
-        System.out.println(startMonth);
-        System.out.println(startDay);
-        System.out.println(startHour);
-        System.out.println(startMin);
-        System.out.println(startAmPm);
-        System.out.println(endYear);
-        System.out.println(endMonth);
-        System.out.println(endDay);
-        System.out.println(endHour);
-        System.out.println(endMin);
-        System.out.println(endAmPm);
-        System.out.println(daysChecked.toString());
-        System.out.println(allDay);
-        System.out.println(reminderSelection);
-        System.out.println(frequencySelection);
-        System.out.println(reasonSelection);
 
 
         if (cursor.getCount() <=0) {
@@ -342,13 +334,6 @@ public class CreateGoalActivity extends AppCompatActivity implements AdapterView
             values.put(EventsDatabaseContract.EventsDB.COL_LOG, "no");
 
             long newRowId = db.insert(EventsDatabaseContract.EventsDB.TABLE_NAME, null, values);
-            System.out.println("EVENT CREATED");
-            System.out.println(username);
-            System.out.println(goalName);
-            System.out.println(cal.get(Calendar.YEAR));
-            System.out.println(cal.get(Calendar.MONTH));
-            System.out.println(cal.get(Calendar.DAY_OF_MONTH));
-            System.out.println("no");
 
             if (frequencySelection.equals("Weekly")) {
                 cal.add(Calendar.DAY_OF_MONTH, 7);

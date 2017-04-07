@@ -1,10 +1,23 @@
 package project.cis350.upenn.edu.project;
 
+import project.cis350.upenn.edu.project.CustomAdapter;
+import project.cis350.upenn.edu.project.EventsDatabaseContract;
+import project.cis350.upenn.edu.project.EventsDatabaseOpenHelper;
+import project.cis350.upenn.edu.project.Goal;
+import project.cis350.upenn.edu.project.GoalsDatabaseContract;
+import project.cis350.upenn.edu.project.GoalsDatabaseOpenHelper;
+import project.cis350.upenn.edu.project.R;
+import project.cis350.upenn.edu.project.SideMenuActivity;
+import project.cis350.upenn.edu.project.SingleGoalActivity;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -17,16 +30,26 @@ import java.util.TreeSet;
  * Created by nkeen_000 on 2/23/2017.
  */
 
-public class AllGoalsActivity extends Activity  {
+public class AllGoalsActivity extends SideMenuActivity  {
     Set<Goal> allGoals;
     String username;
+
+    public static void openActivity(Activity from_activity, String username) {
+        Intent intent = new Intent(from_activity, AllGoalsActivity.class);
+
+        Bundle bundle = new Bundle();
+        bundle.putInt(SideMenuActivity.KEY_LAYOUT_ID, R.layout.all_goals_layout);
+        bundle.putBoolean(SideMenuActivity.KEY_HAS_DRAWER, true);
+        intent.putExtra(MainActivity.KEY_MAIN_BUNDLE, bundle);
+        intent.putExtra("username", username);
+        from_activity.startActivity(intent);
+    }
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Intent i = getIntent();
         username = i.getExtras().getString("username");
 
-        setContentView(R.layout.all_goals_layout);
         // create a ListView to display all the user's goals into a ListView
         final ListView goals = (ListView) findViewById(R.id.all_goals);
         goals.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
@@ -76,6 +99,15 @@ public class AllGoalsActivity extends Activity  {
             String reason = cursorGoals.getString(cursorGoals.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_REASON));
             g.setReason(reason);
             allGoals.add(g);
+            String startH = cursorGoals.getString(cursorGoals.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_STARTHOUR));
+            String endH = cursorGoals.getString(cursorGoals.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_ENDHOUR));
+            String startM = cursorGoals.getString(cursorGoals.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_STARTMIN));
+            String endM = cursorGoals.getString(cursorGoals.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_ENDMIN));
+
+            int startHour = Integer.parseInt(startH);
+            int startMin = Integer.parseInt(startM);
+            int endHour = Integer.parseInt(endH);
+            int endMin = Integer.parseInt(endM);
 
             for (Goal goal : allGoals) {
                 String name = goal.getName();
@@ -110,16 +142,17 @@ public class AllGoalsActivity extends Activity  {
                     int day = cursorEvents.getInt(cursorEvents.getColumnIndex(EventsDatabaseContract.EventsDB.COL_DAY));
 
                     Calendar cal = Calendar.getInstance();
-                    cal.set(year, month, day);
+                    cal.set(year, month, day, startHour, startMin);
+                    Calendar end = Calendar.getInstance();
+                    cal.set(year, month, day, endHour, endMin);
 
-                    Event event = new Event(cal, cal);
+                    Event event = new Event(cal, end);
 
                     String completed = cursorEvents.getString(cursorEvents.getColumnIndex(EventsDatabaseContract.EventsDB.COL_LOG));
                     if (completed.equals("yes")) {
                         event.markCompleted(true);
                     }
 
-                    System.out.println(goal.getName() + ": " + event.toString());
                     goal.addEvent(event);
                 }
             }

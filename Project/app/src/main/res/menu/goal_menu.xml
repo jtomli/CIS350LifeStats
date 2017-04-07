@@ -3,6 +3,8 @@
 
     <item android:title="Edit"
         android:id="@+id/edit_goal_button" />
+    <item android:title="Log"
+        android:id="@+id/log_goal_button"/>
     <item android:title="Delete"
         android:id="@+id/delete_goal_button" />
 </menu>
