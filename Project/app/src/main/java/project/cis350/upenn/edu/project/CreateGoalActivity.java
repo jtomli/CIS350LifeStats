@@ -221,13 +221,9 @@ public class CreateGoalActivity extends SideMenuActivity implements AdapterView.
                     public boolean onMenuItemClick(MenuItem item) {
                         int itemId = item.getItemId();
                         if (itemId == R.id.addAnother) {
-                            Intent i = new Intent(v.getContext(), CreateGoalActivity.class);
-                            i.putExtra("username", username);
-                            startActivity(i);
+                            CreateGoalActivity.openActivity(CreateGoalActivity.this, username);
                         } else if (itemId == R.id.mainMenu) {
-                            Intent i = new Intent(v.getContext(), MainActivity.class);
-                            i.putExtra("username", username);
-                            startActivity(i);
+                            AllGoalsActivity.openActivity(CreateGoalActivity.this, username);
                         }
                         return true;
                     }

@@ -156,9 +156,9 @@ public class DiaryActivity extends SideMenuActivity {
         cursor.close();
 
     }
-    public void onMenuButton(View v) {
+    /*public void onMenuButton(View v) {
         Intent i = new Intent(this, MainActivity.class);
         i.putExtra("username", username);
         startActivity(i);
-    }
+    }*/
 }

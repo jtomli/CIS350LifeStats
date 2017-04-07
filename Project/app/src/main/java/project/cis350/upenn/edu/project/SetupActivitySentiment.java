@@ -110,13 +110,13 @@ public class SetupActivitySentiment extends AppCompatActivity {
         }
 
         if (getIntent().hasExtra("fromSetupButton")) {
-            Intent intent = new Intent(this, MainActivity.class);
-            intent.putExtra("username", username);
-            startActivity(intent);
+            if (getIntent().getExtras().getString("fromSetupButton").equals("yes")) {
+                AllGoalsActivity.openActivity(SetupActivitySentiment.this, username);
+            } else {
+                CreateGoalActivity.openActivity(SetupActivitySentiment.this, username);
+            }
         } else {
-            Intent intent = new Intent(this, CreateGoalActivity.class);
-            intent.putExtra("username", username);
-            startActivity(intent);
+            CreateGoalActivity.openActivity(SetupActivitySentiment.this, username);
         }
     }
 }

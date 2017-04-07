@@ -97,10 +97,7 @@ public class SetupActivityReasons extends SideMenuActivity {
 
         Intent i;
         if (cursor.getCount() > 0 && (!getIntent().hasExtra("fromSetupButton") || !getIntent().getExtras().getString("fromSetupButton").equals("yes"))) {
-
-            i = new Intent(this, MainActivity.class);
-            i.putExtra("username", username);
-            startActivity(i);
+            AllGoalsActivity.openActivity(SetupActivityReasons.this, username);
         } else if (cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
                 for (int j = 0; j < 11; j++) {
