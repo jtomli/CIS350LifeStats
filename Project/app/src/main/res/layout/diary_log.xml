@@ -6,9 +6,10 @@
     android:weightSum="1">
     <EditText
         android:id="@+id/diary_text"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textLongMessage"
+        android:orientation="vertical"
         android:text=""
         android:lines="10"
         android:gravity="top"
