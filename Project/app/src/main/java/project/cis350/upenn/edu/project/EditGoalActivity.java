@@ -254,15 +254,7 @@ public class EditGoalActivity extends AppCompatActivity implements AdapterView.O
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
                         int itemId = item.getItemId();
-                        if (itemId == R.id.allGoalsView) {
-                            Intent i = new Intent(v.getContext(), AllGoalsActivity.class);
-                            i.putExtra("username", username);
-                            startActivity(i);
-                        } else if (itemId == R.id.mainMenu) {
-                            Intent i = new Intent(v.getContext(), MainActivity.class);
-                            i.putExtra("username", username);
-                            startActivity(i);
-                        }
+                        AllGoalsActivity.openActivity(EditGoalActivity.this, username);
                         return true;
                     }
                 });

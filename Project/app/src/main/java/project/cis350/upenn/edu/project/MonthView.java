@@ -4,6 +4,7 @@ package project.cis350.upenn.edu.project;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 
 import android.app.Activity;
@@ -111,60 +112,76 @@ public class MonthView extends TableLayout{
     //Main function for displaying the current selected month
     private void checkForEvents() {
 
-        // clear the map and array because this happens each time the month is changed
-        allEvents.clear();
-        hasEvents = new boolean[32];
+        Activity source = (Activity) context;
+        if (source.getIntent().hasExtra("Goal")) {
+            Goal goal = (Goal) source.getIntent().getSerializableExtra("Goal");
+            allEvents.clear();
+            hasEvents = new boolean[32];
 
-        //load events and goals from database
-        EventsDatabaseOpenHelper dbHelper = new EventsDatabaseOpenHelper(context);
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-
-        String[] projection = {
-                EventsDatabaseContract.EventsDB.COL_USERNAME,
-                EventsDatabaseContract.EventsDB.COL_GOALNAME,
-                EventsDatabaseContract.EventsDB.COL_YEAR,
-                EventsDatabaseContract.EventsDB.COL_MONTH,
-                EventsDatabaseContract.EventsDB.COL_DAY,
-                EventsDatabaseContract.EventsDB.COL_LOG
-        };
-
-        String selection = EventsDatabaseContract.EventsDB.COL_USERNAME + " = ?";
-        String[] selectionArgs = { username };
-
-        Cursor cursor = db.query(
-                EventsDatabaseContract.EventsDB.TABLE_NAME,         // The table to query
-                projection,                                     // The columns to return
-                selection,                                      // The columns for the WHERE clause
-                selectionArgs,                                  // The values for the WHERE clause
-                null,                                           // don't group the rows
-                null,                                           // don't filter by row groups
-                null                                            // The sort order
-        );
-
-        while(cursor.moveToNext()) {
-            int year = cursor.getInt(cursor.getColumnIndex(EventsDatabaseContract.EventsDB.COL_YEAR));
-            int month = cursor.getInt(cursor.getColumnIndex(EventsDatabaseContract.EventsDB.COL_MONTH));
-            int day = cursor.getInt(cursor.getColumnIndex(EventsDatabaseContract.EventsDB.COL_DAY));
-
-            String goalName = cursor.getString(cursor.getColumnIndex(EventsDatabaseContract.EventsDB.COL_GOALNAME));
-
-            Calendar cal = Calendar.getInstance();
-            cal.set(year, month, day);
-
-            Event event = new Event(cal, cal);
-
-            String completed = cursor.getString(cursor.getColumnIndex(EventsDatabaseContract.EventsDB.COL_LOG));
-            if (completed.equals("yes")) {
-                event.markCompleted(true);
+            Set<Event> events = goal.getEvents();
+            for (Event e : events) {
+                if (e.getStart().get(Calendar.MONTH) == cal.get(Calendar.MONTH)) {
+                    allEvents.put(e, goal.getName());
+                    hasEvents[e.getStart().get(Calendar.DATE)] = true;
+                }
             }
+        } else {
 
-            //if the event is in this month, add it to the map "allEvents"
-            if (event.getStart().get(Calendar.MONTH) == this.cal.get(Calendar.MONTH)) {
-                allEvents.put(event, goalName);
-                hasEvents[event.getStart().get(Calendar.DATE)] = true;
+            // clear the map and array because this happens each time the month is changed
+            allEvents.clear();
+            hasEvents = new boolean[32];
+
+            //load events and goals from database
+            EventsDatabaseOpenHelper dbHelper = new EventsDatabaseOpenHelper(context);
+            SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+            String[] projection = {
+                    EventsDatabaseContract.EventsDB.COL_USERNAME,
+                    EventsDatabaseContract.EventsDB.COL_GOALNAME,
+                    EventsDatabaseContract.EventsDB.COL_YEAR,
+                    EventsDatabaseContract.EventsDB.COL_MONTH,
+                    EventsDatabaseContract.EventsDB.COL_DAY,
+                    EventsDatabaseContract.EventsDB.COL_LOG
+            };
+
+            String selection = EventsDatabaseContract.EventsDB.COL_USERNAME + " = ?";
+            String[] selectionArgs = {username};
+
+            Cursor cursor = db.query(
+                    EventsDatabaseContract.EventsDB.TABLE_NAME,         // The table to query
+                    projection,                                     // The columns to return
+                    selection,                                      // The columns for the WHERE clause
+                    selectionArgs,                                  // The values for the WHERE clause
+                    null,                                           // don't group the rows
+                    null,                                           // don't filter by row groups
+                    null                                            // The sort order
+            );
+
+            while (cursor.moveToNext()) {
+                int year = cursor.getInt(cursor.getColumnIndex(EventsDatabaseContract.EventsDB.COL_YEAR));
+                int month = cursor.getInt(cursor.getColumnIndex(EventsDatabaseContract.EventsDB.COL_MONTH));
+                int day = cursor.getInt(cursor.getColumnIndex(EventsDatabaseContract.EventsDB.COL_DAY));
+
+                String goalName = cursor.getString(cursor.getColumnIndex(EventsDatabaseContract.EventsDB.COL_GOALNAME));
+
+                Calendar cal = Calendar.getInstance();
+                cal.set(year, month, day);
+
+                Event event = new Event(cal, cal);
+
+                String completed = cursor.getString(cursor.getColumnIndex(EventsDatabaseContract.EventsDB.COL_LOG));
+                if (completed.equals("yes")) {
+                    event.markCompleted(true);
+                }
+
+                //if the event is in this month, add it to the map "allEvents"
+                if (event.getStart().get(Calendar.MONTH) == this.cal.get(Calendar.MONTH)) {
+                    allEvents.put(event, goalName);
+                    hasEvents[event.getStart().get(Calendar.DATE)] = true;
+                }
             }
+            cursor.close();
         }
-        cursor.close();
 
     }
 

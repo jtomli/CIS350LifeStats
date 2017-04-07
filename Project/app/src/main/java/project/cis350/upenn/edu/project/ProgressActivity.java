@@ -92,14 +92,10 @@ public class ProgressActivity extends AppCompatActivity {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
                         int itemId = item.getItemId();
-                        if (itemId == R.id.returnCal) {
-                            Intent i = new Intent(v.getContext(), CalendarActivity.class);
-                            i.putExtra("username", username);
-                            startActivity(i);
+                        if (itemId == R.id.addAnother) {
+                            CreateGoalActivity.openActivity(ProgressActivity.this, username);
                         } else if (itemId == R.id.mainMenu) {
-                            Intent i = new Intent(v.getContext(), MainActivity.class);
-                            i.putExtra("username", username);
-                            startActivity(i);
+                            AllGoalsActivity.openActivity(ProgressActivity.this, username);
                         }
                         return true;
                     }

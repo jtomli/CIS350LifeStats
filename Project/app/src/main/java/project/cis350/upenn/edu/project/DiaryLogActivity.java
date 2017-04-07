@@ -113,15 +113,13 @@ public class DiaryLogActivity extends SideMenuActivity {
         db.insert(DiaryDatabaseContract.DiaryDB.TABLE_NAME, null, values);
         db.close();
 
-        Intent i = new Intent(this, MainActivity.class);
-        i.putExtra("username", username);
-        startActivity(i);
+        AllGoalsActivity.openActivity(DiaryLogActivity.this, username);
     }
-    public void onMenuButton(View v) {
+   /* public void onMenuButton(View v) {
 
         Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra("username", username);
         startActivity(intent);
 
-    }
+    }*/
 }

@@ -41,12 +41,6 @@
                 android:text="Submit"
                 android:id="@+id/diary_submit_button"
                 android:onClick="onSubmitButton"/>
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Main Menu"
-                android:id="@+id/diary_menu_button"
-                android:onClick="onMenuButton"/>
 
             <requestFocus/>
         </LinearLayout>
