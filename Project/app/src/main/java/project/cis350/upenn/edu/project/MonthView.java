@@ -149,7 +149,7 @@ public class MonthView extends TableLayout{
             String goalName = cursor.getString(cursor.getColumnIndex(EventsDatabaseContract.EventsDB.COL_GOALNAME));
 
             Calendar cal = Calendar.getInstance();
-            cal.set(year, month-1, day);
+            cal.set(year, month, day);
 
             Event event = new Event(cal, cal);
 
@@ -395,7 +395,6 @@ public class MonthView extends TableLayout{
             {
                 try{
                     if(hasEvents[day]) {
-                        System.out.println("allEvents.size() = " + allEvents.size());
                         for (Event e : allEvents.keySet()) {
                             if (eventIsOnDay(cal, e.getStart())) {
                                 if (e.isCompleted()) {

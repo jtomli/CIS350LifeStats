@@ -9,7 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class GoalsDatabaseOpenHelper extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 6;
+    private static final int DATABASE_VERSION = 7;
 
     private static final String GOALS_TABLE_CREATE =
             "CREATE TABLE " + GoalsDatabaseContract.GoalsDB.TABLE_NAME + "(" +

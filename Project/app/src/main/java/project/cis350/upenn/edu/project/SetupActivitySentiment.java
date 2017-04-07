@@ -27,10 +27,6 @@ public class SetupActivitySentiment extends AppCompatActivity {
         // get username, password, and reasons to add to database
         username = intent.getExtras().getString("username");
         reasons = intent.getStringArrayListExtra("reasons");
-
-        for (int i = 0; i < reasons.size(); i++) {
-            System.out.println(reasons.get(i));
-        }
     }
 
     public void onRadioButtonClicked(View view) {
