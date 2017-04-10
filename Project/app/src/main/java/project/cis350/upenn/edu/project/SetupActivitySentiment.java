@@ -110,11 +110,7 @@ public class SetupActivitySentiment extends AppCompatActivity {
         }
 
         if (getIntent().hasExtra("fromSetupButton")) {
-            if (getIntent().getExtras().getString("fromSetupButton").equals("yes")) {
-                AllGoalsActivity.openActivity(SetupActivitySentiment.this, username);
-            } else {
-                CreateGoalActivity.openActivity(SetupActivitySentiment.this, username);
-            }
+            AllGoalsActivity.openActivity(SetupActivitySentiment.this, username);
         } else {
             CreateGoalActivity.openActivity(SetupActivitySentiment.this, username);
         }

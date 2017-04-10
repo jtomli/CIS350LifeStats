@@ -94,8 +94,10 @@ public class Event implements Serializable, Comparable<Event> {
     }
 
     public String toStringHour() {
-        return start.get(Calendar.HOUR_OF_DAY) + ":" + start.get(Calendar.MINUTE) + " - " +
-                end.get(Calendar.HOUR_OF_DAY) + ":" + end.get(Calendar.MINUTE);
+        String startMin = String.format("%02d", start.get(Calendar.MINUTE));
+        String endMin = String.format("%02d", end.get(Calendar.MINUTE));
+        return start.get(Calendar.HOUR_OF_DAY) + ":" + startMin + " - " +
+                end.get(Calendar.HOUR_OF_DAY) + ":" + endMin;
     }
 
     @Override
