@@ -31,6 +31,7 @@ import java.util.List;
 
 public class CreateGoalActivity extends SideMenuActivity implements AdapterView.OnItemSelectedListener {
 
+    // layout elements
     private static TextView startTimeText;
     private static TextView endTimeText;
     private static TextView startDateText;
@@ -40,27 +41,27 @@ public class CreateGoalActivity extends SideMenuActivity implements AdapterView.
     protected static boolean startDatePressed = false;
     protected static boolean endDatePressed = false;
 
-    // for DB
+    // for GoalsDB
     private boolean allDay = false;
     List<String> daysChecked;
-    private String frequencySelection; // default added
+    private String frequencySelection;
     private String reminderSelection;
     private String goalName;
-    private String reasonSelection; // default added
-    private static String startMonth; // default added
-    private static String startDay; // default added
-    private static String startYear; // default added
-    private static String endMonth; // default added
-    private static String endDay; // default added
-    private static String endYear; // default added
-    private static String startHour; // default added
-    private static String startMin; // default added
-    private static String startAmPm; // default added
-    private static String endHour; // default added
-    private static String endMin; // default added
-    private static String endAmPm; // default added
+    private String reasonSelection;
+    private static String startMonth;
+    private static String startDay;
+    private static String startYear;
+    private static String endMonth;
+    private static String endDay;
+    private static String endYear;
+    private static String startHour;
+    private static String startMin;
+    private static String startAmPm;
+    private static String endHour;
+    private static String endMin;
+    private static String endAmPm;
 
-
+    // from UserDB
     String username;
     ArrayList<String> reasons;
 
@@ -133,8 +134,6 @@ public class CreateGoalActivity extends SideMenuActivity implements AdapterView.
             }
         }
         cursor.close();
-        // reasons are saved in reason
-        // reason can now populate a spinner
 
         // setting labels at start up for startTime
         String currTime = hourConverter(c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE));
@@ -261,8 +260,9 @@ public class CreateGoalActivity extends SideMenuActivity implements AdapterView.
                 GoalsDatabaseContract.GoalsDB.COL_REMINDME
         };
 
-        String selection = GoalsDatabaseContract.GoalsDB.COL_GOALNAME + " = ?";
-        String[] selectionArgs = { goalName };
+        String selection = GoalsDatabaseContract.GoalsDB.COL_GOALNAME + " = ? AND " +
+                GoalsDatabaseContract.GoalsDB.COL_USERNAME + " = ?";
+        String[] selectionArgs = { goalName, username };
 
         Cursor cursor = db.query(
                 GoalsDatabaseContract.GoalsDB.TABLE_NAME,         // The table to query
@@ -295,13 +295,12 @@ public class CreateGoalActivity extends SideMenuActivity implements AdapterView.
         values.put(GoalsDatabaseContract.GoalsDB.COL_FREQUENCY, frequencySelection);
         values.put(GoalsDatabaseContract.GoalsDB.COL_REASON, reasonSelection);
 
-
-
         if (cursor.getCount() <=0) {
             long newRowId = db.insert(GoalsDatabaseContract.GoalsDB.TABLE_NAME, null, values);
         } else {
-            String selectionTwo = GoalsDatabaseContract.GoalsDB.COL_GOALNAME + " LIKE ?";
-            String[] selectionArgsTwo = {goalName};
+            String selectionTwo = GoalsDatabaseContract.GoalsDB.COL_GOALNAME + " LIKE ? AND " +
+                    GoalsDatabaseContract.GoalsDB.COL_USERNAME + " LIKE ?";
+            String[] selectionArgsTwo = {goalName, username};
 
             int count = db.update(
                     GoalsDatabaseContract.GoalsDB.TABLE_NAME,
@@ -309,6 +308,8 @@ public class CreateGoalActivity extends SideMenuActivity implements AdapterView.
                     selectionTwo, selectionArgsTwo);
 
         }
+
+        cursor.close();
     }
 
     public void increment(Calendar cal, Calendar end, int dayOfWeek) {

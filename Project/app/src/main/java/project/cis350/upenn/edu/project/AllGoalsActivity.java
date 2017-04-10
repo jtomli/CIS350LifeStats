@@ -111,49 +111,54 @@ public class AllGoalsActivity extends SideMenuActivity  {
 
             for (Goal goal : allGoals) {
                 String name = goal.getName();
-                EventsDatabaseOpenHelper dbEventsHelper = new EventsDatabaseOpenHelper(this);
-                SQLiteDatabase dbEvents = dbEventsHelper.getWritableDatabase();
+                if (name.equals(goalN)) {
+                    EventsDatabaseOpenHelper dbEventsHelper = new EventsDatabaseOpenHelper(this);
+                    SQLiteDatabase dbEvents = dbEventsHelper.getWritableDatabase();
 
-                String[] projectionEvents = {
-                        EventsDatabaseContract.EventsDB.COL_USERNAME,
-                        EventsDatabaseContract.EventsDB.COL_GOALNAME,
-                        EventsDatabaseContract.EventsDB.COL_YEAR,
-                        EventsDatabaseContract.EventsDB.COL_MONTH,
-                        EventsDatabaseContract.EventsDB.COL_DAY,
-                        EventsDatabaseContract.EventsDB.COL_LOG
-                };
+                    String[] projectionEvents = {
+                            EventsDatabaseContract.EventsDB.COL_USERNAME,
+                            EventsDatabaseContract.EventsDB.COL_GOALNAME,
+                            EventsDatabaseContract.EventsDB.COL_YEAR,
+                            EventsDatabaseContract.EventsDB.COL_MONTH,
+                            EventsDatabaseContract.EventsDB.COL_DAY,
+                            EventsDatabaseContract.EventsDB.COL_LOG
+                    };
 
-                String selectionEvents = GoalsDatabaseContract.GoalsDB.COL_GOALNAME + " = ?";
-                String[] selectionArgsEvents = {name};
+                    String selectionEvents = EventsDatabaseContract.EventsDB.COL_GOALNAME + " = ? AND " +
+                            EventsDatabaseContract.EventsDB.COL_USERNAME + " = ?";
+                    String[] selectionArgsEvents = {name, username};
 
-                Cursor cursorEvents = dbEvents.query(
-                        EventsDatabaseContract.EventsDB.TABLE_NAME,         // The table to query
-                        projectionEvents,                                     // The columns to return
-                        selectionEvents,                                      // The columns for the WHERE clause
-                        selectionArgsEvents,                                  // The values for the WHERE clause
-                        null,                                           // don't group the rows
-                        null,                                           // don't filter by row groups
-                        null                                            // The sort order
-                );
+                    Cursor cursorEvents = dbEvents.query(
+                            EventsDatabaseContract.EventsDB.TABLE_NAME,
+                            projectionEvents,
+                            selectionEvents,
+                            selectionArgsEvents,
+                            null,
+                            null,
+                            null
+                    );
 
-                while (cursorEvents.moveToNext()) {
-                    int year = cursorEvents.getInt(cursorEvents.getColumnIndex(EventsDatabaseContract.EventsDB.COL_YEAR));
-                    int month = cursorEvents.getInt(cursorEvents.getColumnIndex(EventsDatabaseContract.EventsDB.COL_MONTH));
-                    int day = cursorEvents.getInt(cursorEvents.getColumnIndex(EventsDatabaseContract.EventsDB.COL_DAY));
+                    while (cursorEvents.moveToNext()) {
+                        int year = cursorEvents.getInt(cursorEvents.getColumnIndex(EventsDatabaseContract.EventsDB.COL_YEAR));
+                        int month = cursorEvents.getInt(cursorEvents.getColumnIndex(EventsDatabaseContract.EventsDB.COL_MONTH));
+                        int day = cursorEvents.getInt(cursorEvents.getColumnIndex(EventsDatabaseContract.EventsDB.COL_DAY));
 
-                    Calendar cal = Calendar.getInstance();
-                    cal.set(year, month, day, startHour, startMin);
-                    Calendar end = Calendar.getInstance();
-                    cal.set(year, month, day, endHour, endMin);
+                        Calendar cal = Calendar.getInstance();
+                        cal.clear();
+                        cal.set(year, month, day, startHour, startMin);
+                        Calendar end = Calendar.getInstance();
+                        end.clear();
+                        end.set(year, month, day, endHour, endMin);
 
-                    Event event = new Event(cal, end);
+                        Event event = new Event(cal, end);
 
-                    String completed = cursorEvents.getString(cursorEvents.getColumnIndex(EventsDatabaseContract.EventsDB.COL_LOG));
-                    if (completed.equals("yes")) {
-                        event.markCompleted(true);
+                        String completed = cursorEvents.getString(cursorEvents.getColumnIndex(EventsDatabaseContract.EventsDB.COL_LOG));
+                        if (completed.equals("yes")) {
+                            event.markCompleted(true);
+                        }
+
+                        goal.addEvent(event);
                     }
-
-                    goal.addEvent(event);
                 }
             }
         }

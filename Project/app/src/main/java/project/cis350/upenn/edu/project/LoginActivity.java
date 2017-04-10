@@ -156,17 +156,6 @@ public class LoginActivity extends AppCompatActivity implements
             } else {
                 AllGoalsActivity.openActivity(LoginActivity.this, u.getID());
             }
-
-
-            // send username to "reasons" DB
-            //Gson gson = new Gson();
-
-
-
-
-
-        } else {
-            System.out.println("SAD");
         }
     }
 

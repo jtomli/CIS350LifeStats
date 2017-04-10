@@ -12,7 +12,7 @@ import java.util.TreeSet;
 
 public class Goal implements Serializable, Comparable<Goal> {
     private String name;
-    private Set<Event> events;
+    protected Set<Event> events;
     private String reason = "";
 
     public Goal(String name) {

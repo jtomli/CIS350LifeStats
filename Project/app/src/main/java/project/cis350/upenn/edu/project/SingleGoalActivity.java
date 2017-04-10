@@ -67,7 +67,7 @@ public class SingleGoalActivity extends AppCompatActivity {
         monthProgressBar.setProgress((int) (goal.getMonthlyCompletion(Calendar.getInstance().get(Calendar.MONTH))*100));
 
         // Handles all calendar activity
-        class MonthView extends TableLayout {
+        /*class MonthView extends TableLayout {
 
             int day=0,month=0,year=0;
             private TextView btn;
@@ -75,8 +75,8 @@ public class SingleGoalActivity extends AppCompatActivity {
             private Context context;
             private TableRow tr;
             private boolean[] hasEvents = new boolean[32];
-            private Map<Event, String /* goal name */> allEvents = new TreeMap<>();
-            private Map<Event, String /* goal name */> eventsOnSelected = new TreeMap<>();
+            private Map<Event, String /* goal name *//*> allEvents = new TreeMap<>();
+            private Map<Event, String /* goal name *//*> eventsOnSelected = new TreeMap<>();
             private int[] resDaysSun = {R.string.sunday,R.string.monday,R.string.tuesday,R.string.wednesday,
                     R.string.thursday,R.string.friday,R.string.saturday};
             private String[] days;
@@ -158,8 +158,9 @@ public class SingleGoalActivity extends AppCompatActivity {
                         hasEvents[e.getStart().get(Calendar.DATE)] = true;
                     }
                 }
-
-                /*//load events and goals from database
+/**/
+                //load events and goals from database
+        /*
                 EventsDatabaseOpenHelper dbHelper = new EventsDatabaseOpenHelper(context);
                 SQLiteDatabase db = dbHelper.getWritableDatabase();
 
@@ -226,7 +227,7 @@ public class SingleGoalActivity extends AppCompatActivity {
 		}
 
 		// that should be it, the rest is handled below
-		*/
+		*//*
             }
             int selected_day=0;
             void DisplayMonth(boolean animationEnabled)
@@ -314,7 +315,7 @@ public class SingleGoalActivity extends AppCompatActivity {
                 addView(tr); //add the tablerow to the tablelayout (first row of the calendar)
 
                 tr.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
-		/*initialize the day counter to 1, it will be used to display the dates of the month*/
+		/*initialize the day counter to 1, it will be used to display the dates of the month*/ /*
                 int day=1;
                 lp = new TableRow.LayoutParams();
                 lp.weight = 0.1f;
@@ -474,13 +475,13 @@ public class SingleGoalActivity extends AppCompatActivity {
                     tv.setBackgroundResource(R.drawable.selectedgrad);
                     DisplayMonth(false);
 			/*save the day,month and year in the public int variables day,month and year
-			 so that they can be used when the calendar is closed */
+			 so that they can be used when the calendar is closed *//*
 
                     cal.set(Calendar.DAY_OF_MONTH, day);
                 }
             };
 
-        }
+        }*/
 
     }
 
@@ -501,9 +502,6 @@ public class SingleGoalActivity extends AppCompatActivity {
                 startActivity(intent);
                 break;
             case R.id.delete_goal_button:
-                // TODO: Show confirmation prompt
-                // TODO: remove goal from database
-
                 GoalsDatabaseOpenHelper dbHelper = new GoalsDatabaseOpenHelper(this);
                 SQLiteDatabase db = dbHelper.getWritableDatabase();
                 String selection = GoalsDatabaseContract.GoalsDB.COL_USERNAME + " LIKE ? AND " +
@@ -520,15 +518,10 @@ public class SingleGoalActivity extends AppCompatActivity {
                 String[] selectionArgsE = { username, goal.getName() };
                 dbE.delete(EventsDatabaseContract.EventsDB.TABLE_NAME, selectionE, selectionArgsE);
 
-                Intent intent2 = new Intent(this, MainActivity.class);
-                intent2.putExtra("username", username);
-                startActivity(intent2);
+                AllGoalsActivity.openActivity(SingleGoalActivity.this, username);
                 break;
-            case R.id.log_goal_button:
-                Intent intent3 = new Intent(this, ProgressActivity.class);
-                intent3.putExtra("username", username);
-                intent3.putExtra("goalName", goal.getName());
-                startActivity(intent3);
+            case R.id.return_to_main_button:
+                AllGoalsActivity.openActivity(SingleGoalActivity.this, username);
                 break;
         }
         return false;
