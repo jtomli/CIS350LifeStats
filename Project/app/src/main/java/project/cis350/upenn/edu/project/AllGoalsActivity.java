@@ -1,23 +1,10 @@
 package project.cis350.upenn.edu.project;
 
-import project.cis350.upenn.edu.project.CustomAdapter;
-import project.cis350.upenn.edu.project.EventsDatabaseContract;
-import project.cis350.upenn.edu.project.EventsDatabaseOpenHelper;
-import project.cis350.upenn.edu.project.Goal;
-import project.cis350.upenn.edu.project.GoalsDatabaseContract;
-import project.cis350.upenn.edu.project.GoalsDatabaseOpenHelper;
-import project.cis350.upenn.edu.project.R;
-import project.cis350.upenn.edu.project.SideMenuActivity;
-import project.cis350.upenn.edu.project.SingleGoalActivity;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -50,7 +37,7 @@ public class AllGoalsActivity extends SideMenuActivity  {
         Intent i = getIntent();
         username = i.getExtras().getString("username");
 
-        // create a ListView to display all the user's goals into a ListView
+        // create a ListView to display all the user's goals
         final ListView goals = (ListView) findViewById(R.id.all_goals);
         goals.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 
@@ -84,13 +71,13 @@ public class AllGoalsActivity extends SideMenuActivity  {
         String[] selectionArgsGoals = {username};
 
         Cursor cursorGoals = dbGoals.query(
-                GoalsDatabaseContract.GoalsDB.TABLE_NAME,         // The table to query
-                projectionGoals,                                     // The columns to return
-                selectionGoals,                                      // The columns for the WHERE clause
-                selectionArgsGoals,                                  // The values for the WHERE clause
-                null,                                           // don't group the rows
-                null,                                           // don't filter by row groups
-                null                                            // The sort order
+                GoalsDatabaseContract.GoalsDB.TABLE_NAME,
+                projectionGoals,
+                selectionGoals,
+                selectionArgsGoals,
+                null,
+                null,
+                null
         );
 
         while (cursorGoals.moveToNext()) {
@@ -99,6 +86,7 @@ public class AllGoalsActivity extends SideMenuActivity  {
             String reason = cursorGoals.getString(cursorGoals.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_REASON));
             g.setReason(reason);
             allGoals.add(g);
+
             String startH = cursorGoals.getString(cursorGoals.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_STARTHOUR));
             String endH = cursorGoals.getString(cursorGoals.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_ENDHOUR));
             String startM = cursorGoals.getString(cursorGoals.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_STARTMIN));
@@ -109,6 +97,7 @@ public class AllGoalsActivity extends SideMenuActivity  {
             int endHour = Integer.parseInt(endH);
             int endMin = Integer.parseInt(endM);
 
+            // add events to goals
             for (Goal goal : allGoals) {
                 String name = goal.getName();
                 if (name.equals(goalN)) {
@@ -159,9 +148,15 @@ public class AllGoalsActivity extends SideMenuActivity  {
 
                         goal.addEvent(event);
                     }
+                    cursorEvents.close();
+                    dbEvents.close();
+                    dbEventsHelper.close();
                 }
             }
         }
+        cursorGoals.close();
+        dbGoals.close();
+        dbGoalsHelper.close();
 
 
         // populate the ListView with all of the user's goals
@@ -174,9 +169,9 @@ public class AllGoalsActivity extends SideMenuActivity  {
     }
 
     public void goToSingleGoal(Goal goal) {
-        // create a new Intent using the current activity and GoalActivity class
+        // create a new Intent using the current activity and SingleGoalActivity class
         Intent i = new Intent(getApplicationContext(), SingleGoalActivity.class);
-        // pass the goal to GoalActivity
+        // pass the goal to SingleGoalActivity
         i.putExtra("Goal", goal);
         i.putExtra("username", username);
         // start the game activity
