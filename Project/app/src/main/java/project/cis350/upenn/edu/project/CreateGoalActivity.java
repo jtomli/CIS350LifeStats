@@ -9,7 +9,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.PopupMenu;
 import android.text.format.DateFormat;
 import android.view.MenuItem;
@@ -85,6 +84,8 @@ public class CreateGoalActivity extends SideMenuActivity implements AdapterView.
         Intent intent = getIntent();
         username = intent.getExtras().getString("username");
 
+
+        // populate "reasons" spinner with user-defined reasons
         UserDatabaseOpenHelper dbHelper = new UserDatabaseOpenHelper(this);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
@@ -105,21 +106,21 @@ public class CreateGoalActivity extends SideMenuActivity implements AdapterView.
 
         };
 
-        // Filter results WHERE COL_USERNAME = username
         String selection = UserDatabaseContract.UserDB.COL_USERNAME + " = ?";
         String[] selectionArgs = { username };
 
         Cursor cursor = db.query(
-                UserDatabaseContract.UserDB.TABLE_NAME,         // The table to query
-                projection,                                     // The columns to return
-                selection,                                      // The columns for the WHERE clause
-                selectionArgs,                                  // The values for the WHERE clause
-                null,                                           // don't group the rows
-                null,                                           // don't filter by row groups
-                null                                            // The sort order
+                UserDatabaseContract.UserDB.TABLE_NAME,
+                projection,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                null
         );
 
         reasons = new ArrayList<String>();
+
         // access list of reasons for each row
         while(cursor.moveToNext()) {
             for (int i = 0; i < 11; i++) {
@@ -134,6 +135,8 @@ public class CreateGoalActivity extends SideMenuActivity implements AdapterView.
             }
         }
         cursor.close();
+        db.close();
+        dbHelper.close();
 
         // setting labels at start up for startTime
         String currTime = hourConverter(c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE));
@@ -198,13 +201,11 @@ public class CreateGoalActivity extends SideMenuActivity implements AdapterView.
         reasonsSpinner.setAdapter(adapterThree);
         reasonsSpinner.setOnItemSelectedListener(this);
 
-        //GOAL NAME
+        // goal name
         final EditText goalInput = (EditText) findViewById(R.id.goalNameInput);
 
         daysChecked = new ArrayList<String>();
 
-
-        //should also switch intent here
         final Button addGoal = (Button) findViewById(R.id.addGoalButton);
         addGoal.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -229,8 +230,6 @@ public class CreateGoalActivity extends SideMenuActivity implements AdapterView.
                 });
             }
         });
-
-
     }
 
     public void addGoal(View v) {
@@ -265,13 +264,13 @@ public class CreateGoalActivity extends SideMenuActivity implements AdapterView.
         String[] selectionArgs = { goalName, username };
 
         Cursor cursor = db.query(
-                GoalsDatabaseContract.GoalsDB.TABLE_NAME,         // The table to query
-                projection,                                     // The columns to return
-                selection,                                      // The columns for the WHERE clause
-                selectionArgs,                                  // The values for the WHERE clause
-                null,                                           // don't group the rows
-                null,                                           // don't filter by row groups
-                null                                            // The sort order
+                GoalsDatabaseContract.GoalsDB.TABLE_NAME,
+                projection,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                null
         );
 
         ContentValues values = new ContentValues();
@@ -310,6 +309,8 @@ public class CreateGoalActivity extends SideMenuActivity implements AdapterView.
         }
 
         cursor.close();
+        db.close();
+        dbHelper.close();
     }
 
     public void increment(Calendar cal, Calendar end, int dayOfWeek) {
@@ -342,6 +343,9 @@ public class CreateGoalActivity extends SideMenuActivity implements AdapterView.
                 break;
             }
         }
+
+        db.close();
+        dbHelper.close();
     }
 
     public void createEvents() {

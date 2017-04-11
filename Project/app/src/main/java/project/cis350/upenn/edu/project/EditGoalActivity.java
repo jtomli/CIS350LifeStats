@@ -120,10 +120,8 @@ public class EditGoalActivity extends AppCompatActivity implements AdapterView.O
             }
         }
         cursorUser.close();
-
-        // reasons are saved in reason
-        // reason can now populate a spinner
-
+        db.close();
+        dbHelper.close();
 
         //creating reminder spinner
         Spinner reminderSpinner = (Spinner) findViewById(R.id.reminderSpinner);
@@ -149,7 +147,7 @@ public class EditGoalActivity extends AppCompatActivity implements AdapterView.O
         reasonsSpinner.setAdapter(adapterThree);
         reasonsSpinner.setOnItemSelectedListener(this);
 
-        //GOAL NAME
+        // goal name
         final EditText goalInput = (EditText) findViewById(R.id.goalNameInput);
 
         daysChecked = new ArrayList<String>();
@@ -192,7 +190,7 @@ public class EditGoalActivity extends AppCompatActivity implements AdapterView.O
                 null                                            // The sort order
         );
 
-        //setting all info on EditGoal screen to match the previous goals info
+        // setting all info on EditGoal screen to match the previous goals info
         while (cursor.moveToNext()) {
             startTimeText = (TextView) findViewById(R.id.setStartTime);
             startTimeText.setText(timePrinter(cursor.getString(cursor.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_STARTHOUR)),
@@ -213,10 +211,23 @@ public class EditGoalActivity extends AppCompatActivity implements AdapterView.O
                     cursor.getString(cursor.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_ENDDAY)),
                     cursor.getString(cursor.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_ENDYEAR))));
 
-            reminderSpinner.setPrompt(cursor.getString(cursor.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_REMINDME)));
-            frequencySpinner.setPrompt(cursor.getString(cursor.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_FREQUENCY)));
-            reasonsSpinner.setPrompt(cursor.getString(cursor.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_REASON)));
+            String reminders = cursor.getString(cursor.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_REMINDME));
+            String frequencies = cursor.getString(cursor.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_FREQUENCY));
+            String reas = cursor.getString(cursor.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_REASON));
+
             goalInput.setText(cursor.getString(cursor.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_GOALNAME)));
+
+            ArrayAdapter reminderAdapt = (ArrayAdapter) reminderSpinner.getAdapter();
+            int reminderPos = reminderAdapt.getPosition(reminders);
+            reminderSpinner.setSelection(reminderPos);
+
+            ArrayAdapter freqAdapt = (ArrayAdapter) frequencySpinner.getAdapter();
+            int freqPos = freqAdapt.getPosition(frequencies);
+            frequencySpinner.setSelection(freqPos);
+
+            ArrayAdapter reasAdapt = (ArrayAdapter) reasonsSpinner.getAdapter();
+            int reasPos = reasAdapt.getPosition(reas);
+            reasonsSpinner.setSelection(reasPos);
 
             checkDayBoxes(cursor.getString(cursor.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_REPEAT)));
 
@@ -237,9 +248,10 @@ public class EditGoalActivity extends AppCompatActivity implements AdapterView.O
             reminderSelection = cursor.getString(cursor.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_REMINDME));
         }
 
+        cursor.close();
+        dbGoals.close();
+        dbGoalsHelper.close();
 
-
-        //should also switch intent here
         final Button updateGoal = (Button) findViewById(R.id.updateGoalButton);
         updateGoal.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -247,18 +259,7 @@ public class EditGoalActivity extends AppCompatActivity implements AdapterView.O
                 goalName = goalInput.getText().toString();
                 updateGoal(v);
                 updateEvents(v);
-                PopupMenu popup = new PopupMenu(EditGoalActivity.this, updateGoal);
-                popup.getMenuInflater().inflate(R.menu.update_goal_popup_menu, popup.getMenu());
-                popup.show();
-                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        int itemId = item.getItemId();
-                        AllGoalsActivity.openActivity(EditGoalActivity.this, username);
-                        return true;
-                    }
-                });
-
+                AllGoalsActivity.openActivity(EditGoalActivity.this, username);
             }
         });
     }
@@ -327,15 +328,18 @@ public class EditGoalActivity extends AppCompatActivity implements AdapterView.O
         if (cursor.getCount() <= 0) {
             long newRowId = db.insert(GoalsDatabaseContract.GoalsDB.TABLE_NAME, null, values);
         } else {
-            String selectionTwo = GoalsDatabaseContract.GoalsDB.COL_GOALNAME + " LIKE ?";
-            String[] selectionArgsTwo = {originalGoalName};
+            String selectionTwo = GoalsDatabaseContract.GoalsDB.COL_GOALNAME + " LIKE ? AND " +
+                    GoalsDatabaseContract.GoalsDB.COL_USERNAME + " LIKE ?";
+            String[] selectionArgsTwo = {originalGoalName, username};
 
             int count = db.update(
                     GoalsDatabaseContract.GoalsDB.TABLE_NAME,
                     values,
                     selectionTwo, selectionArgsTwo);
         }
-
+        cursor.close();
+        db.close();
+        dbHelper.close();
     }
 
     public void updateEvents(View v) {
@@ -367,6 +371,9 @@ public class EditGoalActivity extends AppCompatActivity implements AdapterView.O
 
             }
         }
+
+        dbE.close();
+        dbEHelper.close();
 
         Calendar end = Calendar.getInstance();
         end.set(Integer.parseInt(endYear), Integer.parseInt(endMonth) - 1, Integer.parseInt(endDay));
@@ -423,6 +430,8 @@ public class EditGoalActivity extends AppCompatActivity implements AdapterView.O
                 break;
             }
         }
+        db.close();
+        dbHelper.close();
     }
 
     private String datePrinter(String month, String day, String year) {
