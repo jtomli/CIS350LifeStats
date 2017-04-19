@@ -552,9 +552,7 @@ public class MonthView extends TableLayout{
             Set<Event> eventsToday = eventsOnSelected.keySet();
 
             if (checked) {
-                System.out.println("CHECKED");
                 for (Event e : eventsToday) {
-                    System.out.println(e.toString());
                     int year = e.getYearInt();
                     int month = e.getMonthInt();
                     int day = e.getDayInt();
@@ -622,10 +620,18 @@ public class MonthView extends TableLayout{
                 }
             }
 
-            Intent intent = new Intent(context, SingleGoalActivity.class);
-            intent.putExtra("username", username);
-            intent.putExtra("Goal", goal);
-            context.startActivity(intent);
+            SingleGoalActivity main = (SingleGoalActivity) context;
+            main.update();
+
+            for (Event e : allEvents.keySet()) {
+                if (eventIsOnDay(cal, e.getStart())) {
+                    if (e.isCompleted()) {
+                        tv.setBackgroundColor(Color.GREEN);
+                    } else {
+                        tv.setBackgroundColor(Color.RED);
+                    }
+                }
+            }
         }
     };
 }

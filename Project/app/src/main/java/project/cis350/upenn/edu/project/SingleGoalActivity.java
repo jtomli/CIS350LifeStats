@@ -103,14 +103,37 @@ public class SingleGoalActivity extends AppCompatActivity {
 
                 AllGoalsActivity.openActivity(SingleGoalActivity.this, username);
                 break;
-            case R.id.return_to_main_button:
-                AllGoalsActivity.openActivity(SingleGoalActivity.this, username);
-                break;
         }
         return false;
     }
 
     public void onProgressClick(View v) {
+
+    }
+
+    // update progress bars when an event is checked on the goals page
+    public void update() {
+        // Make the top TextView display the name of the goal
+        final TextView goalName = (TextView) findViewById(R.id.goal_name);
+        goalName.setText(goal.getName());
+
+        // Populate the reasons TextView with all of the reasons associated with this goal
+        TextView reasons = (TextView) findViewById(R.id.reason);
+        reasons.setText("Reasons: " + goal.getReason());
+
+        // Display current goal's total progress
+        TextView totalProgressText = (TextView) findViewById(R.id.progress_total_text);
+        totalProgressText.setText("Total Progress: " + goal.getTotalCompletionPercent());
+
+        ProgressBar totalProgressBar = (ProgressBar) findViewById(R.id.progress_bar_total);
+        totalProgressBar.setProgress((int) (goal.getTotalCompletion()*100));
+
+        // Display current goal's monthly progress
+        TextView monthProgressText = (TextView) findViewById(R.id.progress_month_text);
+        monthProgressText.setText("This Month's Progress: " + goal.getMonthlyCompletionPercent(Calendar.getInstance().get(Calendar.MONTH)));
+
+        ProgressBar monthProgressBar = (ProgressBar) findViewById(R.id.progress_bar_month);
+        monthProgressBar.setProgress((int) (goal.getMonthlyCompletion(Calendar.getInstance().get(Calendar.MONTH))*100));
 
     }
 }
