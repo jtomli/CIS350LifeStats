@@ -22,6 +22,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -210,24 +211,29 @@ public class CreateGoalActivity extends SideMenuActivity implements AdapterView.
         addGoal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
-                goalName = goalInput.getText().toString();
-                addGoal(v);
-                createEvents();
-                PopupMenu popup = new PopupMenu(CreateGoalActivity.this, addGoal);
-                popup.getMenuInflater().inflate(R.menu.add_goal_popup_menu, popup.getMenu());
-                popup.show();
-                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        int itemId = item.getItemId();
-                        if (itemId == R.id.addAnother) {
-                            CreateGoalActivity.openActivity(CreateGoalActivity.this, username);
-                        } else if (itemId == R.id.mainMenu) {
-                            AllGoalsActivity.openActivity(CreateGoalActivity.this, username);
+                if (checkEvents() == 0) {
+                    Toast.makeText(CreateGoalActivity.this,
+                            "Your goal does not occur between your start and end dates.", Toast.LENGTH_LONG).show();
+                } else {
+                    goalName = goalInput.getText().toString();
+                    addGoal(v);
+                    createEvents();
+                    PopupMenu popup = new PopupMenu(CreateGoalActivity.this, addGoal);
+                    popup.getMenuInflater().inflate(R.menu.add_goal_popup_menu, popup.getMenu());
+                    popup.show();
+                    popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item) {
+                            int itemId = item.getItemId();
+                            if (itemId == R.id.addAnother) {
+                                CreateGoalActivity.openActivity(CreateGoalActivity.this, username);
+                            } else if (itemId == R.id.mainMenu) {
+                                AllGoalsActivity.openActivity(CreateGoalActivity.this, username);
+                            }
+                            return true;
                         }
-                        return true;
-                    }
-                });
+                    });
+                }
             }
         });
     }
@@ -374,6 +380,65 @@ public class CreateGoalActivity extends SideMenuActivity implements AdapterView.
                 increment(cal, end, Calendar.SATURDAY);
             }
         }
+    }
+
+    public int checkIncrement(Calendar cal, Calendar end, int dayOfWeek) {
+
+        int numEvents = 0;
+
+        while (cal.compareTo(end) <= 0){
+            while (!(cal.get(Calendar.DAY_OF_WEEK) == dayOfWeek)) {
+                cal.add(Calendar.DAY_OF_MONTH, 1);
+            }
+
+            if (cal.compareTo(end) <= 0){
+                numEvents++;
+            }
+
+            if (frequencySelection.equals("Weekly")) {
+                cal.add(Calendar.DAY_OF_MONTH, 7);
+            } else if (frequencySelection.equals("Biweekly")) {
+                cal.add(Calendar.DAY_OF_MONTH, 14);
+            } else if (frequencySelection.equals("Monthly")) {
+                cal.add(Calendar.MONTH, 1);
+            } else {
+                break;
+            }
+        }
+
+        return numEvents;
+    }
+
+    public int checkEvents() {
+
+        int numEvents = 0;
+
+        Calendar end = Calendar.getInstance();
+        end.set(Integer.parseInt(endYear), Integer.parseInt(endMonth) - 1, Integer.parseInt(endDay));
+
+        for (int i = 0; i < daysChecked.size(); i++) {
+
+            Calendar cal = Calendar.getInstance();
+            cal.set(Integer.parseInt(startYear), Integer.parseInt(startMonth) - 1, Integer.parseInt(startDay));
+
+            if (daysChecked.get(i).equals("Sunday")) {
+                numEvents += checkIncrement(cal, end, Calendar.SUNDAY);
+            } else if (daysChecked.get(i).equals("Monday")) {
+                numEvents += checkIncrement(cal, end, Calendar.MONDAY);
+            } else if (daysChecked.get(i).equals("Tuesday")) {
+                numEvents += checkIncrement(cal, end, Calendar.TUESDAY);
+            } else if (daysChecked.get(i).equals("Wednesday")) {
+                numEvents += checkIncrement(cal, end, Calendar.WEDNESDAY);
+            } else if (daysChecked.get(i).equals("Thursday")) {
+                numEvents += checkIncrement(cal, end, Calendar.THURSDAY);
+            } else if (daysChecked.get(i).equals("Friday")) {
+                numEvents += checkIncrement(cal, end, Calendar.FRIDAY);
+            } else if (daysChecked.get(i).equals("Saturday")){
+                numEvents += checkIncrement(cal, end, Calendar.SATURDAY);
+            }
+        }
+
+        return numEvents;
     }
 
     public void allDayCheckBox(View v) {
