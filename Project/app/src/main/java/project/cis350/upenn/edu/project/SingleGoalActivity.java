@@ -1,6 +1,8 @@
 package project.cis350.upenn.edu.project;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.database.Cursor;
@@ -23,6 +25,7 @@ import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -85,23 +88,34 @@ public class SingleGoalActivity extends AppCompatActivity {
                 startActivity(intent);
                 break;
             case R.id.delete_goal_button:
-                GoalsDatabaseOpenHelper dbHelper = new GoalsDatabaseOpenHelper(this);
-                SQLiteDatabase db = dbHelper.getWritableDatabase();
-                String selection = GoalsDatabaseContract.GoalsDB.COL_USERNAME + " LIKE ? AND " +
-                        GoalsDatabaseContract.GoalsDB.COL_GOALNAME + " LIKE ?";
+                final GoalsDatabaseOpenHelper dbHelper = new GoalsDatabaseOpenHelper(this);
+                final EventsDatabaseOpenHelper dbEHelper = new EventsDatabaseOpenHelper(this);
 
-                String[] selectionArgs = { username, goal.getName() };
-                db.delete(GoalsDatabaseContract.GoalsDB.TABLE_NAME, selection, selectionArgs);
+                new AlertDialog.Builder(this)
+                        .setTitle("Delete Goal")
+                        .setMessage("Are you sure you want to delete this goal?")
+                        //.setIcon(android.R.drawable.ic_dialog_alert)
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 
-                EventsDatabaseOpenHelper dbEHelper = new EventsDatabaseOpenHelper(this);
-                SQLiteDatabase dbE = dbEHelper.getWritableDatabase();
-                String selectionE = EventsDatabaseContract.EventsDB.COL_USERNAME + " LIKE ? AND " +
-                        EventsDatabaseContract.EventsDB.COL_GOALNAME + " LIKE ?";
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                SQLiteDatabase db = dbHelper.getWritableDatabase();
+                                String selection = GoalsDatabaseContract.GoalsDB.COL_USERNAME + " LIKE ? AND " +
+                                        GoalsDatabaseContract.GoalsDB.COL_GOALNAME + " LIKE ?";
 
-                String[] selectionArgsE = { username, goal.getName() };
-                dbE.delete(EventsDatabaseContract.EventsDB.TABLE_NAME, selectionE, selectionArgsE);
+                                String[] selectionArgs = { username, goal.getName() };
+                                db.delete(GoalsDatabaseContract.GoalsDB.TABLE_NAME, selection, selectionArgs);
 
-                AllGoalsActivity.openActivity(SingleGoalActivity.this, username);
+                                SQLiteDatabase dbE = dbEHelper.getWritableDatabase();
+                                String selectionE = EventsDatabaseContract.EventsDB.COL_USERNAME + " LIKE ? AND " +
+                                        EventsDatabaseContract.EventsDB.COL_GOALNAME + " LIKE ?";
+
+                                String[] selectionArgsE = { username, goal.getName() };
+                                dbE.delete(EventsDatabaseContract.EventsDB.TABLE_NAME, selectionE, selectionArgsE);
+
+                                AllGoalsActivity.openActivity(SingleGoalActivity.this, username);
+                            }})
+                        .setNegativeButton(android.R.string.cancel, null).show();
+
                 break;
         }
         return false;
