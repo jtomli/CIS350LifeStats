@@ -152,25 +152,10 @@ public class LoginActivity extends AppCompatActivity implements
 
             Intent i;
             if (cursor.getCount() <= 0) {
-                i = new Intent(this, SetupActivityReasons.class);
-                i.putExtra("username", u.getID());
-                startActivity(i);
+                SetupActivityReasons.openActivity(LoginActivity.this, u.getID(), "no");
             } else {
-                i = new Intent(this, MainActivity.class);
-                i.putExtra("username", u.getID());
-                startActivity(i);
+                AllGoalsActivity.openActivity(LoginActivity.this, u.getID());
             }
-
-
-            // send username to "reasons" DB
-            //Gson gson = new Gson();
-
-
-
-
-
-        } else {
-            System.out.println("SAD");
         }
     }
 

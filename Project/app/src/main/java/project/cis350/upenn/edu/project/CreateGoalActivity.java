@@ -9,7 +9,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.PopupMenu;
 import android.text.format.DateFormat;
 import android.view.MenuItem;
@@ -23,6 +22,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -31,6 +31,7 @@ import java.util.List;
 
 public class CreateGoalActivity extends SideMenuActivity implements AdapterView.OnItemSelectedListener {
 
+    // layout elements
     private static TextView startTimeText;
     private static TextView endTimeText;
     private static TextView startDateText;
@@ -40,27 +41,27 @@ public class CreateGoalActivity extends SideMenuActivity implements AdapterView.
     protected static boolean startDatePressed = false;
     protected static boolean endDatePressed = false;
 
-    // for DB
+    // for GoalsDB
     private boolean allDay = false;
     List<String> daysChecked;
-    private String frequencySelection; // default added
+    private String frequencySelection;
     private String reminderSelection;
     private String goalName;
-    private String reasonSelection; // default added
-    private static String startMonth; // default added
-    private static String startDay; // default added
-    private static String startYear; // default added
-    private static String endMonth; // default added
-    private static String endDay; // default added
-    private static String endYear; // default added
-    private static String startHour; // default added
-    private static String startMin; // default added
-    private static String startAmPm; // default added
-    private static String endHour; // default added
-    private static String endMin; // default added
-    private static String endAmPm; // default added
+    private String reasonSelection;
+    private static String startMonth;
+    private static String startDay;
+    private static String startYear;
+    private static String endMonth;
+    private static String endDay;
+    private static String endYear;
+    private static String startHour;
+    private static String startMin;
+    private static String startAmPm;
+    private static String endHour;
+    private static String endMin;
+    private static String endAmPm;
 
-
+    // from UserDB
     String username;
     ArrayList<String> reasons;
 
@@ -84,6 +85,8 @@ public class CreateGoalActivity extends SideMenuActivity implements AdapterView.
         Intent intent = getIntent();
         username = intent.getExtras().getString("username");
 
+
+        // populate "reasons" spinner with user-defined reasons
         UserDatabaseOpenHelper dbHelper = new UserDatabaseOpenHelper(this);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
@@ -104,21 +107,21 @@ public class CreateGoalActivity extends SideMenuActivity implements AdapterView.
 
         };
 
-        // Filter results WHERE COL_USERNAME = username
         String selection = UserDatabaseContract.UserDB.COL_USERNAME + " = ?";
         String[] selectionArgs = { username };
 
         Cursor cursor = db.query(
-                UserDatabaseContract.UserDB.TABLE_NAME,         // The table to query
-                projection,                                     // The columns to return
-                selection,                                      // The columns for the WHERE clause
-                selectionArgs,                                  // The values for the WHERE clause
-                null,                                           // don't group the rows
-                null,                                           // don't filter by row groups
-                null                                            // The sort order
+                UserDatabaseContract.UserDB.TABLE_NAME,
+                projection,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                null
         );
 
         reasons = new ArrayList<String>();
+
         // access list of reasons for each row
         while(cursor.moveToNext()) {
             for (int i = 0; i < 11; i++) {
@@ -133,8 +136,8 @@ public class CreateGoalActivity extends SideMenuActivity implements AdapterView.
             }
         }
         cursor.close();
-        // reasons are saved in reason
-        // reason can now populate a spinner
+        db.close();
+        dbHelper.close();
 
         // setting labels at start up for startTime
         String currTime = hourConverter(c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE));
@@ -199,43 +202,40 @@ public class CreateGoalActivity extends SideMenuActivity implements AdapterView.
         reasonsSpinner.setAdapter(adapterThree);
         reasonsSpinner.setOnItemSelectedListener(this);
 
-        //GOAL NAME
+        // goal name
         final EditText goalInput = (EditText) findViewById(R.id.goalNameInput);
 
         daysChecked = new ArrayList<String>();
 
-
-        //should also switch intent here
         final Button addGoal = (Button) findViewById(R.id.addGoalButton);
         addGoal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
-                goalName = goalInput.getText().toString();
-                addGoal(v);
-                createEvents();
-                PopupMenu popup = new PopupMenu(CreateGoalActivity.this, addGoal);
-                popup.getMenuInflater().inflate(R.menu.add_goal_popup_menu, popup.getMenu());
-                popup.show();
-                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        int itemId = item.getItemId();
-                        if (itemId == R.id.addAnother) {
-                            Intent i = new Intent(v.getContext(), CreateGoalActivity.class);
-                            i.putExtra("username", username);
-                            startActivity(i);
-                        } else if (itemId == R.id.mainMenu) {
-                            Intent i = new Intent(v.getContext(), MainActivity.class);
-                            i.putExtra("username", username);
-                            startActivity(i);
+                if (checkEvents() == 0) {
+                    Toast.makeText(CreateGoalActivity.this,
+                            "Your goal does not occur between your start and end dates.", Toast.LENGTH_LONG).show();
+                } else {
+                    goalName = goalInput.getText().toString();
+                    addGoal(v);
+                    createEvents();
+                    PopupMenu popup = new PopupMenu(CreateGoalActivity.this, addGoal);
+                    popup.getMenuInflater().inflate(R.menu.add_goal_popup_menu, popup.getMenu());
+                    popup.show();
+                    popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item) {
+                            int itemId = item.getItemId();
+                            if (itemId == R.id.addAnother) {
+                                CreateGoalActivity.openActivity(CreateGoalActivity.this, username);
+                            } else if (itemId == R.id.mainMenu) {
+                                AllGoalsActivity.openActivity(CreateGoalActivity.this, username);
+                            }
+                            return true;
                         }
-                        return true;
-                    }
-                });
+                    });
+                }
             }
         });
-
-
     }
 
     public void addGoal(View v) {
@@ -265,17 +265,18 @@ public class CreateGoalActivity extends SideMenuActivity implements AdapterView.
                 GoalsDatabaseContract.GoalsDB.COL_REMINDME
         };
 
-        String selection = GoalsDatabaseContract.GoalsDB.COL_GOALNAME + " = ?";
-        String[] selectionArgs = { goalName };
+        String selection = GoalsDatabaseContract.GoalsDB.COL_GOALNAME + " = ? AND " +
+                GoalsDatabaseContract.GoalsDB.COL_USERNAME + " = ?";
+        String[] selectionArgs = { goalName, username };
 
         Cursor cursor = db.query(
-                GoalsDatabaseContract.GoalsDB.TABLE_NAME,         // The table to query
-                projection,                                     // The columns to return
-                selection,                                      // The columns for the WHERE clause
-                selectionArgs,                                  // The values for the WHERE clause
-                null,                                           // don't group the rows
-                null,                                           // don't filter by row groups
-                null                                            // The sort order
+                GoalsDatabaseContract.GoalsDB.TABLE_NAME,
+                projection,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                null
         );
 
         ContentValues values = new ContentValues();
@@ -299,13 +300,12 @@ public class CreateGoalActivity extends SideMenuActivity implements AdapterView.
         values.put(GoalsDatabaseContract.GoalsDB.COL_FREQUENCY, frequencySelection);
         values.put(GoalsDatabaseContract.GoalsDB.COL_REASON, reasonSelection);
 
-
-
         if (cursor.getCount() <=0) {
             long newRowId = db.insert(GoalsDatabaseContract.GoalsDB.TABLE_NAME, null, values);
         } else {
-            String selectionTwo = GoalsDatabaseContract.GoalsDB.COL_GOALNAME + " LIKE ?";
-            String[] selectionArgsTwo = {goalName};
+            String selectionTwo = GoalsDatabaseContract.GoalsDB.COL_GOALNAME + " LIKE ? AND " +
+                    GoalsDatabaseContract.GoalsDB.COL_USERNAME + " LIKE ?";
+            String[] selectionArgsTwo = {goalName, username};
 
             int count = db.update(
                     GoalsDatabaseContract.GoalsDB.TABLE_NAME,
@@ -313,6 +313,10 @@ public class CreateGoalActivity extends SideMenuActivity implements AdapterView.
                     selectionTwo, selectionArgsTwo);
 
         }
+
+        cursor.close();
+        db.close();
+        dbHelper.close();
     }
 
     public void increment(Calendar cal, Calendar end, int dayOfWeek) {
@@ -345,6 +349,9 @@ public class CreateGoalActivity extends SideMenuActivity implements AdapterView.
                 break;
             }
         }
+
+        db.close();
+        dbHelper.close();
     }
 
     public void createEvents() {
@@ -373,6 +380,65 @@ public class CreateGoalActivity extends SideMenuActivity implements AdapterView.
                 increment(cal, end, Calendar.SATURDAY);
             }
         }
+    }
+
+    public int checkIncrement(Calendar cal, Calendar end, int dayOfWeek) {
+
+        int numEvents = 0;
+
+        while (cal.compareTo(end) <= 0){
+            while (!(cal.get(Calendar.DAY_OF_WEEK) == dayOfWeek)) {
+                cal.add(Calendar.DAY_OF_MONTH, 1);
+            }
+
+            if (cal.compareTo(end) <= 0){
+                numEvents++;
+            }
+
+            if (frequencySelection.equals("Weekly")) {
+                cal.add(Calendar.DAY_OF_MONTH, 7);
+            } else if (frequencySelection.equals("Biweekly")) {
+                cal.add(Calendar.DAY_OF_MONTH, 14);
+            } else if (frequencySelection.equals("Monthly")) {
+                cal.add(Calendar.MONTH, 1);
+            } else {
+                break;
+            }
+        }
+
+        return numEvents;
+    }
+
+    public int checkEvents() {
+
+        int numEvents = 0;
+
+        Calendar end = Calendar.getInstance();
+        end.set(Integer.parseInt(endYear), Integer.parseInt(endMonth) - 1, Integer.parseInt(endDay));
+
+        for (int i = 0; i < daysChecked.size(); i++) {
+
+            Calendar cal = Calendar.getInstance();
+            cal.set(Integer.parseInt(startYear), Integer.parseInt(startMonth) - 1, Integer.parseInt(startDay));
+
+            if (daysChecked.get(i).equals("Sunday")) {
+                numEvents += checkIncrement(cal, end, Calendar.SUNDAY);
+            } else if (daysChecked.get(i).equals("Monday")) {
+                numEvents += checkIncrement(cal, end, Calendar.MONDAY);
+            } else if (daysChecked.get(i).equals("Tuesday")) {
+                numEvents += checkIncrement(cal, end, Calendar.TUESDAY);
+            } else if (daysChecked.get(i).equals("Wednesday")) {
+                numEvents += checkIncrement(cal, end, Calendar.WEDNESDAY);
+            } else if (daysChecked.get(i).equals("Thursday")) {
+                numEvents += checkIncrement(cal, end, Calendar.THURSDAY);
+            } else if (daysChecked.get(i).equals("Friday")) {
+                numEvents += checkIncrement(cal, end, Calendar.FRIDAY);
+            } else if (daysChecked.get(i).equals("Saturday")){
+                numEvents += checkIncrement(cal, end, Calendar.SATURDAY);
+            }
+        }
+
+        return numEvents;
     }
 
     public void allDayCheckBox(View v) {

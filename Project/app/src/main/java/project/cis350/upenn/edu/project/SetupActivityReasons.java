@@ -96,11 +96,8 @@ public class SetupActivityReasons extends SideMenuActivity {
         );
 
         Intent i;
-        if (cursor.getCount() > 0 && (!getIntent().hasExtra("fromSetupButton") || !getIntent().getExtras().getString("fromSetupButton").equals("yes"))) {
-
-            i = new Intent(this, MainActivity.class);
-            i.putExtra("username", username);
-            startActivity(i);
+        if (cursor.getCount() > 0 && !getIntent().getExtras().getString("fromSetupButton").equals("yes")) {
+            AllGoalsActivity.openActivity(SetupActivityReasons.this, username);
         } else if (cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
                 for (int j = 0; j < 11; j++) {
@@ -176,8 +173,8 @@ public class SetupActivityReasons extends SideMenuActivity {
             Intent intent = new Intent(this, SetupActivitySentiment.class);
             intent.putExtra("username", username);
             intent.putExtra("reasons", reasons);
-            if (getIntent().hasExtra("fromSetupButton")) {
-                intent.putExtra("fromSetupButton", "true");
+            if (getIntent().getExtras().getString("fromSetupButton").equals("yes")) {
+                intent.putExtra("fromSetupButton", "yes");
             }
             startActivity(intent);
         } else {

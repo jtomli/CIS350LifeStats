@@ -68,4 +68,6 @@
     <string name="app_calendar_name">Calendar Widget</string>
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
+    <string name="yes">Yes</string>
+    <string name="cancel">Cancel</string>
 </resources>

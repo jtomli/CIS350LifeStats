@@ -1,23 +1,10 @@
 package project.cis350.upenn.edu.project;
 
-import project.cis350.upenn.edu.project.CustomAdapter;
-import project.cis350.upenn.edu.project.EventsDatabaseContract;
-import project.cis350.upenn.edu.project.EventsDatabaseOpenHelper;
-import project.cis350.upenn.edu.project.Goal;
-import project.cis350.upenn.edu.project.GoalsDatabaseContract;
-import project.cis350.upenn.edu.project.GoalsDatabaseOpenHelper;
-import project.cis350.upenn.edu.project.R;
-import project.cis350.upenn.edu.project.SideMenuActivity;
-import project.cis350.upenn.edu.project.SingleGoalActivity;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -50,128 +37,142 @@ public class AllGoalsActivity extends SideMenuActivity  {
         Intent i = getIntent();
         username = i.getExtras().getString("username");
 
-        // create a ListView to display all the user's goals into a ListView
-        final ListView goals = (ListView) findViewById(R.id.all_goals);
-        goals.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+            // create a ListView to display all the user's goals
+            final ListView goals = (ListView) findViewById(R.id.all_goals);
+            goals.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 
-        allGoals = new TreeSet<>();
-        GoalsDatabaseOpenHelper dbGoalsHelper = new GoalsDatabaseOpenHelper(this);
-        SQLiteDatabase dbGoals = dbGoalsHelper.getWritableDatabase();
+            allGoals = new TreeSet<>();
+            GoalsDatabaseOpenHelper dbGoalsHelper = new GoalsDatabaseOpenHelper(this);
+            SQLiteDatabase dbGoals = dbGoalsHelper.getWritableDatabase();
 
-        String[] projectionGoals = {
-                GoalsDatabaseContract.GoalsDB.COL_USERNAME,
-                GoalsDatabaseContract.GoalsDB.COL_GOALNAME,
-                GoalsDatabaseContract.GoalsDB.COL_REASON,
-                GoalsDatabaseContract.GoalsDB.COL_ALLDAY,
-                GoalsDatabaseContract.GoalsDB.COL_STARTYEAR,
-                GoalsDatabaseContract.GoalsDB.COL_STARTMONTH,
-                GoalsDatabaseContract.GoalsDB.COL_STARTDAY,
-                GoalsDatabaseContract.GoalsDB.COL_STARTHOUR,
-                GoalsDatabaseContract.GoalsDB.COL_STARTMIN,
-                GoalsDatabaseContract.GoalsDB.COL_STARTAMPM,
-                GoalsDatabaseContract.GoalsDB.COL_ENDYEAR,
-                GoalsDatabaseContract.GoalsDB.COL_ENDMONTH,
-                GoalsDatabaseContract.GoalsDB.COL_ENDDAY,
-                GoalsDatabaseContract.GoalsDB.COL_ENDHOUR,
-                GoalsDatabaseContract.GoalsDB.COL_ENDMIN,
-                GoalsDatabaseContract.GoalsDB.COL_ENDAMPM,
-                GoalsDatabaseContract.GoalsDB.COL_REPEAT,
-                GoalsDatabaseContract.GoalsDB.COL_FREQUENCY,
-                GoalsDatabaseContract.GoalsDB.COL_REMINDME
-        };
+            String[] projectionGoals = {
+                    GoalsDatabaseContract.GoalsDB.COL_USERNAME,
+                    GoalsDatabaseContract.GoalsDB.COL_GOALNAME,
+                    GoalsDatabaseContract.GoalsDB.COL_REASON,
+                    GoalsDatabaseContract.GoalsDB.COL_ALLDAY,
+                    GoalsDatabaseContract.GoalsDB.COL_STARTYEAR,
+                    GoalsDatabaseContract.GoalsDB.COL_STARTMONTH,
+                    GoalsDatabaseContract.GoalsDB.COL_STARTDAY,
+                    GoalsDatabaseContract.GoalsDB.COL_STARTHOUR,
+                    GoalsDatabaseContract.GoalsDB.COL_STARTMIN,
+                    GoalsDatabaseContract.GoalsDB.COL_STARTAMPM,
+                    GoalsDatabaseContract.GoalsDB.COL_ENDYEAR,
+                    GoalsDatabaseContract.GoalsDB.COL_ENDMONTH,
+                    GoalsDatabaseContract.GoalsDB.COL_ENDDAY,
+                    GoalsDatabaseContract.GoalsDB.COL_ENDHOUR,
+                    GoalsDatabaseContract.GoalsDB.COL_ENDMIN,
+                    GoalsDatabaseContract.GoalsDB.COL_ENDAMPM,
+                    GoalsDatabaseContract.GoalsDB.COL_REPEAT,
+                    GoalsDatabaseContract.GoalsDB.COL_FREQUENCY,
+                    GoalsDatabaseContract.GoalsDB.COL_REMINDME
+            };
 
-        String selectionGoals = GoalsDatabaseContract.GoalsDB.COL_USERNAME + " = ?";
-        String[] selectionArgsGoals = {username};
+            String selectionGoals = GoalsDatabaseContract.GoalsDB.COL_USERNAME + " = ?";
+            String[] selectionArgsGoals = {username};
 
-        Cursor cursorGoals = dbGoals.query(
-                GoalsDatabaseContract.GoalsDB.TABLE_NAME,         // The table to query
-                projectionGoals,                                     // The columns to return
-                selectionGoals,                                      // The columns for the WHERE clause
-                selectionArgsGoals,                                  // The values for the WHERE clause
-                null,                                           // don't group the rows
-                null,                                           // don't filter by row groups
-                null                                            // The sort order
-        );
+            Cursor cursorGoals = dbGoals.query(
+                    GoalsDatabaseContract.GoalsDB.TABLE_NAME,
+                    projectionGoals,
+                    selectionGoals,
+                    selectionArgsGoals,
+                    null,
+                    null,
+                    null
+            );
 
-        while (cursorGoals.moveToNext()) {
-            String goalN = cursorGoals.getString(cursorGoals.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_GOALNAME));
-            Goal g = new Goal(goalN);
-            String reason = cursorGoals.getString(cursorGoals.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_REASON));
-            g.setReason(reason);
-            allGoals.add(g);
-            String startH = cursorGoals.getString(cursorGoals.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_STARTHOUR));
-            String endH = cursorGoals.getString(cursorGoals.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_ENDHOUR));
-            String startM = cursorGoals.getString(cursorGoals.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_STARTMIN));
-            String endM = cursorGoals.getString(cursorGoals.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_ENDMIN));
+            while (cursorGoals.moveToNext()) {
+                String goalN = cursorGoals.getString(cursorGoals.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_GOALNAME));
+                Goal g = new Goal(goalN);
+                String reason = cursorGoals.getString(cursorGoals.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_REASON));
+                g.setReason(reason);
+                allGoals.add(g);
 
-            int startHour = Integer.parseInt(startH);
-            int startMin = Integer.parseInt(startM);
-            int endHour = Integer.parseInt(endH);
-            int endMin = Integer.parseInt(endM);
+                String startH = cursorGoals.getString(cursorGoals.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_STARTHOUR));
+                String endH = cursorGoals.getString(cursorGoals.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_ENDHOUR));
+                String startM = cursorGoals.getString(cursorGoals.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_STARTMIN));
+                String endM = cursorGoals.getString(cursorGoals.getColumnIndex(GoalsDatabaseContract.GoalsDB.COL_ENDMIN));
 
-            for (Goal goal : allGoals) {
-                String name = goal.getName();
-                EventsDatabaseOpenHelper dbEventsHelper = new EventsDatabaseOpenHelper(this);
-                SQLiteDatabase dbEvents = dbEventsHelper.getWritableDatabase();
+                int startHour = Integer.parseInt(startH);
+                int startMin = Integer.parseInt(startM);
+                int endHour = Integer.parseInt(endH);
+                int endMin = Integer.parseInt(endM);
 
-                String[] projectionEvents = {
-                        EventsDatabaseContract.EventsDB.COL_USERNAME,
-                        EventsDatabaseContract.EventsDB.COL_GOALNAME,
-                        EventsDatabaseContract.EventsDB.COL_YEAR,
-                        EventsDatabaseContract.EventsDB.COL_MONTH,
-                        EventsDatabaseContract.EventsDB.COL_DAY,
-                        EventsDatabaseContract.EventsDB.COL_LOG
-                };
+                // add events to goals
+                for (Goal goal : allGoals) {
+                    String name = goal.getName();
+                    if (name.equals(goalN)) {
+                        EventsDatabaseOpenHelper dbEventsHelper = new EventsDatabaseOpenHelper(this);
+                        SQLiteDatabase dbEvents = dbEventsHelper.getWritableDatabase();
 
-                String selectionEvents = GoalsDatabaseContract.GoalsDB.COL_GOALNAME + " = ?";
-                String[] selectionArgsEvents = {name};
+                        String[] projectionEvents = {
+                                EventsDatabaseContract.EventsDB.COL_USERNAME,
+                                EventsDatabaseContract.EventsDB.COL_GOALNAME,
+                                EventsDatabaseContract.EventsDB.COL_YEAR,
+                                EventsDatabaseContract.EventsDB.COL_MONTH,
+                                EventsDatabaseContract.EventsDB.COL_DAY,
+                                EventsDatabaseContract.EventsDB.COL_LOG
+                        };
 
-                Cursor cursorEvents = dbEvents.query(
-                        EventsDatabaseContract.EventsDB.TABLE_NAME,         // The table to query
-                        projectionEvents,                                     // The columns to return
-                        selectionEvents,                                      // The columns for the WHERE clause
-                        selectionArgsEvents,                                  // The values for the WHERE clause
-                        null,                                           // don't group the rows
-                        null,                                           // don't filter by row groups
-                        null                                            // The sort order
-                );
+                        String selectionEvents = EventsDatabaseContract.EventsDB.COL_GOALNAME + " = ? AND " +
+                                EventsDatabaseContract.EventsDB.COL_USERNAME + " = ?";
+                        String[] selectionArgsEvents = {name, username};
 
-                while (cursorEvents.moveToNext()) {
-                    int year = cursorEvents.getInt(cursorEvents.getColumnIndex(EventsDatabaseContract.EventsDB.COL_YEAR));
-                    int month = cursorEvents.getInt(cursorEvents.getColumnIndex(EventsDatabaseContract.EventsDB.COL_MONTH));
-                    int day = cursorEvents.getInt(cursorEvents.getColumnIndex(EventsDatabaseContract.EventsDB.COL_DAY));
+                        Cursor cursorEvents = dbEvents.query(
+                                EventsDatabaseContract.EventsDB.TABLE_NAME,
+                                projectionEvents,
+                                selectionEvents,
+                                selectionArgsEvents,
+                                null,
+                                null,
+                                null
+                        );
 
-                    Calendar cal = Calendar.getInstance();
-                    cal.set(year, month, day, startHour, startMin);
-                    Calendar end = Calendar.getInstance();
-                    cal.set(year, month, day, endHour, endMin);
+                        while (cursorEvents.moveToNext()) {
+                            int year = cursorEvents.getInt(cursorEvents.getColumnIndex(EventsDatabaseContract.EventsDB.COL_YEAR));
+                            int month = cursorEvents.getInt(cursorEvents.getColumnIndex(EventsDatabaseContract.EventsDB.COL_MONTH));
+                            int day = cursorEvents.getInt(cursorEvents.getColumnIndex(EventsDatabaseContract.EventsDB.COL_DAY));
 
-                    Event event = new Event(cal, end);
+                            Calendar cal = Calendar.getInstance();
+                            cal.clear();
+                            cal.set(year, month, day, startHour, startMin);
+                            Calendar end = Calendar.getInstance();
+                            end.clear();
+                            end.set(year, month, day, endHour, endMin);
 
-                    String completed = cursorEvents.getString(cursorEvents.getColumnIndex(EventsDatabaseContract.EventsDB.COL_LOG));
-                    if (completed.equals("yes")) {
-                        event.markCompleted(true);
+                            Event event = new Event(cal, end);
+
+                            String completed = cursorEvents.getString(cursorEvents.getColumnIndex(EventsDatabaseContract.EventsDB.COL_LOG));
+                            if (completed.equals("yes")) {
+                                event.markCompleted(true);
+                            }
+
+                            goal.addEvent(event);
+                        }
+                        cursorEvents.close();
+                        dbEvents.close();
+                        dbEventsHelper.close();
                     }
-
-                    goal.addEvent(event);
                 }
             }
-        }
+            cursorGoals.close();
+            dbGoals.close();
+            dbGoalsHelper.close();
 
 
-        // populate the ListView with all of the user's goals
-        List<Goal> list = new ArrayList<>();
-        for (Goal goal : allGoals) {
-            list.add(goal);
+            // populate the ListView with all of the user's goals
+            List<Goal> list = new ArrayList<>();
+            for (Goal goal : allGoals) {
+                list.add(goal);
+            }
+            CustomAdapter adapter = new CustomAdapter(this, list);
+            goals.setAdapter(adapter);
         }
-        CustomAdapter adapter = new CustomAdapter(this, list);
-        goals.setAdapter(adapter);
-    }
+
 
     public void goToSingleGoal(Goal goal) {
-        // create a new Intent using the current activity and GoalActivity class
+        // create a new Intent using the current activity and SingleGoalActivity class
         Intent i = new Intent(getApplicationContext(), SingleGoalActivity.class);
-        // pass the goal to GoalActivity
+        // pass the goal to SingleGoalActivity
         i.putExtra("Goal", goal);
         i.putExtra("username", username);
         // start the game activity

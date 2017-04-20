@@ -335,11 +335,11 @@ public class EmotionActivity extends SideMenuActivity implements AdapterView.OnI
 
 
     }
-    public void onMenuButton(View v) {
+    /*public void onMenuButton(View v) {
         Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra("username", username);
         startActivity(intent);
-    }
+    }*/
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {

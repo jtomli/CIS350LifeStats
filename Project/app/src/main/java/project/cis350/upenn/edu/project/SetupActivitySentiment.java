@@ -109,54 +109,14 @@ public class SetupActivitySentiment extends AppCompatActivity {
                     selectionArgsTwo);
         }
 
+        cursor.close();
+        db.close();
+        dbHelper.close();
+
         if (getIntent().hasExtra("fromSetupButton")) {
-            Intent intent = new Intent(this, MainActivity.class);
-            intent.putExtra("username", username);
-            startActivity(intent);
+            AllGoalsActivity.openActivity(SetupActivitySentiment.this, username);
         } else {
-            Intent intent = new Intent(this, CreateGoalActivity.class);
-            intent.putExtra("username", username);
-            startActivity(intent);
+            CreateGoalActivity.openActivity(SetupActivitySentiment.this, username);
         }
     }
 }
-
-/*
-String[] projection = {
-                UserDatabaseContract.UserDB.COL_USERNAME,
-                UserDatabaseContract.UserDB.COL_REASONS_1,
-                UserDatabaseContract.UserDB.COL_REASONS_2,
-                UserDatabaseContract.UserDB.COL_REASONS_3,
-                UserDatabaseContract.UserDB.COL_REASONS_4,
-                UserDatabaseContract.UserDB.COL_REASONS_5,
-                UserDatabaseContract.UserDB.COL_REASONS_6,
-                UserDatabaseContract.UserDB.COL_REASONS_7,
-                UserDatabaseContract.UserDB.COL_REASONS_8,
-                UserDatabaseContract.UserDB.COL_REASONS_9,
-                UserDatabaseContract.UserDB.COL_REASONS_10,
-                UserDatabaseContract.UserDB.COL_REASONS_11,
-                UserDatabaseContract.UserDB.COL_SENTIMENT
-
-        };
-
-        Cursor cursor = db.query(
-                UserDatabaseContract.UserDB.TABLE_NAME,                     // The table to query
-                projection,                               // The columns to return
-                null,                                // The columns for the WHERE clause
-                null,                            // The values for the WHERE clause
-                null,                                     // don't group the rows
-                null,                                     // don't filter by row groups
-                null                                 // The sort order
-        );
-
-        // access list of reasons for each row
-        ArrayList<String> items = new ArrayList<String>();
-        while(cursor.moveToNext()) {
-            for (int i = 0; i < 11; i++) {
-                String item = cursor.getString(cursor.getColumnIndex("reasons" + i));
-                items.add(item);
-            }
-        }
-        cursor.close();
-        // items are in "items.get(i)"
- */

@@ -24,12 +24,7 @@
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Main Menu"
-                android:id="@+id/diary_menu_button"
-                android:onClick="onMenuButton"/>
+
             <ScrollView
                 android:id="@+id/SCROLLER_ID"
                 android:layout_width="fill_parent"
