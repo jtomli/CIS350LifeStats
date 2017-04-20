@@ -1,5 +1,6 @@
 package project.cis350.upenn.edu.project;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -22,14 +23,25 @@ import java.util.List;
  * Created by AK47 on 2/21/17.
  */
 
-public class DiaryActivity extends AppCompatActivity{
+public class DiaryActivity extends SideMenuActivity {
 
     String username;
+
+    public static void openActivity(Activity from_activity, String username) {
+        Intent intent = new Intent(from_activity, DiaryActivity.class);
+
+        Bundle bundle = new Bundle();
+        bundle.putInt(SideMenuActivity.KEY_LAYOUT_ID, R.layout.diary);
+        bundle.putBoolean(SideMenuActivity.KEY_HAS_DRAWER, true);
+        intent.putExtra(MainActivity.KEY_MAIN_BUNDLE, bundle);
+        intent.putExtra("username", username);
+        from_activity.startActivity(intent);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.diary);
+        //setContentView(R.layout.diary);
 
         Intent i = getIntent();
         username = i.getExtras().getString("username");
@@ -144,9 +156,9 @@ public class DiaryActivity extends AppCompatActivity{
         cursor.close();
 
     }
-    public void onMenuButton(View v) {
+    /*public void onMenuButton(View v) {
         Intent i = new Intent(this, MainActivity.class);
         i.putExtra("username", username);
         startActivity(i);
-    }
+    }*/
 }

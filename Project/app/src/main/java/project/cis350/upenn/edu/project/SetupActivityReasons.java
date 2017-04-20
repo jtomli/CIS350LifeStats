@@ -1,5 +1,6 @@
 package project.cis350.upenn.edu.project;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -15,7 +16,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-public class SetupActivityReasons extends AppCompatActivity {
+public class SetupActivityReasons extends SideMenuActivity {
 
     // layout elements
     LinearLayout layoutCheckBox; // stores programmatically added "Other" checkboxes
@@ -32,12 +33,24 @@ public class SetupActivityReasons extends AppCompatActivity {
     int maxOther = 8; // the maximum number of user-generated reasons that can be added
 
 
+    public static void openActivity(Activity from_activity, String username, String fromSetupButton) {
+        Intent intent = new Intent(from_activity, SetupActivityReasons.class);
+
+        Bundle bundle = new Bundle();
+        bundle.putInt(SideMenuActivity.KEY_LAYOUT_ID, R.layout.activity_setup_reasons);
+        bundle.putBoolean(SideMenuActivity.KEY_HAS_DRAWER, true);
+        intent.putExtra(MainActivity.KEY_MAIN_BUNDLE, bundle);
+        intent.putExtra("username", username);
+        intent.putExtra("fromSetupButton", fromSetupButton);
+        from_activity.startActivity(intent);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         // start activity
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_setup_reasons);
+        //setContentView(R.layout.activity_setup_reasons);
 
         // get username and password
         Intent intent = getIntent();
@@ -83,11 +96,8 @@ public class SetupActivityReasons extends AppCompatActivity {
         );
 
         Intent i;
-        if (cursor.getCount() > 0 && !getIntent().hasExtra("fromSetupButton")) {
-
-            i = new Intent(this, MainActivity.class);
-            i.putExtra("username", username);
-            startActivity(i);
+        if (cursor.getCount() > 0 && !getIntent().getExtras().getString("fromSetupButton").equals("yes")) {
+            AllGoalsActivity.openActivity(SetupActivityReasons.this, username);
         } else if (cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
                 for (int j = 0; j < 11; j++) {
@@ -163,8 +173,8 @@ public class SetupActivityReasons extends AppCompatActivity {
             Intent intent = new Intent(this, SetupActivitySentiment.class);
             intent.putExtra("username", username);
             intent.putExtra("reasons", reasons);
-            if (getIntent().hasExtra("fromSetupButton")) {
-                intent.putExtra("fromSetupButton", "true");
+            if (getIntent().getExtras().getString("fromSetupButton").equals("yes")) {
+                intent.putExtra("fromSetupButton", "yes");
             }
             startActivity(intent);
         } else {

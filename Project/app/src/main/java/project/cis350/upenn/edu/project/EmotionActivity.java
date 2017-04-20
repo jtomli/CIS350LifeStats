@@ -1,5 +1,6 @@
 package project.cis350.upenn.edu.project;
 
+        import android.app.Activity;
         import android.content.Intent;
         import android.database.Cursor;
         import android.database.sqlite.SQLiteDatabase;
@@ -25,13 +26,27 @@ package project.cis350.upenn.edu.project;
  * Created by AK47 on 3/23/17.
  */
 
-public class EmotionActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+
+public class EmotionActivity extends SideMenuActivity implements AdapterView.OnItemSelectedListener {
+
     String username;
     String emotionSelection = "past week";
+
+    public static void openActivity(Activity from_activity, String username) {
+        Intent intent = new Intent(from_activity, EmotionActivity.class);
+
+        Bundle bundle = new Bundle();
+        bundle.putInt(SideMenuActivity.KEY_LAYOUT_ID, R.layout.emotions);
+        bundle.putBoolean(SideMenuActivity.KEY_HAS_DRAWER, true);
+        intent.putExtra(MainActivity.KEY_MAIN_BUNDLE, bundle);
+        intent.putExtra("username", username);
+        from_activity.startActivity(intent);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.emotions);
+        //setContentView(R.layout.emotions);
 
         username = getIntent().getExtras().getString("username");
 
@@ -320,11 +335,11 @@ public class EmotionActivity extends AppCompatActivity implements AdapterView.On
 
 
     }
-    public void onMenuButton(View v) {
+    /*public void onMenuButton(View v) {
         Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra("username", username);
         startActivity(intent);
-    }
+    }*/
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {

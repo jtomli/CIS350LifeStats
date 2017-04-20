@@ -1,7 +1,6 @@
 package project.cis350.upenn.edu.project;
 
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -10,7 +9,6 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.w3c.dom.Text;
 
@@ -75,7 +73,7 @@ public class CustomAdapter extends BaseAdapter{
         holder.totalText.setText(" Total Progress: " + goals[position].getTotalCompletionPercent());
         holder.totalProgressBar = (ProgressBar) rowView.findViewById(R.id.total_progress_bar);
         holder.totalProgressBar.setProgress((int)(goals[position].getTotalCompletion()*100));
-        holder.monthText = (TextView) rowView.findViewById(R.id.total_progress_text);
+        holder.monthText = (TextView) rowView.findViewById(R.id.month_progress_text);
         holder.monthText.setText(" This Month's Progress: " + goals[position].getMonthlyCompletionPercent(
                 Calendar.getInstance().get(Calendar.MONTH)));
         holder.monthProgressBar = (ProgressBar) rowView.findViewById(R.id.month_progres_bar);
