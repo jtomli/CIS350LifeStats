@@ -100,7 +100,8 @@ public class EmotionActivity extends SideMenuActivity implements AdapterView.OnI
                 String d = cursor.getString(0);
                 String[] mdy = d.split(", ");
                 Calendar c = Calendar.getInstance();
-                c.set(Integer.parseInt(mdy[2]), Integer.parseInt(mdy[0]), Integer.parseInt(mdy[1]));
+                c.set(Integer.parseInt(mdy[2]), i, Integer.parseInt(mdy[1]));
+               // c.set(Integer.parseInt(mdy[2]), Integer.parseInt(mdy[0]), Integer.parseInt(mdy[1]));
                 Date date = c.getTime();
                 dates[i] = d;
                 anger[i] = new DataPoint(date, cursor.getDouble(1));
@@ -108,6 +109,11 @@ public class EmotionActivity extends SideMenuActivity implements AdapterView.OnI
                 fear[i] = new DataPoint(date, cursor.getDouble(3));
                 joy[i] = new DataPoint(date, cursor.getDouble(4));
                 sadness[i] = new DataPoint(date, cursor.getDouble(5));
+//                anger[i] = new DataPoint(i, cursor.getDouble(1));
+//                disgust[i] = new DataPoint(i, cursor.getDouble(2));
+//                fear[i] = new DataPoint(i, cursor.getDouble(3));
+//                joy[i] = new DataPoint(i, cursor.getDouble(4));
+//                sadness[i] = new DataPoint(i, cursor.getDouble(5));
 
                 i++;
             } while (cursor.moveToNext());
@@ -158,10 +164,10 @@ public class EmotionActivity extends SideMenuActivity implements AdapterView.OnI
         graph.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(this));
         graph.getViewport().setXAxisBoundsManual(true);
         graph.getGridLabelRenderer().setHumanRounding(false);
-        graph.getGridLabelRenderer().setNumHorizontalLabels(3);
-        //graph.getViewport().setScalable(true);
+        graph.getGridLabelRenderer().setNumHorizontalLabels(2);
+        graph.getViewport().setScalable(true);
         //graph.getViewport().setScalableY(true);
-        graph.getLegendRenderer().setVisible(true);
+
 
         Calendar curr = Calendar.getInstance();
         int day = curr.get(Calendar.DAY_OF_MONTH);
@@ -170,8 +176,6 @@ public class EmotionActivity extends SideMenuActivity implements AdapterView.OnI
 
         //anger, disgust, fear, joy, sadness
         Double[] tots = new Double[]{0.0, 0.0, 0.0, 0.0, 0.0};
-        Double[] min = new Double[]{10.0, 10.0, 10.0, 10.0, 10.0};
-        Double[] max = new Double[]{0.0, 0.0, 0.0, 0.0, 0.0};
         switch (emotionSelection) {
             case "past week":
                 for (int x = 0; x < dates.length; x++) {
@@ -184,36 +188,7 @@ public class EmotionActivity extends SideMenuActivity implements AdapterView.OnI
                                 tots[2] += fear[x].getY();
                                 tots[3] += joy[x].getY();
                                 tots[4] += sadness[x].getY();
-                                if (min[0] > anger[x].getY()) {
-                                    min[0] = anger[x].getY();
-                                }
-                                if (min[1] > disgust[x].getY()) {
-                                    min[1] = disgust[x].getY();
-                                }
-                                if (min[2] > fear[x].getY()) {
-                                    min[2] = fear[x].getY();
-                                }
-                                if (min[3] > joy[x].getY()) {
-                                    min[3] = joy[x].getY();
-                                }
-                                if (min[4] > sadness[x].getY()) {
-                                    min[4] = sadness[x].getY();
-                                }
-                                if (max[0] < anger[x].getY()) {
-                                    max[0] = anger[x].getY();
-                                }
-                                if (max[1] < disgust[x].getY()) {
-                                    max[1] = disgust[x].getY();
-                                }
-                                if (max[2] < fear[x].getY()) {
-                                    max[2] = fear[x].getY();
-                                }
-                                if (max[3] < joy[x].getY()) {
-                                    max[3] = joy[x].getY();
-                                }
-                                if (max[4] < sadness[x].getY()) {
-                                    max[4] = sadness[x].getY();
-                                }
+
                             }
                         }
                     }
@@ -230,37 +205,6 @@ public class EmotionActivity extends SideMenuActivity implements AdapterView.OnI
                             tots[2] += fear[x].getY();
                             tots[3] += joy[x].getY();
                             tots[4] += sadness[x].getY();
-                            if (min[0] > anger[x].getY()) {
-                                min[0] = anger[x].getY();
-                            }
-                            if (min[1] > disgust[x].getY()) {
-                                min[1] = disgust[x].getY();
-                            }
-                            if (min[2] > fear[x].getY()) {
-                                min[2] = fear[x].getY();
-                            }
-                            if (min[3] > joy[x].getY()) {
-                                min[3] = joy[x].getY();
-                            }
-                            if (min[4] > sadness[x].getY()) {
-                                min[4] = sadness[x].getY();
-                            }
-                            if (max[0] < anger[x].getY()) {
-                                max[0] = anger[x].getY();
-                            }
-                            if (max[1] < disgust[x].getY()) {
-                                max[1] = disgust[x].getY();
-                            }
-                            if (max[2] < fear[x].getY()) {
-                                max[2] = fear[x].getY();
-                            }
-                            if (max[3] < joy[x].getY()) {
-                                max[3] = joy[x].getY();
-                            }
-                            if (max[4] < sadness[x].getY()) {
-                                max[4] = sadness[x].getY();
-                            }
-
                         }
                     }
                 };
@@ -275,62 +219,27 @@ public class EmotionActivity extends SideMenuActivity implements AdapterView.OnI
                         tots[2] += fear[x].getY();
                         tots[3] += joy[x].getY();
                         tots[4] += sadness[x].getY();
-                        if (min[0] > anger[x].getY()) {
-                            min[0] = anger[x].getY();
-                        }
-                        if (min[1] > disgust[x].getY()) {
-                            min[1] = disgust[x].getY();
-                        }
-                        if (min[2] > fear[x].getY()) {
-                            min[2] = fear[x].getY();
-                        }
-                        if (min[3] > joy[x].getY()) {
-                            min[3] = joy[x].getY();
-                        }
-                        if (min[4] > sadness[x].getY()) {
-                            min[4] = sadness[x].getY();
-                        }
-                        if (max[0] < anger[x].getY()) {
-                            max[0] = anger[x].getY();
-                        }
-                        if (max[1] < disgust[x].getY()) {
-                            max[1] = disgust[x].getY();
-                        }
-                        if (max[2] < fear[x].getY()) {
-                            max[2] = fear[x].getY();
-                        }
-                        if (max[3] < joy[x].getY()) {
-                            max[3] = joy[x].getY();
-                        }
-                        if (max[4] < sadness[x].getY()) {
-                            max[4] = sadness[x].getY();
-                        }
 
                     }
                 };
                 break;
         }
 
-        TextView tv1 = (TextView) findViewById(R.id.avg);
-        tv1.setText("Averages: Anger: " + Math.round(tots[0] / tots.length * 100.0) / 100.0 +
-                " Disgust: " + Math.round(tots[1] / tots.length * 100.0) / 100.0 +
-                " Fear: " + Math.round(tots[2] / tots.length * 100.0) / 100.0 +
-                " Joy: " + Math.round(tots[3] / tots.length * 100.0) / 100.0 +
-                " Sadness: " + Math.round(tots[4] / tots.length * 100.0) / 100.0);
-
-        TextView tv2 = (TextView) findViewById(R.id.min);
-        tv2.setText("Minimums: Anger: " + Math.round(min[0] * 100.0) / 100.0 +
-                " Disgust: " + Math.round(min[1] * 100.0) / 100.0 +
-                " Fear: " + Math.round(min[2] * 100.0) / 100.0 +
-                " Joy: " + Math.round(min[3] * 100.0) / 100.0 +
-                " Sadness: " + Math.round(min[4] * 100.0) / 100.0);
-
-        TextView tv3 = (TextView) findViewById(R.id.max);
-        tv3.setText("Maximums: Anger: " + Math.round(max[0] * 100.0) / 100.0 +
-                " Disgust: " + Math.round(max[1] * 100.0) / 100.0 +
-                " Fear: " + Math.round(max[2] * 100.0) / 100.0 +
-                " Joy: " + Math.round(max[3] * 100.0) / 100.0 +
-                " Sadness: " + Math.round(max[4] * 100.0) / 100.0);
+        TextView tv1 = (TextView) findViewById(R.id.anger);
+        tv1.setText("Anger: " + Math.round(tots[0] / dates.length * 100.0) + "%");
+        tv1.setTextColor(Color.RED);
+        TextView tv2 = (TextView) findViewById(R.id.disgust);
+        tv2.setText("Disgust: " + Math.round(tots[1] / dates.length * 100.0) + "%");
+        tv2.setTextColor(Color.BLACK);
+        TextView tv3 = (TextView) findViewById(R.id.fear);
+        tv3.setText("Fear: " + Math.round(tots[2] / dates.length * 100.0) + "%");
+        tv3.setTextColor(Color.GREEN);
+        TextView tv4 = (TextView) findViewById(R.id.joy);
+        tv4.setText("Joy: " + Math.round(tots[3] / dates.length * 100.0) + "%");
+        tv4.setTextColor(Color.MAGENTA);
+        TextView tv5 = (TextView) findViewById(R.id.sadness);
+        tv5.setText("Sadness: " + Math.round(tots[4] / dates.length * 100.0) + "%");
+        tv5.setTextColor(Color.BLUE);
 
 
 
