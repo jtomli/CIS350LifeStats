@@ -1,14 +1,21 @@
 package project.cis350.upenn.edu.project;
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.widget.PopupMenu;
 import android.text.format.DateFormat;
 import android.view.MenuItem;
@@ -317,6 +324,8 @@ public class CreateGoalActivity extends SideMenuActivity implements AdapterView.
         cursor.close();
         db.close();
         dbHelper.close();
+
+        createNotification();
     }
 
     public void increment(Calendar cal, Calendar end, int dayOfWeek) {
@@ -641,6 +650,34 @@ public class CreateGoalActivity extends SideMenuActivity implements AdapterView.
         @Override
         public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
             setText(dateConverter(dayOfMonth, month+1, year));
+        }
+    }
+
+    private void createNotification() {
+        if (!reminderSelection.equals("Never")) {
+            Integer hour = Integer.valueOf(startHour);
+            Integer min = Integer.valueOf(startMin);
+
+            if (startAmPm.equals("PM")) {
+                hour += 12;
+            }
+
+            if (reminderSelection.equals("1 hour before")) {
+                hour--;
+            } else if (reminderSelection.equals("15 minutes before")) {
+                min -= 15;
+            }
+
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(Calendar.HOUR_OF_DAY, hour);
+            calendar.set(Calendar.MINUTE, min);
+            calendar.set(Calendar.SECOND, 0);
+
+            Intent intent1 = new Intent(CreateGoalActivity.this, AlarmReceiver.class);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(CreateGoalActivity.this, 0, intent1, PendingIntent.FLAG_UPDATE_CURRENT);
+            AlarmManager am = (AlarmManager) CreateGoalActivity.this.getSystemService(CreateGoalActivity.this.ALARM_SERVICE);
+            am.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
+            System.out.println("Alarm set for: "+calendar.getTimeInMillis() + " :: "+ hour + " :: "+min);
         }
     }
 }
