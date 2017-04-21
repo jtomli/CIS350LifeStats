@@ -73,7 +73,7 @@ public class CustomAdapter extends BaseAdapter{
         holder.totalText.setText(" Total Progress: " + goals[position].getTotalCompletionPercent());
         holder.totalProgressBar = (ProgressBar) rowView.findViewById(R.id.total_progress_bar);
         holder.totalProgressBar.setProgress((int)(goals[position].getTotalCompletion()*100));
-        holder.monthText = (TextView) rowView.findViewById(R.id.total_progress_text);
+        holder.monthText = (TextView) rowView.findViewById(R.id.month_progress_text);
         holder.monthText.setText(" This Month's Progress: " + goals[position].getMonthlyCompletionPercent(
                 Calendar.getInstance().get(Calendar.MONTH)));
         holder.monthProgressBar = (ProgressBar) rowView.findViewById(R.id.month_progres_bar);
