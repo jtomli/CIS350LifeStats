@@ -4,6 +4,8 @@ import android.provider.BaseColumns;
 
 /**
  * Created by emmharv on 3/15/17.
+ *
+ * Column names for GoalsDB
  */
 
 public class GoalsDatabaseContract {
