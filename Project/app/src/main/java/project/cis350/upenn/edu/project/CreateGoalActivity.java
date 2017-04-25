@@ -223,7 +223,7 @@ public class CreateGoalActivity extends SideMenuActivity implements AdapterView.
                             "Your goal does not occur between your start and end dates.", Toast.LENGTH_LONG).show();
                 } else {
                     goalName = goalInput.getText().toString();
-                    addGoal(v);
+                    addGoal();
                     createEvents();
                     PopupMenu popup = new PopupMenu(CreateGoalActivity.this, addGoal);
                     popup.getMenuInflater().inflate(R.menu.add_goal_popup_menu, popup.getMenu());
@@ -245,9 +245,14 @@ public class CreateGoalActivity extends SideMenuActivity implements AdapterView.
         });
     }
 
-    public void addGoal(View v) {
+    /**
+     * Adds the created goal to the GoalsDB
+     * If the created goal has the same name as an existing goal,
+     * updates the existing goal instead
+     */
+    public void addGoal() {
 
-        GoalsDatabaseOpenHelper dbHelper = new GoalsDatabaseOpenHelper(v.getContext());
+        GoalsDatabaseOpenHelper dbHelper = new GoalsDatabaseOpenHelper(this);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
         String[] projection = {
@@ -307,7 +312,7 @@ public class CreateGoalActivity extends SideMenuActivity implements AdapterView.
         values.put(GoalsDatabaseContract.GoalsDB.COL_FREQUENCY, frequencySelection);
         values.put(GoalsDatabaseContract.GoalsDB.COL_REASON, reasonSelection);
 
-        if (cursor.getCount() <=0) {
+        if (cursor.getCount() <= 0) {
             long newRowId = db.insert(GoalsDatabaseContract.GoalsDB.TABLE_NAME, null, values);
         } else {
             String selectionTwo = GoalsDatabaseContract.GoalsDB.COL_GOALNAME + " LIKE ? AND " +
@@ -328,6 +333,15 @@ public class CreateGoalActivity extends SideMenuActivity implements AdapterView.
         createNotification();
     }
 
+    /**
+     * Determines the dates all of a Goal's Events that occur on the specified day of the week
+     * Adds the Events to the EventsDB
+     *
+     * @param cal the start date of the goal
+     * @param end the end data of the goal
+     * @param dayOfWeek the day of week that the event should occur
+     *                  method is called once per day of week selected by the user
+     */
     public void increment(Calendar cal, Calendar end, int dayOfWeek) {
 
         EventsDatabaseOpenHelper dbHelper = new EventsDatabaseOpenHelper(this);
@@ -363,6 +377,10 @@ public class CreateGoalActivity extends SideMenuActivity implements AdapterView.
         dbHelper.close();
     }
 
+    /**
+     * Determines the first Event occurring on each day of the week that the Goal is to be logged
+     * Calls increment() to add Events to the EventsDB
+     */
     public void createEvents() {
 
         Calendar end = Calendar.getInstance();
@@ -391,6 +409,16 @@ public class CreateGoalActivity extends SideMenuActivity implements AdapterView.
         }
     }
 
+    /**
+     * Returns the number of a Goal's Events that occur on the specified day of the week
+     *
+     * @param cal the start date of the goal
+     * @param end the end data of the goal
+     * @param dayOfWeek the day of week that the event should occur
+     *                  method is called once per day of week selected by the user
+     *
+     * @return the number of Events occurring on the specified day between the start and end date
+     */
     public int checkIncrement(Calendar cal, Calendar end, int dayOfWeek) {
 
         int numEvents = 0;
@@ -418,6 +446,12 @@ public class CreateGoalActivity extends SideMenuActivity implements AdapterView.
         return numEvents;
     }
 
+    /**
+     * Returns the number Events that a Goal has
+     * Users may not create a Goal with zero events
+     *
+     * @return the number of Events occurring for the specified Goal
+     */
     public int checkEvents() {
 
         int numEvents = 0;

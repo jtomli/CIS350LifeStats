@@ -11,6 +11,11 @@ import android.widget.RadioButton;
 
 import java.util.ArrayList;
 
+/**
+ * Settings: allows a user to enter whether they would like to use the app's Diary feature
+ * Saves a user's Diary preferences and reasons for using the app to the device
+ */
+
 public class SetupActivitySentiment extends AppCompatActivity {
 
     String username;
@@ -18,6 +23,12 @@ public class SetupActivitySentiment extends AppCompatActivity {
     String sentiment = "yes";
     int maxReasons = 11;
 
+    /**
+     * Starts the Activity from SetupActivityReasons
+     * @param savedInstanceState information from SetupActivityReasons including the user's
+     *                           unique username and the "reasons for using the app" they
+     *                           entered on the previous screen
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,6 +40,12 @@ public class SetupActivitySentiment extends AppCompatActivity {
         reasons = intent.getStringArrayListExtra("reasons");
     }
 
+    /**
+     * Sets sentiment to "yes" if user wants to use Diary function and to "no" if user wants to use
+     * app for goals only
+     *
+     * @param view
+     */
     public void onRadioButtonClicked(View view) {
         boolean checked = ((RadioButton) view).isChecked();
 
@@ -46,8 +63,14 @@ public class SetupActivitySentiment extends AppCompatActivity {
 
     }
 
+    /**
+     * Adds a user's settings (reasons for using the app and whether they want to use the Diary
+     * functionality) to the UserDB if a user does not have existing settings
+     * Updates a user's settings if they do have existing settings
+     *
+     * @param view
+     */
     public void onContinue(View view) {
-
 
         UserDatabaseOpenHelper dbHelper = new UserDatabaseOpenHelper(view.getContext());
         SQLiteDatabase db = dbHelper.getWritableDatabase();

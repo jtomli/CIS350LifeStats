@@ -125,7 +125,9 @@ public class SingleGoalActivity extends AppCompatActivity {
 
     }
 
-    // update progress bars when an event is checked on the goals page
+    /**
+     * Updates progress bars when an Event is logged on the Goal's page
+     */
     public void update() {
         // Make the top TextView display the name of the goal
         final TextView goalName = (TextView) findViewById(R.id.goal_name);
