@@ -4,18 +4,15 @@ import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.*;
-import com.ibm.watson.developer_cloud.alchemy.v1.AlchemyLanguage;
-import com.ibm.watson.developer_cloud.alchemy.v1.model.DocumentEmotion;
-import com.ibm.watson.developer_cloud.alchemy.v1.model.DocumentSentiment;
-import android.content.*;
 
+import android.content.*;
+import com.ibm.watson.developer_cloud.natural_language_understanding.v1.NaturalLanguageUnderstanding;
+import com.ibm.watson.developer_cloud.natural_language_understanding.v1.model.EmotionOptions;
+import com.ibm.watson.developer_cloud.natural_language_understanding.v1.model.EmotionScores;
+import com.ibm.watson.developer_cloud.natural_language_understanding.v1.model.Features;
+import com.ibm.watson.developer_cloud.natural_language_understanding.v1.model.AnalyzeOptions;
+import com.ibm.watson.developer_cloud.natural_language_understanding.v1.model.AnalysisResults;
 /**
  * Created by AK47 on 2/23/17.
  */
@@ -32,19 +29,22 @@ public class Mood extends AsyncTask<String, Void, String> {
     protected String doInBackground(String[] params) {
 
         //send to API
+        NaturalLanguageUnderstanding service = new NaturalLanguageUnderstanding(NaturalLanguageUnderstanding.VERSION_DATE_2017_02_27,
+        "aaf1b1cc-405e-4729-a8db-bdebeec00278", "oLFD0KD6dSic");
 
-        AlchemyLanguage service = new AlchemyLanguage();
-        service.setApiKey("7661d71d86a4308318a43b1dbe7a22a0407c6ad9");
-        Map<String,Object> param = new HashMap<String, Object>();
-        param.put(AlchemyLanguage.TEXT, params[0]);
-        DocumentEmotion sentiment = service.getEmotion(param).execute();
+        EmotionOptions emotion = new EmotionOptions.Builder().build();
+        Features features = new Features.Builder().emotion(emotion).build();
+        AnalyzeOptions parameters =
+                new AnalyzeOptions.Builder().text(params[0]).features(features).returnAnalyzedText(true).build();
 
+        AnalysisResults results = service.analyze(parameters).execute();
 
-        Double anger = sentiment.getEmotion().getAnger();
-        Double disgust = sentiment.getEmotion().getDisgust();
-        Double fear = sentiment.getEmotion().getFear();
-        Double joy = sentiment.getEmotion().getJoy();
-        Double sadness = sentiment.getEmotion().getSadness();
+        EmotionScores sentiment = results.getEmotion().getDocument().getEmotion();
+        Double anger = sentiment.getAnger();
+        Double disgust = sentiment.getDisgust();
+        Double fear = sentiment.getFear();
+        Double joy = sentiment.getJoy();
+        Double sadness = sentiment.getSadness();
 
         Calendar date = Calendar.getInstance();
         String d = date.get(Calendar.MONTH) + ", " + date.get(Calendar.DAY_OF_MONTH) + ", " + date.get(Calendar.YEAR);

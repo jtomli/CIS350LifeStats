@@ -3,6 +3,8 @@ package project.cis350.upenn.edu.project;
 import android.provider.BaseColumns;
 /**
  * Created by AK47 on 2/23/17.
+ *
+ * Column names for DiaryDB
  */
 
 public class DiaryDatabaseContract {

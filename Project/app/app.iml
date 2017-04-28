@@ -126,12 +126,12 @@
     <orderEntry type="library" exported="" scope="TEST" name="runner-0.5" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="espresso-idling-resource-2.2.2" level="project" />
     <orderEntry type="library" exported="" name="gson-2.8.0" level="project" />
+    <orderEntry type="library" exported="" name="natural-language-understanding-3.7.2" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="hamcrest-library-1.3" level="project" />
     <orderEntry type="library" exported="" name="firebase-analytics-impl-9.8.0" level="project" />
-    <orderEntry type="library" exported="" name="alchemy-3.7.0" level="project" />
-    <orderEntry type="library" exported="" name="core-3.7.0" level="project" />
     <orderEntry type="library" exported="" name="jersey-jsr166e-2.22.2" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="hamcrest-integration-1.3" level="project" />
+    <orderEntry type="library" exported="" name="core-3.7.2" level="project" />
     <orderEntry type="library" exported="" name="okhttp-urlconnection-3.6.0" level="project" />
     <orderEntry type="library" exported="" name="firebase-core-9.8.0" level="project" />
     <orderEntry type="library" exported="" name="firebase-common-9.8.0" level="project" />
