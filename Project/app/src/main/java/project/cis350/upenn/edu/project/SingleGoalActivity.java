@@ -34,7 +34,8 @@ import java.util.Set;
 import java.util.TreeMap;
 
 /**
- * Created by nkeen_000 on 2/23/2017.
+ * Activity displays the goal's name, completion of events, and a calendar showing the schedule of
+ * the goal's events for each month.
  */
 
 public class SingleGoalActivity extends AppCompatActivity {

@@ -4,7 +4,8 @@ import java.io.Serializable;
 import java.util.Calendar;
 
 /**
- * Created by nkeen_000 on 2/22/2017.
+ * Event contains a start date & time and an end date & time. It can be marked as complete
+ * or incomplete.
  */
 
 public class Event implements Serializable, Comparable<Event> {
@@ -93,6 +94,9 @@ public class Event implements Serializable, Comparable<Event> {
         }
     }
 
+    /**
+     * Displays the event's start and end times respectively in the format "hh:mm - hh:mm"
+     */
     public String toStringHour() {
         String startMin = String.format("%02d", start.get(Calendar.MINUTE));
         String endMin = String.format("%02d", end.get(Calendar.MINUTE));

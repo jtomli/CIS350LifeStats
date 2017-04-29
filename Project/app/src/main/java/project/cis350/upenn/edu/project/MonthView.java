@@ -30,6 +30,9 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+/**
+ * Programatically builds a calendar that maintains events.
+ */
 public class MonthView extends TableLayout{
 
     int day = 0, month = 0, year = 0;
