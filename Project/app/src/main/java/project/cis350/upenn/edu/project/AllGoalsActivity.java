@@ -14,7 +14,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 /**
- * Created by nkeen_000 on 2/23/2017.
+ * Activity displays a list of all the user's goals along with details about each goal
  */
 
 public class AllGoalsActivity extends SideMenuActivity  {
@@ -168,7 +168,9 @@ public class AllGoalsActivity extends SideMenuActivity  {
         goals.setAdapter(adapter);
     }
 
-
+    /** Navigates to the single goal page
+     * @param goal is the goal that will populate the next page
+     */
     public void goToSingleGoal(Goal goal) {
         // create a new Intent using the current activity and SingleGoalActivity class
         Intent i = new Intent(getApplicationContext(), SingleGoalActivity.class);
