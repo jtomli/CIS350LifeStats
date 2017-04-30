@@ -17,6 +17,9 @@ import java.util.Date;
 
 /**
  * Created by AK47 on 2/21/17.
+ * Activity class which handles the Diary log page.  Specifically, when a user submits a diary
+ * entry, the entry is saved in the database and it makes the call to Mood to retrieve and then
+ * store the emotions statistics of this entry.
  */
 
 public class DiaryLogActivity extends SideMenuActivity {
