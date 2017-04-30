@@ -24,6 +24,9 @@ package project.cis350.upenn.edu.project;
         import com.jjoe64.graphview.helper.DateAsXAxisLabelFormatter;
 /**
  * Created by AK47 on 3/23/17.
+ * This class shows statistics on the users moods.  It handles the graph which shows how the user's
+ * mood has changes over time and it also gets the average of each emotion over the past week,
+ * month, or year depending on the user's request.
  */
 
 
@@ -244,11 +247,6 @@ public class EmotionActivity extends SideMenuActivity implements AdapterView.OnI
 
 
     }
-    /*public void onMenuButton(View v) {
-        Intent intent = new Intent(this, MainActivity.class);
-        intent.putExtra("username", username);
-        startActivity(intent);
-    }*/
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
