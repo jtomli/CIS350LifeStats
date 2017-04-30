@@ -30,6 +30,9 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+/**
+ * Programatically builds a calendar that maintains events.
+ */
 public class MonthView extends TableLayout{
 
     int day = 0, month = 0, year = 0;
@@ -540,8 +543,16 @@ public class MonthView extends TableLayout{
         }
     };
 
+
     private OnClickListener loggedListener = new OnClickListener(){
 
+        /**
+         * Updates the color of an Event and whether it is checked
+         * Updates the Event to be marked as completed in the EventsDB if it is checked
+         * and as uncompleted if it is unchecked
+         *
+         * @param v
+         */
         @Override
         public void onClick(View v) {
             boolean checked = ((CheckBox) v).isChecked();

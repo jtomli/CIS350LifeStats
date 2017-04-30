@@ -41,6 +41,7 @@
         <activity android:name=".CalendarActivity" />
         <activity android:name=".AllGoalsActivity"/>
         <activity android:name=".EditGoalActivity"></activity>
+        <receiver android:name=".AlarmReceiver"></receiver>
     </application>
 
 </manifest>

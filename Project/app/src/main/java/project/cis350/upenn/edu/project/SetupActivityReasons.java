@@ -16,6 +16,13 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
+/**
+ * Settings: allows a user to enter their "reasons for using the app"
+ * Users can choose default reasons and/or submit their own
+ * Users can submit up to 11 reasons (3 default and 8 user-generated)
+ * Users can later tag each goal with a reason, and Goals are then color-coded according to their reason
+ */
+
 public class SetupActivityReasons extends SideMenuActivity {
 
     // layout elements
@@ -33,6 +40,16 @@ public class SetupActivityReasons extends SideMenuActivity {
     int maxOther = 8; // the maximum number of user-generated reasons that can be added
 
 
+    /**
+     * Starts the Activity from the Side Menu
+     * @param from_activity Activity calling SetupActivityReasons
+     * @param username the unique username associated with this user
+     *                 passed through all activities because it identifies a user's information in the database
+     * @param fromSetupButton "no" if the user is logging in
+     *                        "yes" if the user is deliberately clicking "Settings" on the side menu
+     *                        if "no" and the user has setup information already existing in the
+     *                        database, this Activity is skipped
+     */
     public static void openActivity(Activity from_activity, String username, String fromSetupButton) {
         Intent intent = new Intent(from_activity, SetupActivityReasons.class);
 
@@ -45,6 +62,10 @@ public class SetupActivityReasons extends SideMenuActivity {
         from_activity.startActivity(intent);
     }
 
+    /**
+     * Starts the Activity from LoginActivity
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -149,7 +170,12 @@ public class SetupActivityReasons extends SideMenuActivity {
     }
 
 
-    // go to next step of setup
+    /**
+     * Takes the user to the next stage of Settings after they select their reasons for using the app
+     * If the user did not select any reasons, throws a warning Toast and does not go to next stage
+     *
+     * @param view
+     */
     public void onContinue(View view) {
 
         Checkable other = (Checkable) findViewById(R.id.other);
@@ -182,6 +208,12 @@ public class SetupActivityReasons extends SideMenuActivity {
         }
     }
 
+    /**
+     * Allows the user to select or deselect one of three default reasons
+     * If the user selects the default "other" reason (the first blank checkbox), calls onSelectOther
+     *
+     * @param view
+     */
     public void onCheckboxClicked(View view) {
 
         boolean checked = ((Checkable) view).isChecked();
@@ -215,6 +247,16 @@ public class SetupActivityReasons extends SideMenuActivity {
         }
     }
 
+    /**
+     * Allows the user to select or deselect one of the "Other" checkboxes
+     * Users can write their own reasons next to the checkboxes
+     * If less than 8 "Other" checkboxes exist and the user checks another one, creates a new,
+     * unchecked "Other" checkbox
+     * If more than 1 "Other" checkboxes exist and the user unchecks on, deletes the last "Other"
+     * checkbox
+     *
+     * @param view
+     */
     public void onSelectOther(View view) {
 
         boolean checked = ((Checkable) view).isChecked();
@@ -236,12 +278,24 @@ public class SetupActivityReasons extends SideMenuActivity {
         }
     }
 
+    /**
+     * If less than 8 "Other" checkboxes exist and the user checks an additional "Other" checkbox,
+     * creates a new Layout to hold a new "Other" checkbox and text box
+     *
+     * @return other the Layout that will hold the next "Other" checkbox
+     */
     private RelativeLayout createNewRelativeLayout() {
         RelativeLayout other = new RelativeLayout(this);
         ugrLayout.add(other);
         return other;
     }
 
+    /**
+     * If less than 8 "Other" checkboxes exist and the user checks an additional "Other" checkbox,
+     * creates a new "Other" CheckBox
+     *
+     * @return other the new CheckBox
+     */
     private CheckBox createNewCheckBox() {
 
         // create checkbox
@@ -259,6 +313,12 @@ public class SetupActivityReasons extends SideMenuActivity {
         return other;
     }
 
+    /**
+     * If less than 8 "Other" checkboxes exist and the user checks an additional "Other" checkbox,
+     * creates a new "Other" EditText
+     *
+     * @return other the new EditText
+     */
     private EditText createNewTextBox() {
 
         EditText other = new EditText(this);
@@ -276,6 +336,10 @@ public class SetupActivityReasons extends SideMenuActivity {
         return other;
     }
 
+    /**
+     * If more than 1 "Other" checkboxes exist and the user unchecks an additional "Other" checkbox,
+     * deletes the last "Other" checkbox created
+     */
     private void deleteLastCheckBox() {
         if (!ugrCheckbox.isEmpty() && !ugrLayout.isEmpty() && !ugrText.isEmpty()) {
             int last = ugrCheckbox.size() - 1;
@@ -292,6 +356,11 @@ public class SetupActivityReasons extends SideMenuActivity {
         }
     }
 
+    /**
+     * Creates an onClickListener that performs onSelectOther
+     *
+     * @return other the new onClickListener for the "Other" checkbox
+     */
     private View.OnClickListener onClick() {
         return new View.OnClickListener() {
             public void onClick(View view) {

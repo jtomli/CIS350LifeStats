@@ -1,14 +1,21 @@
 package project.cis350.upenn.edu.project;
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.widget.PopupMenu;
 import android.text.format.DateFormat;
 import android.view.MenuItem;
@@ -216,7 +223,7 @@ public class CreateGoalActivity extends SideMenuActivity implements AdapterView.
                             "Your goal does not occur between your start and end dates.", Toast.LENGTH_LONG).show();
                 } else {
                     goalName = goalInput.getText().toString();
-                    addGoal(v);
+                    addGoal();
                     createEvents();
                     PopupMenu popup = new PopupMenu(CreateGoalActivity.this, addGoal);
                     popup.getMenuInflater().inflate(R.menu.add_goal_popup_menu, popup.getMenu());
@@ -238,9 +245,14 @@ public class CreateGoalActivity extends SideMenuActivity implements AdapterView.
         });
     }
 
-    public void addGoal(View v) {
+    /**
+     * Adds the created goal to the GoalsDB
+     * If the created goal has the same name as an existing goal,
+     * updates the existing goal instead
+     */
+    public void addGoal() {
 
-        GoalsDatabaseOpenHelper dbHelper = new GoalsDatabaseOpenHelper(v.getContext());
+        GoalsDatabaseOpenHelper dbHelper = new GoalsDatabaseOpenHelper(this);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
         String[] projection = {
@@ -300,7 +312,7 @@ public class CreateGoalActivity extends SideMenuActivity implements AdapterView.
         values.put(GoalsDatabaseContract.GoalsDB.COL_FREQUENCY, frequencySelection);
         values.put(GoalsDatabaseContract.GoalsDB.COL_REASON, reasonSelection);
 
-        if (cursor.getCount() <=0) {
+        if (cursor.getCount() <= 0) {
             long newRowId = db.insert(GoalsDatabaseContract.GoalsDB.TABLE_NAME, null, values);
         } else {
             String selectionTwo = GoalsDatabaseContract.GoalsDB.COL_GOALNAME + " LIKE ? AND " +
@@ -317,8 +329,19 @@ public class CreateGoalActivity extends SideMenuActivity implements AdapterView.
         cursor.close();
         db.close();
         dbHelper.close();
+
+        createNotification();
     }
 
+    /**
+     * Determines the dates all of a Goal's Events that occur on the specified day of the week
+     * Adds the Events to the EventsDB
+     *
+     * @param cal the start date of the goal
+     * @param end the end data of the goal
+     * @param dayOfWeek the day of week that the event should occur
+     *                  method is called once per day of week selected by the user
+     */
     public void increment(Calendar cal, Calendar end, int dayOfWeek) {
 
         EventsDatabaseOpenHelper dbHelper = new EventsDatabaseOpenHelper(this);
@@ -354,6 +377,10 @@ public class CreateGoalActivity extends SideMenuActivity implements AdapterView.
         dbHelper.close();
     }
 
+    /**
+     * Determines the first Event occurring on each day of the week that the Goal is to be logged
+     * Calls increment() to add Events to the EventsDB
+     */
     public void createEvents() {
 
         Calendar end = Calendar.getInstance();
@@ -382,6 +409,16 @@ public class CreateGoalActivity extends SideMenuActivity implements AdapterView.
         }
     }
 
+    /**
+     * Returns the number of a Goal's Events that occur on the specified day of the week
+     *
+     * @param cal the start date of the goal
+     * @param end the end data of the goal
+     * @param dayOfWeek the day of week that the event should occur
+     *                  method is called once per day of week selected by the user
+     *
+     * @return the number of Events occurring on the specified day between the start and end date
+     */
     public int checkIncrement(Calendar cal, Calendar end, int dayOfWeek) {
 
         int numEvents = 0;
@@ -409,6 +446,12 @@ public class CreateGoalActivity extends SideMenuActivity implements AdapterView.
         return numEvents;
     }
 
+    /**
+     * Returns the number Events that a Goal has
+     * Users may not create a Goal with zero events
+     *
+     * @return the number of Events occurring for the specified Goal
+     */
     public int checkEvents() {
 
         int numEvents = 0;
@@ -641,6 +684,34 @@ public class CreateGoalActivity extends SideMenuActivity implements AdapterView.
         @Override
         public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
             setText(dateConverter(dayOfMonth, month+1, year));
+        }
+    }
+
+    private void createNotification() {
+        if (!reminderSelection.equals("Never")) {
+            Integer hour = Integer.valueOf(startHour);
+            Integer min = Integer.valueOf(startMin);
+
+            if (startAmPm.equals("PM")) {
+                hour += 12;
+            }
+
+            if (reminderSelection.equals("1 hour before")) {
+                hour--;
+            } else if (reminderSelection.equals("15 minutes before")) {
+                min -= 15;
+            }
+
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(Calendar.HOUR_OF_DAY, hour);
+            calendar.set(Calendar.MINUTE, min);
+            calendar.set(Calendar.SECOND, 0);
+
+            Intent intent1 = new Intent(CreateGoalActivity.this, AlarmReceiver.class);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(CreateGoalActivity.this, 0, intent1, PendingIntent.FLAG_UPDATE_CURRENT);
+            AlarmManager am = (AlarmManager) CreateGoalActivity.this.getSystemService(CreateGoalActivity.this.ALARM_SERVICE);
+            am.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
+            System.out.println("Alarm set for: "+calendar.getTimeInMillis() + " :: "+ hour + " :: "+min);
         }
     }
 }

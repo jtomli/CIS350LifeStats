@@ -4,6 +4,8 @@ import android.provider.BaseColumns;
 
 /**
  * Created by emmharv on 2/22/17.
+ *
+ * Column names for UserDB
  */
 
 public class UserDatabaseContract {

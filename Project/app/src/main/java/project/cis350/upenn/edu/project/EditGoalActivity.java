@@ -257,15 +257,18 @@ public class EditGoalActivity extends AppCompatActivity implements AdapterView.O
             @Override
             public void onClick(final View v) {
                 goalName = goalInput.getText().toString();
-                updateGoal(v);
-                updateEvents(v);
+                updateGoal();
+                updateEvents();
                 AllGoalsActivity.openActivity(EditGoalActivity.this, username);
             }
         });
     }
 
-    public void updateGoal(View v) {
-        GoalsDatabaseOpenHelper dbHelper = new GoalsDatabaseOpenHelper(v.getContext());
+    /**
+     * Updates the Goal in the GoalsDB
+     */
+    public void updateGoal() {
+        GoalsDatabaseOpenHelper dbHelper = new GoalsDatabaseOpenHelper(this);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
         String[] projection = {
@@ -342,7 +345,17 @@ public class EditGoalActivity extends AppCompatActivity implements AdapterView.O
         dbHelper.close();
     }
 
-    public void updateEvents(View v) {
+    /**
+     * Updating a Goal:
+     * 1) removes all of the Goal's existing Events from the EventsDB
+     * 2) adds back all Events that occurred prior to the current date, leaving them unchanged
+     * 3) creates all-new Events from the current date forward using the new Goal information
+     *
+     * Determines the first Event after the current date occurring on each day of the week
+     * that the Goal is to be logged
+     * Calls increment() to add newly updated Events to the EventsDB
+     */
+    public void updateEvents() {
         Set<Event> eventSet = fromGoal.getEvents();
         EventsDatabaseOpenHelper dbEHelper = new EventsDatabaseOpenHelper(this);
         SQLiteDatabase dbE = dbEHelper.getWritableDatabase();
@@ -400,6 +413,15 @@ public class EditGoalActivity extends AppCompatActivity implements AdapterView.O
         }
     }
 
+    /**
+     * Determines the dates all of a Goal's Events that occur on the specified day of the week
+     * Adds the Events to the EventsDB
+     *
+     * @param cal the start date of the goal
+     * @param end the end data of the goal
+     * @param dayOfWeek the day of week that the event should occur
+     *                  method is called once per day of week selected by the user
+     */
     public void increment(Calendar cal, Calendar end, int dayOfWeek) {
 
         EventsDatabaseOpenHelper dbHelper = new EventsDatabaseOpenHelper(this);
