@@ -15,6 +15,8 @@ import java.util.List;
 
 /**
  * Created by AK47 on 2/21/17.
+ * This class handles the diary page.  It retrieves all past diary entries and colors each entry
+ * based on its main mood.
  */
 
 public class DiaryActivity extends SideMenuActivity {

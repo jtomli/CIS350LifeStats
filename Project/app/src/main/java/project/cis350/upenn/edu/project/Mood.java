@@ -15,6 +15,8 @@ import com.ibm.watson.developer_cloud.natural_language_understanding.v1.model.An
 import com.ibm.watson.developer_cloud.natural_language_understanding.v1.model.AnalysisResults;
 /**
  * Created by AK47 on 2/23/17.
+ * This class handles the API call to Watson to retrieve the emotion statistics for a diary
+ * entry.
  */
 
 public class Mood extends AsyncTask<String, Void, String> {

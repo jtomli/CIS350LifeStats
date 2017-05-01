@@ -21,6 +21,9 @@ import java.util.Calendar;
 import java.util.Date;
 /**
  * Created by AK47 on 3/23/17.
+ * This class shows statistics on the users moods.  It handles the graph which shows how the user's
+ * mood has changes over time and it also gets the average of each emotion over the past week,
+ * month, or year depending on the user's request.
  */
 
 
