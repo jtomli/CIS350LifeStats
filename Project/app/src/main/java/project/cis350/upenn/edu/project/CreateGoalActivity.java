@@ -3,19 +3,14 @@ import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.media.RingtoneManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.NotificationCompat;
 import android.support.v7.widget.PopupMenu;
 import android.text.format.DateFormat;
 import android.view.MenuItem;
@@ -78,7 +73,7 @@ public class CreateGoalActivity extends SideMenuActivity implements AdapterView.
         Bundle bundle = new Bundle();
         bundle.putInt(SideMenuActivity.KEY_LAYOUT_ID, R.layout.activity_goal);
         bundle.putBoolean(SideMenuActivity.KEY_HAS_DRAWER, true);
-        intent.putExtra(MainActivity.KEY_MAIN_BUNDLE, bundle);
+        intent.putExtra(SideMenuActivity.KEY_MAIN_BUNDLE, bundle);
         intent.putExtra("username", username);
         from_activity.startActivity(intent);
     }

@@ -56,7 +56,7 @@ public class SetupActivityReasons extends SideMenuActivity {
         Bundle bundle = new Bundle();
         bundle.putInt(SideMenuActivity.KEY_LAYOUT_ID, R.layout.activity_setup_reasons);
         bundle.putBoolean(SideMenuActivity.KEY_HAS_DRAWER, true);
-        intent.putExtra(MainActivity.KEY_MAIN_BUNDLE, bundle);
+        intent.putExtra(SideMenuActivity.KEY_MAIN_BUNDLE, bundle);
         intent.putExtra("username", username);
         intent.putExtra("fromSetupButton", fromSetupButton);
         from_activity.startActivity(intent);

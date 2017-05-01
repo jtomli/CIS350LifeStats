@@ -1,27 +1,24 @@
 package project.cis350.upenn.edu.project;
 
         import android.app.Activity;
-        import android.content.Intent;
-        import android.database.Cursor;
-        import android.database.sqlite.SQLiteDatabase;
-        import android.os.Bundle;
-        import android.support.v7.app.AppCompatActivity;
-        import android.view.View;
-        import android.widget.AdapterView;
-        import android.widget.ArrayAdapter;
-        import android.widget.Spinner;
-        import android.widget.TextView;
+import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
+import android.widget.TextView;
 
-        import java.util.ArrayList;
-        import java.util.List;
+import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.helper.DateAsXAxisLabelFormatter;
+import com.jjoe64.graphview.series.DataPoint;
+import com.jjoe64.graphview.series.LineGraphSeries;
 
-        import com.google.gson.Gson;
-        import com.jjoe64.graphview.*;
-        import com.jjoe64.graphview.series.*;
-        import android.graphics.*;
-        import java.util.Date;
-        import java.util.Calendar;
-        import com.jjoe64.graphview.helper.DateAsXAxisLabelFormatter;
+import java.util.Calendar;
+import java.util.Date;
 /**
  * Created by AK47 on 3/23/17.
  */
@@ -38,7 +35,7 @@ public class EmotionActivity extends SideMenuActivity implements AdapterView.OnI
         Bundle bundle = new Bundle();
         bundle.putInt(SideMenuActivity.KEY_LAYOUT_ID, R.layout.emotions);
         bundle.putBoolean(SideMenuActivity.KEY_HAS_DRAWER, true);
-        intent.putExtra(MainActivity.KEY_MAIN_BUNDLE, bundle);
+        intent.putExtra(SideMenuActivity.KEY_MAIN_BUNDLE, bundle);
         intent.putExtra("username", username);
         from_activity.startActivity(intent);
     }
@@ -244,11 +241,6 @@ public class EmotionActivity extends SideMenuActivity implements AdapterView.OnI
 
 
     }
-    /*public void onMenuButton(View v) {
-        Intent intent = new Intent(this, MainActivity.class);
-        intent.putExtra("username", username);
-        startActivity(intent);
-    }*/
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {

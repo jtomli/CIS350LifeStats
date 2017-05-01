@@ -27,7 +27,7 @@ public class AllGoalsActivity extends SideMenuActivity  {
         Bundle bundle = new Bundle();
         bundle.putInt(SideMenuActivity.KEY_LAYOUT_ID, R.layout.all_goals_layout);
         bundle.putBoolean(SideMenuActivity.KEY_HAS_DRAWER, true);
-        intent.putExtra(MainActivity.KEY_MAIN_BUNDLE, bundle);
+        intent.putExtra(SideMenuActivity.KEY_MAIN_BUNDLE, bundle);
         intent.putExtra("username", username);
         from_activity.startActivity(intent);
     }

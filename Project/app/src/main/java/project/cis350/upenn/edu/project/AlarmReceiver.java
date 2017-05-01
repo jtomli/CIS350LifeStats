@@ -11,13 +11,15 @@ import android.support.v4.app.NotificationCompat;
 
 /**
  * Created by emmharv on 4/21/17.
+ *
+ * This class receives a broadcast that is set when goals are created. It creates a notification for
+ * the app, telling the user their goal is upcoming.
  */
 
 public class AlarmReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
         Intent notificationIntent = new Intent(context, AllGoalsActivity.class);
