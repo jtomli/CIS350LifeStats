@@ -4,20 +4,12 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.widget.Button;
-import android.widget.EditText;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.view.View;
-
-import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.SignInButton;
-import com.google.android.gms.common.api.GoogleApiClient;
 
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -31,7 +23,11 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.gson.Gson;
 
-import java.util.List;
+/**
+ * This class is the first activity to open when the app starts. If the user has logged in before,
+ * it will recognize this and go to AllGoalsActivity, otherwise the user is given the option to log
+ * in with Google.
+ */
 
 public class LoginActivity extends AppCompatActivity implements
         GoogleApiClient.OnConnectionFailedListener,
@@ -44,6 +40,11 @@ public class LoginActivity extends AppCompatActivity implements
     private TextView mStatusTextView;
     private ProgressDialog mProgressDialog;
 
+
+    /**
+     * Starts the Activity when the app is opened
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,6 +70,10 @@ public class LoginActivity extends AppCompatActivity implements
         signInButton.setSize(SignInButton.SIZE_STANDARD);
     }
 
+
+    /**
+     * This method is called after onCreate() and checks to see if the user is already signed in
+     */
     @Override
     public void onStart() {
         super.onStart();
@@ -95,6 +100,12 @@ public class LoginActivity extends AppCompatActivity implements
         }
     }
 
+    /*
+     * This method is the callback for the Google sign in call
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -106,6 +117,11 @@ public class LoginActivity extends AppCompatActivity implements
         }
     }
 
+    /*
+     * This method handles the data passed back from the sign in request. It handles successful sign
+     * ins.
+     * @param result
+     */
     private void handleSignInResult(GoogleSignInResult result) {
         Log.d(TAG, "handleSignInResult:" + result.isSuccess());
         if (result.isSuccess()) {
@@ -159,11 +175,17 @@ public class LoginActivity extends AppCompatActivity implements
         }
     }
 
+    /*
+     * This method prompts a Google sign in
+     */
     private void signIn() {
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
+    /*
+     * This method prompts a Google sign out
+     */
     private void signOut() {
         Toast.makeText(this, "You are signed out.", Toast.LENGTH_LONG).show();
         Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
@@ -176,6 +198,10 @@ public class LoginActivity extends AppCompatActivity implements
                 });
     }
 
+    /*
+     * This method handles connection failures to the Google API
+     * @param connectionResult the specific connection status
+     */
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
         // An unresolvable error has occurred and Google APIs (including Sign-In) will not
@@ -184,6 +210,7 @@ public class LoginActivity extends AppCompatActivity implements
         Toast.makeText(this, "Connection to Google APIs failed. (Not our fault!)", Toast.LENGTH_LONG).show();
     }
 
+    // This function sets a textfield with status updates relevant to the log in
     private void showProgressDialog() {
         if (mProgressDialog == null) {
             mProgressDialog = new ProgressDialog(this);
@@ -200,6 +227,7 @@ public class LoginActivity extends AppCompatActivity implements
         }
     }
 
+    // This method handles the clicking action of the Sign In and Sign Out buttons
     @Override
     public void onClick(View v) {
         switch (v.getId()) {

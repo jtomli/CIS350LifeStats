@@ -6,21 +6,17 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.jjoe64.graphview.series.DataPoint;
-
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 /**
  * Created by AK47 on 2/21/17.
+ * This class handles the diary page.  It retrieves all past diary entries and colors each entry
+ * based on its main mood.
  */
 
 public class DiaryActivity extends SideMenuActivity {
@@ -33,7 +29,7 @@ public class DiaryActivity extends SideMenuActivity {
         Bundle bundle = new Bundle();
         bundle.putInt(SideMenuActivity.KEY_LAYOUT_ID, R.layout.diary);
         bundle.putBoolean(SideMenuActivity.KEY_HAS_DRAWER, true);
-        intent.putExtra(MainActivity.KEY_MAIN_BUNDLE, bundle);
+        intent.putExtra(SideMenuActivity.KEY_MAIN_BUNDLE, bundle);
         intent.putExtra("username", username);
         from_activity.startActivity(intent);
     }
@@ -156,9 +152,4 @@ public class DiaryActivity extends SideMenuActivity {
         cursor.close();
 
     }
-    /*public void onMenuButton(View v) {
-        Intent i = new Intent(this, MainActivity.class);
-        i.putExtra("username", username);
-        startActivity(i);
-    }*/
 }

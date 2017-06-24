@@ -1,22 +1,19 @@
 package project.cis350.upenn.edu.project;
 
 
-import android.app.ActionBar;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
@@ -25,7 +22,6 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
-import com.google.gson.Gson;
 
 
 /**
@@ -69,7 +65,7 @@ public class SideMenuActivity extends AppCompatActivity implements GoogleApiClie
             mainBundle = new Bundle();
             mainBundle.putInt(SideMenuActivity.KEY_LAYOUT_ID, R.layout.activity_main);
             mainBundle.putBoolean(SideMenuActivity.KEY_HAS_DRAWER, true);
-            //throw new IllegalArgumentException("Cannot access a subclass of MainActivity without including a main bundle.");
+            //throw new IllegalArgumentException("Cannot access a subclass of SideMenuActivity without including a main bundle.");
         } else {
             mainBundle = getIntent().getBundleExtra(KEY_MAIN_BUNDLE);
         }

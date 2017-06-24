@@ -2,21 +2,21 @@ package project.cis350.upenn.edu.project;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.view.View;
-import android.widget.*;
 import android.database.sqlite.SQLiteDatabase;
-import android.content.ContentValues;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.EditText;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 
 /**
  * Created by AK47 on 2/21/17.
+ * Activity class which handles the Diary log page.  Specifically, when a user submits a diary
+ * entry, the entry is saved in the database and it makes the call to Mood to retrieve and then
+ * store the emotions statistics of this entry.
  */
 
 public class DiaryLogActivity extends SideMenuActivity {
@@ -31,7 +31,7 @@ public class DiaryLogActivity extends SideMenuActivity {
         Bundle bundle = new Bundle();
         bundle.putInt(SideMenuActivity.KEY_LAYOUT_ID, R.layout.diary_log);
         bundle.putBoolean(SideMenuActivity.KEY_HAS_DRAWER, true);
-        intent.putExtra(MainActivity.KEY_MAIN_BUNDLE, bundle);
+        intent.putExtra(SideMenuActivity.KEY_MAIN_BUNDLE, bundle);
         intent.putExtra("username", username);
         from_activity.startActivity(intent);
     }

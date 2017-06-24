@@ -16,6 +16,9 @@ import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
 
+/**
+ * Custom adapter to populate a listview with goals and their information
+ */
 public class CustomAdapter extends BaseAdapter{
     AllGoalsActivity activity;
     Goal[] goals;

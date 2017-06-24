@@ -7,7 +7,8 @@ import java.util.Set;
 import java.util.TreeSet;
 
 /**
- * Created by nkeen_000 on 2/22/2017.
+ * Goal contains a name, a reason for that goal, and a set of events for which
+ * that goal takes place
  */
 
 public class Goal implements Serializable, Comparable<Goal> {
@@ -58,6 +59,11 @@ public class Goal implements Serializable, Comparable<Goal> {
         return s + "%";
     }
 
+    /**
+     * Calculates percentage of goal events that have been completed during the current month.
+     * @param month is the current month as an int
+     * @return ratio of completed events this month to total events this month
+     */
     public double getMonthlyCompletion(int month) {
         int total = 0;
         int completed = 0;
@@ -71,6 +77,12 @@ public class Goal implements Serializable, Comparable<Goal> {
         else return (double) completed / (double) total;
     }
 
+    /**
+     * Calculates percentage of goal events that have been completed during the current month and
+     * converts the result into a String percentage with at most 4 digits.
+     * @param month is the current month as an int
+     * @return percentage of completed events with respect to total events
+     */
     public String getMonthlyCompletionPercent(int month) {
         String s = "" + getMonthlyCompletion(month)*100;
         if (s.length() > 5) { s = s.substring(0, 5); }
